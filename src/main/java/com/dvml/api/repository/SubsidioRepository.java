@@ -1,0 +1,12 @@
+package com.dvml.api.repository;
+
+import com.dvml.api.entity.Subsidio;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface SubsidioRepository extends JpaRepository<Subsidio, Long> {
+
+}

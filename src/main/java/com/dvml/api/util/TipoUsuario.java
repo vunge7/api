@@ -1,0 +1,5 @@
+package com.dvml.api.util;
+
+public enum TipoUsuario {
+    ADMINISTRATIVO, RECEPCIONISTA, FARMACEUTICO, MEDICO, ENFERMEIRO, ANALISTA, DIVERSO
+}
