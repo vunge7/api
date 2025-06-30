@@ -18,11 +18,10 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository repo;
 
-    @Autowired
-    private ProdutoRepository proRepository;
+
 
     public List <ProdutoDTO>listarTodosProdutos() {
-        return proRepository.findAllOrderByNomeAsc()
+        return repo.findAllOrderByNomeAsc()
                 .stream()
                 .map(this::convertEntityToDto1)
                 .collect(Collectors.toList());
@@ -37,7 +36,7 @@ public class ProdutoService {
         produtoDTO.setProductCode(produto.getProductCode());
         produtoDTO.setTaxIva(produto.getTaxIva());
         produtoDTO.setProductDescription(produto.getProductDescription());
-        produtoDTO.setProductNumberCode(produto.getProductNumberCode());
+
         return produtoDTO;
     }
     public Produto getProdutoById(long id){

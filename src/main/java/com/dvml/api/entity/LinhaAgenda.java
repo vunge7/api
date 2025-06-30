@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "linha_agenda") // Adicionei o nome da tabela explicitamente para clareza
 @Setter
 @Getter
 @NoArgsConstructor
@@ -34,6 +33,8 @@ public class LinhaAgenda {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Especifica o formato esperado
     @Temporal(TemporalType.TIMESTAMP) // Garante que é tratado como timestamp
     private Date dataRealizacao;
+    @Column(name = "confirmacao", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean confirmacao = false;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;

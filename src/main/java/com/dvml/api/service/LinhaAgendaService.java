@@ -14,8 +14,7 @@ public class LinhaAgendaService {
     @Autowired
     private LinhaAgendaRepository repo;
     public List<LinhaAgenda> listarTodasLinhasAgenda() {
-
-        return repo.findAllActiveOrderByDataRealizacaoAsc();
+        return repo.findAll();
     }
     public LinhaAgenda getLinhaAgendaById(long id) {
         return repo.findById(id).get();
@@ -32,6 +31,7 @@ public class LinhaAgendaService {
         linhaagendaToUpdate.setStatus(linhaagenda.getStatus());
         linhaagendaToUpdate.setFuncionarioId(linhaagenda.getFuncionarioId());
         linhaagendaToUpdate.setConsultaId((linhaagenda.getConsultaId()));
+        linhaagendaToUpdate.setConfirmacao((linhaagenda.getConfirmacao()));
         linhaagendaToUpdate.setDataRealizacao(linhaagenda.getDataRealizacao());
 
 
@@ -54,5 +54,6 @@ public class LinhaAgendaService {
         }
 
     }
+
 
 }
