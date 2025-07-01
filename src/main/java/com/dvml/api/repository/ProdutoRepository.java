@@ -14,7 +14,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findAllOrderByNomeAsc();
 
 
-    @Query(value = "SELECT p FROM Produto p WHERE product_group_id = :grupoId", nativeQuery = true)
+    @Query(value = "SELECT * FROM produto p WHERE product_group_id = :grupoId", nativeQuery = true)
     List<Produto> findAllProdutosPorGrupoId(@Param("grupoId") long grupoId);
 
 

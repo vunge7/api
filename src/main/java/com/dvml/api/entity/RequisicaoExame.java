@@ -24,6 +24,10 @@ public class RequisicaoExame {
     @Column(name = "usuario_id")
     private long usuarioId;
 
+
+    @Column(name = "inscricao_id")
+    private long inscricaoId;
+
     @Column(name = "status",  nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 }

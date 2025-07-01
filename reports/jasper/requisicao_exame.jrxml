@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receita_medica" pageWidth="420" pageHeight="595" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72355318-f0f7-4642-819d-14c2e26f7c38">
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="requisicao_exame" pageWidth="420" pageHeight="595" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72355318-f0f7-4642-819d-14c2e26f7c38">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ConnectionSysHospitalar"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="797"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="190"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -14,6 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="HOSPITALAR_CNN"/>
 	<parameter name="id" class="java.lang.Long"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT 
@@ -25,13 +25,13 @@
 	f.nif as nif,
 	f.endereco as endereco,
 	f.telefone as telefone,
-	pa.nome as nome_usuario,
-	pa.nome as nome_usuario,
-	pa.nome as nome_paciente,
-	pa.apelido as apelido_paciente,
-	pa.sexo as sexo_paciente,
-	pa.bairro as bairro_paciente,
-	pa.raca as raca_paciente,
+	p.nome  as nome_usuario,
+	p2.nome as nome_usuario,
+	p2.nome as nome_paciente,
+	p2.apelido as apelido_paciente,
+	p2.genero as sexo_paciente,
+	p2.bairro as bairro_paciente,
+	p2.raca as raca_paciente,
 	r.data_requisicao as data_requisicao,
 	pr.product_description as product_description, 
 	pr.product_code as codigo_produto,
@@ -44,10 +44,10 @@ FROM linha_requisicao_exame l
         INNER JOIN pessoa p ON p.id  = f2.pessoa_id 
         INNER JOIN inscricao i ON  i.id  = r.inscricao_id 
         INNER JOIN paciente pa ON pa.id  = i.paciente_id 
-        INNER JOIN produto pr ON pr.id = l.produto_id
-        JOIN filial f 
-        
-    WHERE r.id = $P{id}]]>
+        inner join pessoa p2 on p2.id = pa.pessoa_id 
+        INNER JOIN produto pr ON pr.id = l.produto_id    
+        JOIN filial f   
+WHERE r.id = $P{id}]]>
 	</queryString>
 	<field name="id_linha" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -92,37 +92,37 @@ FROM linha_requisicao_exame l
 	<field name="nome_usuario" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nome"/>
 		<property name="com.jaspersoft.studio.field.label" value="nome_usuario"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="COLUMN_10" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nome"/>
 		<property name="com.jaspersoft.studio.field.label" value="nome_usuario"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="nome_paciente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nome"/>
 		<property name="com.jaspersoft.studio.field.label" value="nome_paciente"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="apelido_paciente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="apelido"/>
 		<property name="com.jaspersoft.studio.field.label" value="apelido_paciente"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="sexo_paciente" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="sexo"/>
+		<property name="com.jaspersoft.studio.field.name" value="genero"/>
 		<property name="com.jaspersoft.studio.field.label" value="sexo_paciente"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="bairro_paciente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="bairro"/>
 		<property name="com.jaspersoft.studio.field.label" value="bairro_paciente"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="raca_paciente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="raca"/>
 		<property name="com.jaspersoft.studio.field.label" value="raca_paciente"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
 	<field name="data_requisicao" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="data_requisicao"/>

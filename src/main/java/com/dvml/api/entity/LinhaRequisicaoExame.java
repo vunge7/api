@@ -1,6 +1,7 @@
 package com.dvml.api.entity;
 
 import com.dvml.api.util.EstadoRequisicao;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,6 @@ public class LinhaRequisicaoExame {
     private LocalDateTime hora;
     @Column(name = "requisicao_exame_id")
     private long requisicaoExameId;
-
-    @Column(name = "inscricao_id")
-    private long inscricaoId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;

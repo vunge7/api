@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class LinhaRequisicaoExameService {
         return repo.findAllOrderByNomeAsc();
     }
     public ResponseEntity<String> criar(LinhaRequisicaoExame linhaRequisicaoExame) {
+        linhaRequisicaoExame.setHora(LocalDateTime.now());
         if(Objects.nonNull(repo.save(linhaRequisicaoExame))) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha Requisicao criada com sucesso!");
@@ -61,7 +64,9 @@ public class LinhaRequisicaoExameService {
         return repo.findAllByRequisicaoId(requisicaoExameId);
     }
 
-    public List<LinhaRequisicaoExame> listarLinhasPorIncricaoId(long  inscricaoId) {
+    /*
+    public List<LinhaRequisicaoExame> listarLinhasPorInscricaoId(long inscricaoId) {
         return repo.findAllByInscricaoId(inscricaoId);
     }
+     */
 }

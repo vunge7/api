@@ -15,8 +15,10 @@ public interface LinhaRequisicaoExameRepository extends JpaRepository<LinhaRequi
     @Query("SELECT l FROM LinhaRequisicaoExame l WHERE l.requisicaoExameId = :requisicaoExameId")
     List<LinhaRequisicaoExame> findAllByRequisicaoId(@Param("requisicaoExameId") long requisicaoExameId);
 
-    @Query("SELECT l FROM LinhaRequisicaoExame l WHERE l.inscricaoId = :inscricaoId")
-    List<LinhaRequisicaoExame> findAllByInscricaoId(@Param("inscricaoId") long inscricaoId);
+
+
+
+
 
     Optional<LinhaRequisicaoExame> findById(long id);
 }

@@ -27,7 +27,7 @@ public class RequisicaoExameController {
 
     @PostMapping("requisicaoexame/add")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<String> adicionar(@RequestBody @Valid RequisicaoExame requisicaoExame){
+    public RequisicaoExame adicionar(@RequestBody @Valid RequisicaoExame requisicaoExame){
         return service.criar(requisicaoExame);
     }
     @PutMapping("requisicaoexame/edit")

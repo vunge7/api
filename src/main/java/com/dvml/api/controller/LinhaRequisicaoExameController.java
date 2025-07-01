@@ -1,6 +1,5 @@
 package com.dvml.api.controller;
 
-
 import com.dvml.api.entity.LinhaGasto;
 import com.dvml.api.entity.LinhaRequisicaoExame;
 import com.dvml.api.service.LinhaRequisicaoExameService;
@@ -51,8 +50,12 @@ public class LinhaRequisicaoExameController {
         return service.listarLinhasPorRequisicaoId(requisicaoExameId);
     }
 
+
+    /*
     @GetMapping("linharequisicaoexame/all/inscricao/{inscricaoId}")
     public List<LinhaRequisicaoExame> getLinhasByInscricaoId(@PathVariable long inscricaoId) {
-        return service.listarLinhasPorIncricaoId(inscricaoId);
+        return service.listarLinhasPorInscricaoId(inscricaoId);
     }
+
+     */
 }
