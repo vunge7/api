@@ -90,78 +90,14 @@ where i.id  = $P{inscricao_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="obs_triagem_manchester"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inscricao"/>
 	</field>
-	<background>
-		<band height="832">
-			<textField isBlankWhenNull="true">
-				<reportElement style="StyleBackground" mode="Opaque" x="2" y="0" width="136" height="831" uuid="2d97bf0f-eca4-40ab-afb0-96e2aa0b1e08">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="4"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-					<font size="51"/>
-				</textElement>
-			</textField>
-		</band>
-	</background>
 	<detail>
-		<band height="832" splitType="Stretch">
-			<textField>
-				<reportElement mode="Transparent" x="75" y="212" width="36" height="299" backcolor="#FFFFFF" uuid="4ac6171d-4ca0-4f74-be89-f6aaa0f4b909">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="4"/>
-				<textElement verticalAlignment="Bottom" rotation="Right">
-					<font fontName="Times New Roman" size="15" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{paciente_nome}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="38" y="212" width="36" height="492" uuid="1d9d8a57-daf3-49b7-b79c-6627de17b024">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="4"/>
-				<textElement verticalAlignment="Top" rotation="Right">
-					<font fontName="Times New Roman" size="13"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{obs_triagem_manchester}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="8" y="121" width="119" height="83" uuid="cb589110-5a25-4f16-b308-3a521247a889">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="0" bottomPadding="0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-					<font fontName="Times New Roman" size="54"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{minuto_espera_triagem_manchester}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd-MM-yyyy H:mm:ss">
-				<reportElement x="0" y="805" width="138" height="19" uuid="f44b008e-0427-4625-913f-71900d531a27">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="4"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{data_criacao}]]></textFieldExpression>
-			</textField>
+		<band height="250" splitType="Stretch">
 			<componentElement>
 				<reportElement x="0" y="0" width="139" height="131" uuid="65565635-8aea-4aa4-bf3b-250944c5cba3"/>
 				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<jr:codeExpression><![CDATA["localhost:8081/inscricao/" +$P{inscricao_id}]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$P{inscricao_id}]]></jr:codeExpression>
 				</jr:QRCode>
 			</componentElement>
-			<staticText>
-				<reportElement x="111" y="121" width="24" height="82" uuid="c75077ef-5ac8-434e-90a1-b33a2866ed3c">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bae1521-46bb-4dc4-8cc3-6198bfe1d8b8"/>
-				</reportElement>
-				<box leftPadding="4"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="Left">
-					<font fontName="Times New Roman" size="9"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[minutos]]></text>
-			</staticText>
 		</band>
 	</detail>
 </jasperReport>
