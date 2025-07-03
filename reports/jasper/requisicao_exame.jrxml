@@ -355,7 +355,7 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Bairro:]]></text>
 			</staticText>
 			<image scaleImage="FillFrame">
-				<reportElement x="40" y="-32" width="312" height="182" uuid="46c79417-6585-475c-bfad-e41343d618e9"/>
+				<reportElement x="41" y="-32" width="312" height="182" uuid="46c79417-6585-475c-bfad-e41343d618e9"/>
 				<imageExpression><![CDATA["/img/FORMA_SUPERIOR_2.png"]]></imageExpression>
 			</image>
 			<textField>
