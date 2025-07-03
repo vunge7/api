@@ -70,7 +70,8 @@ public class PacienteService {
     }
 
     public List<PacienteDTO> listarTodos(){
-        return repo.findAll().stream()
+        return repo.findAll()
+                .stream()
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }

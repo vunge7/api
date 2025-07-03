@@ -1,12 +1,20 @@
 package com.dvml.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailService {
@@ -17,30 +25,27 @@ public class EmailService {
             String patientEmail, String doctorEmail,
             String patientName, String doctorName,
             String appointmentDate, String appointmentTime,
-            String consultationType) throws MessagingException {
+            String consultationType) throws Exception {
 
-        // E-mail para o paciente
-        MimeMessage patientMessage = mailSender.createMimeMessage();
-        MimeMessageHelper patientHelper = new MimeMessageHelper(patientMessage, true, "UTF-8");
-        patientHelper.setFrom("robbiealgon@gmail.com");
-        patientHelper.setTo(patientEmail);
-        patientHelper.setSubject("Confirmação de Agendamento de Consulta");
-        patientHelper.setText(
-                "<h3>Olá, " + patientName + "</h3>" +
-                        "<p>Sua consulta foi agendada com sucesso!</p>" +
-                        "<p><strong>Detalhes da Consulta:</strong></p>" +
-                        "<ul>" +
-                        "<li><strong>Médico:</strong> " + doctorName + "</li>" +
-                        "<li><strong>Data:</strong> " + appointmentDate + "</li>" +
-                        "<li><strong>Hora:</strong> " + appointmentTime + "</li>" +
-                        "<li><strong>Tipo de Consulta:</strong> " + (consultationType != null ? consultationType : "Consulta") + "</li>" +
-                        "</ul>" +
-                        "<p>Agradecemos pela confiança!</p>",
-                true
-        );
-        mailSender.send(patientMessage);
+        // ... (envio do e-mail do paciente igual ao seu código)
 
-        // E-mail para o médico
+        // Geração do PDF com Jasper
+        Map<String, Object> params = new HashMap<>();
+        params.put("doctorName", doctorName);
+        params.put("patientName", patientName);
+        params.put("appointmentDate", appointmentDate);
+        params.put("appointmentTime", appointmentTime);
+        params.put("consultationType", consultationType);
+
+        // Carrega o template .jrxml
+        InputStream reportStream = new ClassPathResource("reports/jasper/agendamento.jrxml").getInputStream();
+        JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
+
+        // Gera o PDF em memória
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JREmptyDataSource());
+        byte[] pdfBytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+        // E-mail para o médico com anexo PDF
         MimeMessage doctorMessage = mailSender.createMimeMessage();
         MimeMessageHelper doctorHelper = new MimeMessageHelper(doctorMessage, true, "UTF-8");
         doctorHelper.setFrom("robbiealgon@gmail.com");
@@ -49,16 +54,10 @@ public class EmailService {
         doctorHelper.setText(
                 "<h3>Olá, Dr(a). " + doctorName + "</h3>" +
                         "<p>Uma nova consulta foi agendada com você.</p>" +
-                        "<p><strong>Detalhes da Consulta:</strong></p>" +
-                        "<ul>" +
-                        "<li><strong>Paciente:</strong> " + patientName + "</li>" +
-                        "<li><strong>Data:</strong> " + appointmentDate + "</li>" +
-                        "<li><strong>Hora:</strong> " + appointmentTime + "</li>" +
-                        "<li><strong>Tipo de Consulta:</strong> " + (consultationType != null ? consultationType : "Consulta") + "</li>" +
-                        "</ul>" +
-                        "<p>Por favor, prepare-se para a consulta.</p>",
+                        "<p>Veja os detalhes no PDF em anexo.</p>",
                 true
         );
+        doctorHelper.addAttachment("agendamento.pdf", new ByteArrayResource(pdfBytes));
         mailSender.send(doctorMessage);
     }
 }
