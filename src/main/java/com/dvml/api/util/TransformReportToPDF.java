@@ -13,28 +13,22 @@ public class TransformReportToPDF {
 
     // Configura a conexão JDBC
     Connection conexao;
-    private  HashMap<String, Object> parametros;
+    private HashMap<String, Object> parametros;
 
-
-    public TransformReportToPDF(String fileName,  HashMap<String, Object> hash) {
+    public TransformReportToPDF(String templateName, HashMap<String, Object> hash, String pdfFileName) {
         conexao = new BDConexao().connection;
         this.parametros = hash;
         // Caminho do arquivo .jrxml (design do relatório)
-        jrxmlFile = "reports/jasper/" + fileName + ".jrxml";
-        jasperFile = "reports/jasper/" + fileName + ".jasper";
-        pdfFile = "reports/pdf/" + fileName + ".pdf";
+        jrxmlFile = "reports/jasper/" + templateName + ".jrxml";
+        jasperFile = "reports/jasper/" + templateName + ".jasper";
+        pdfFile = "reports/pdf/" + pdfFileName + ".pdf";
         gerarPDF();
     }
 
-
     private void gerarPDF() {
-
         try {
-            //compila o ficheiro jrxml
+            // Compila o ficheiro jrxml
             JasperCompileManager.compileReportToFile(jrxmlFile, jasperFile);
-
-
-            // parametros.put("titulo", "Relatório de Usuários");
 
             // Preenche o relatório com dados do banco
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFile, parametros, conexao);
@@ -43,12 +37,9 @@ public class TransformReportToPDF {
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFile);
             System.out.println("PDF gerado com sucesso: " + pdfFile);
 
-            // Fecha a conexão
             conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 }
