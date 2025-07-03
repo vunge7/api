@@ -195,7 +195,7 @@ join filial fl
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<jr:codeExpression><![CDATA["localhost:8081/receita/" +$P{id}]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$P{id}]]></jr:codeExpression>
 				</jr:QRCode>
 			</componentElement>
 		</band>
