@@ -14,18 +14,27 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("enviar-email")
-    public ResponseEntity<?> sendAppointmentEmails(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> sendAppointmentEmails(@RequestBody Map<String, Object> request) {
         try {
-            String patientEmail = request.get("pacienteEmail");
-            String doctorEmail = request.get("dotorEmail");
-            String patientName = request.get("pacienteNome");
-            String doctorName = request.get("dotorNome");
-            String appointmentDate = request.get("data");
-            String appointmentTime = request.get("hora");
-            String consultationType = request.get("consulta");
+            String patientEmail = (String) request.get("pacienteEmail");
+            String doctorEmail = (String) request.get("dotorEmail");
+            String patientName = (String) request.get("pacienteNome");
+            String doctorName = (String) request.get("dotorNome");
+            String appointmentDate = (String) request.get("data");
+            String appointmentTime = (String) request.get("hora");
+            String consultationType = (String) request.get("consulta");
+            // Recebe o ID do médico (funcionarioId)
+            Long medicoId = null;
+            if (request.get("funcionarioId") instanceof Integer) {
+                medicoId = ((Integer) request.get("funcionarioId")).longValue();
+            } else if (request.get("funcionarioId") instanceof Long) {
+                medicoId = (Long) request.get("funcionarioId");
+            } else if (request.get("funcionarioId") instanceof String) {
+                medicoId = Long.parseLong((String) request.get("funcionarioId"));
+            }
 
             if (patientEmail == null || doctorEmail == null || patientName == null || doctorName == null ||
-                    appointmentDate == null || appointmentTime == null) {
+                    appointmentDate == null || appointmentTime == null || medicoId == null) {
                 return ResponseEntity.badRequest().body("Campos obrigatórios faltando");
             }
 
@@ -33,7 +42,8 @@ public class EmailController {
                     patientEmail, doctorEmail,
                     patientName, doctorName,
                     appointmentDate, appointmentTime,
-                    consultationType
+                    consultationType,
+                    medicoId
             );
 
             return ResponseEntity.ok("E-mails enviados com sucesso");

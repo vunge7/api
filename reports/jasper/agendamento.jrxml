@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="agendamento" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09b6d37d-d2e0-4db9-a0f5-25b296d4b9d0">
-	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="agendamento" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b1e6c1e2-1a2b-4c3d-8e9f-123456789abc">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conexao_Kitanda_Hospitalar_DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="id" class="java.lang.Long"/>
 	<queryString>
-		<![CDATA[select * from linha_agenda where funcionario_id = $P{id}]]>
+		<![CDATA[SELECT
+              la.id,
+              la.data_realizacao,
+              la.confirmacao,
+              la.status,
+              p.nome AS paciente_nome,
+              m.nome AS medico_nome,
+              ag.descricao AS agenda_descricao
+            FROM linha_agenda la
+            JOIN paciente pac ON la.paciente_id = pac.id
+            JOIN pessoa p ON pac.pessoa_id = p.id
+            JOIN funcionario f ON la.funcionario_id = f.id
+            JOIN pessoa m ON f.pessoa_id = m.id
+            JOIN agenda ag ON la.agenda_id = ag.id
+            WHERE la.funcionario_id = $P{id}]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
-	</field>
-	<field name="agenda_id" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="agenda_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="agenda_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
-	</field>
-	<field name="consulta_id" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="consulta_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="consulta_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
 	</field>
 	<field name="data_realizacao" class="java.time.LocalDateTime">
@@ -27,14 +31,9 @@
 		<property name="com.jaspersoft.studio.field.label" value="data_realizacao"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
 	</field>
-	<field name="funcionario_id" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="funcionario_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="funcionario_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
-	</field>
-	<field name="paciente_id" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="paciente_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="paciente_id"/>
+	<field name="confirmacao" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="confirmacao"/>
+		<property name="com.jaspersoft.studio.field.label" value="confirmacao"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
 	</field>
 	<field name="status" class="java.lang.Boolean">
@@ -42,40 +41,93 @@
 		<property name="com.jaspersoft.studio.field.label" value="status"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
 	</field>
-	<field name="confirmacao" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="confirmacao"/>
-		<property name="com.jaspersoft.studio.field.label" value="confirmacao"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="linha_agenda"/>
+	<field name="paciente_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="paciente_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="medico_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="medico_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="agenda_descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descricao"/>
+		<property name="com.jaspersoft.studio.field.label" value="agenda_descricao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="agenda"/>
 	</field>
 	<title>
-		<band height="51">
+		<band height="40">
 			<staticText>
-				<reportElement x="48" y="21" width="100" height="30" uuid="98e51429-623e-4964-81c9-614e3f2333e6"/>
-				<text><![CDATA[AGENDAMENTO]]></text>
+				<reportElement x="0" y="0" width="555" height="40" uuid="e2b7c1d2-3a4b-5c6d-7e8f-23456789abcd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de Agendamentos]]></text>
 			</staticText>
 		</band>
 	</title>
-	<pageHeader>
-		<band height="50">
+	<columnHeader>
+		<band height="30">
 			<staticText>
-				<reportElement x="60" y="20" width="100" height="30" uuid="6d843041-b9cf-42e4-af5c-a1d8c3ecb650"/>
-				<text><![CDATA[consulta_id]]></text>
+				<reportElement x="0" y="0" width="40" height="30" uuid="f3c8d2e3-4b5c-6d7e-8f9a-3456789abcde"/>
+				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="160" y="20" width="100" height="30" uuid="754b5b76-6386-4c8d-a0f6-08addf982b3e"/>
-				<text><![CDATA[paciente_id]]></text>
+				<reportElement x="40" y="0" width="120" height="30" uuid="a4d9e3f4-5c6d-7e8f-9a0b-456789abcdef"/>
+				<text><![CDATA[Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="120" height="30" uuid="b5e0f405-6d7e-8f9a-0b1c-56789abcdef0"/>
+				<text><![CDATA[Médico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="100" height="30" uuid="c6f1a516-7e8f-9a0b-1c2d-6789abcdef01"/>
+				<text><![CDATA[Consulta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="0" width="80" height="30" uuid="d7a2b627-8f9a-0b1c-2d3e-789abcdef012"/>
+				<text><![CDATA[Data/Hora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="50" height="30" uuid="e8b3c738-9a0b-1c2d-3e4f-89abcdef0123"/>
+				<text><![CDATA[Conf.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="45" height="30" uuid="f9c4d849-a0b1-c2d3-e4f5-9abcdef01234"/>
+				<text><![CDATA[Status]]></text>
 			</staticText>
 		</band>
-	</pageHeader>
+	</columnHeader>
 	<detail>
-		<band height="30">
+		<band height="25">
 			<textField>
-				<reportElement x="60" y="0" width="100" height="30" uuid="834a75d6-30ef-4349-acf7-518cbdc12d8b"/>
-				<textFieldExpression><![CDATA[$F{consulta_id}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="40" height="25" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="0" width="100" height="30" uuid="8c08f7ba-5207-4949-b09a-2ca242811b92"/>
-				<textFieldExpression><![CDATA[$F{paciente_id}]]></textFieldExpression>
+				<reportElement x="40" y="0" width="120" height="25" uuid="b2c3d4e5-f6a7-8901-bcde-f234567890ab"/>
+				<textFieldExpression><![CDATA[$F{paciente_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="120" height="25" uuid="c3d4e5f6-a7b8-9012-cdef-34567890abcd"/>
+				<textFieldExpression><![CDATA[$F{medico_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="100" height="25" uuid="d4e5f6a7-b8c9-0123-def0-4567890abcde"/>
+				<textFieldExpression><![CDATA[$F{agenda_descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="80" height="25" uuid="e5f6a7b8-c9d0-1234-ef01-567890abcdef"/>
+				<textFieldExpression><![CDATA[((java.time.LocalDateTime)$F{data_realizacao}).format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="50" height="25" uuid="f6a7b8c9-d0e1-2345-f012-67890abcdef1"/>
+				<textFieldExpression><![CDATA[$F{confirmacao} ? "Sim" : "Não"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="0" width="45" height="25" uuid="a7b8c9d0-e1f2-3456-0123-7890abcdef12"/>
+				<textFieldExpression><![CDATA[$F{status} ? "Ativo" : "Inativo"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
