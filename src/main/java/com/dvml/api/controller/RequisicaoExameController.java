@@ -1,6 +1,7 @@
 package com.dvml.api.controller;
 
 
+import com.dvml.api.dto.RequisicaoExameDTO;
 import com.dvml.api.entity.RequisicaoExame;
 import com.dvml.api.service.RequisicaoExameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,17 @@ public class RequisicaoExameController {
     @Autowired
     private RequisicaoExameService service;
 
+
     @GetMapping("requisicaoexame/all")
     public List<RequisicaoExame> getAllReceita() {
         return service.listarTodasRequisicoes();
     }
+
+    @GetMapping("requisicaoexame/all/composto")
+    public List<RequisicaoExameDTO> getAllReceitaComposto() {
+        return service.listarTodasRequisicoesComposto();
+    }
+
     @GetMapping("requisicaoexame/{id}")
     public RequisicaoExame getAllRequisicaoById(@PathVariable long id) {
         return service.getRequisicaoById(id);
