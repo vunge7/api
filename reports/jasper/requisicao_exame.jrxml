@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receita_medica" language="groovy" pageWidth="420" pageHeight="595" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72355318-f0f7-4642-819d-14c2e26f7c38">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receita_medica" pageWidth="420" pageHeight="595" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72355318-f0f7-4642-819d-14c2e26f7c38">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="797"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="190"/>
@@ -58,19 +58,7 @@ FROM linha_requisicao_exame l
     INNER JOIN pessoa pe ON pe.id = pa.pessoa_id
     INNER JOIN produto pr ON pr.id = l.produto_id
 
-WHERE r.id = $P{id};
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    ]]>
+WHERE r.id = $P{id};]]>
 	</queryString>
 	<field name="exames_requisitados" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="exame"/>
@@ -263,8 +251,7 @@ WHERE r.id = $P{id};
 				<textElement>
 					<font fontName="Times New Roman" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(new java.util.Date().getYear() - $F{data_nascimento_paciente}.getYear()) + " Anos"
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new java.util.Date().getYear() - $F{data_nascimento_paciente}.getYear()) + " Anos"]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="342" y="186" width="44" height="1" uuid="7fb54bf9-db28-499b-b4ce-3945c2bd6f0c">
@@ -468,7 +455,7 @@ WHERE r.id = $P{id};
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="287" splitType="Stretch">
+		<band height="325" splitType="Stretch">
 			<componentElement>
 				<reportElement x="-12" y="211" width="89" height="61" uuid="9fc59b25-989a-41a7-98f5-5d4b70424096">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
