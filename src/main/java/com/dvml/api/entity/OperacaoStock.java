@@ -48,7 +48,6 @@ public class OperacaoStock {
 
     @Column(name = "descricao")
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
-    @NotBlank(message = "Descrição não pode ser vazia")
     private String descricao;
 
     @OneToMany(mappedBy = "operacaoStock", cascade = CascadeType.ALL, orphanRemoval = true)
