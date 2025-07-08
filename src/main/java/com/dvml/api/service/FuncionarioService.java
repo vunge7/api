@@ -5,6 +5,10 @@ import com.dvml.api.dto.LinhaSubsidioDTO;
 import com.dvml.api.entity.Funcionario;
 import com.dvml.api.repository.FuncionarioRepository;
 import com.dvml.api.repository.PessoaRepository;
+import com.dvml.api.util.EstadoFuncionario;
+import com.dvml.api.util.FechoPeriodo;
+import com.dvml.api.util.SegurancaSocial;
+import com.dvml.api.util.TipoContrato;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,13 +167,13 @@ public class FuncionarioService {
         }
         if (dto.getTipoDeContrato() == null || dto.getTipoDeContrato().isEmpty()) {
             LOGGER.error("Tipo de contrato é obrigatório");
-            throw new IllegalArgumentException("Tipo de contrato é obrigatório. Valores válidos: EFETIVO, TEMPORARIO, ESTAGIO, FREELANCE");
+            throw new IllegalArgumentException("Tipo de contrato é obrigatório.");
         }
-        // Validar valores específicos para tipoDeContrato
-        List<String> validTiposContrato = Arrays.asList("EFETIVO", "TEMPORARIO", "ESTAGIO", "FREELANCE");
-        if (!validTiposContrato.contains(dto.getTipoDeContrato())) {
+        try {
+            TipoContrato.valueOf(dto.getTipoDeContrato());
+        } catch (IllegalArgumentException e) {
             LOGGER.error("Tipo de contrato inválido: {}", dto.getTipoDeContrato());
-            throw new IllegalArgumentException("Tipo de contrato inválido. Valores válidos: EFETIVO, TEMPORARIO, ESTAGIO, FREELANCE");
+            throw new IllegalArgumentException("Tipo de contrato inválido. Valores válidos: " + Arrays.toString(TipoContrato.values()));
         }
         if (dto.getSalario() == null || dto.getSalario().compareTo(BigDecimal.ZERO) <= 0) {
             LOGGER.error("Salário deve ser maior que zero. Valor recebido: {}", dto.getSalario());
@@ -179,19 +183,41 @@ public class FuncionarioService {
             LOGGER.error("Data de admissão é obrigatória");
             throw new IllegalArgumentException("Data de admissão é obrigatória. Formato esperado: yyyy-MM-dd ou yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         }
-        if (dto.getFechoContas() == null || dto.getFechoContas().isEmpty()) {
-            LOGGER.error("Fecho de contas é obrigatório");
-            throw new IllegalArgumentException("Fecho de contas é obrigatório. Valores válidos: MENSAL, QUINZENAL, ANUAL");
+        if (dto.getDescricao() == null || dto.getDescricao().isEmpty()) {
+            LOGGER.error("Descrição é obrigatória");
+            throw new IllegalArgumentException("Descrição é obrigatória.");
         }
-        // Validar valores específicos para fechoDeContas
-        List<String> validFechoDeContas = Arrays.asList("MENSAL", "QUINZENAL", "ANUAL");
-        if (!validFechoDeContas.contains(dto.getFechoContas())) {
-            LOGGER.error("Fecho de contas inválido: {}", dto.getFechoContas());
-            throw new IllegalArgumentException("Fecho de contas inválido. Valores válidos: MENSAL, QUINZENAL, ANUAL");
+        if (dto.getCargo() == null || dto.getCargo().isEmpty()) {
+            LOGGER.error("Cargo é obrigatório");
+            throw new IllegalArgumentException("Cargo é obrigatório.");
+        }
+        if (dto.getDepartamentoId() == null) {
+            LOGGER.error("DepartamentoId é obrigatório");
+            throw new IllegalArgumentException("DepartamentoId é obrigatório.");
+        }
+        if (dto.getFechoContas() == null || dto.getFechoContas().isEmpty()) {
+            LOGGER.error("Fecho de período é obrigatório");
+            throw new IllegalArgumentException("Fecho de período é obrigatório.");
+        }
+        try {
+            FechoPeriodo.valueOf(dto.getFechoContas());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Fecho de período inválido: {}", dto.getFechoContas());
+            throw new IllegalArgumentException("Fecho de período inválido. Valores válidos: " + Arrays.toString(FechoPeriodo.values()));
+        }
+        if (dto.getSegurancaSocial() == null || dto.getSegurancaSocial().isEmpty()) {
+            LOGGER.error("Segurança social é obrigatória");
+            throw new IllegalArgumentException("Segurança social é obrigatória.");
+        }
+        try {
+            SegurancaSocial.valueOf(dto.getSegurancaSocial());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Segurança social inválida: {}", dto.getSegurancaSocial());
+            throw new IllegalArgumentException("Segurança social inválida. Valores válidos: " + Arrays.toString(SegurancaSocial.values()));
         }
         if (dto.getEstadoFuncionario() == null) {
             LOGGER.error("Estado do funcionário é obrigatório");
-            throw new IllegalArgumentException("Estado do funcionário é obrigatório. Valores válidos: ATIVO, INATIVO");
+            throw new IllegalArgumentException("Estado do funcionário é obrigatório. Valores válidos: " + Arrays.toString(EstadoFuncionario.values()));
         }
     }
 
@@ -199,11 +225,14 @@ public class FuncionarioService {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(dto.getId());
         funcionario.setPessoaId(dto.getPessoaId());
-        funcionario.setTipoDeContrato(dto.getTipoDeContrato());
+        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoDeContrato()));
         funcionario.setSalario(dto.getSalario());
         funcionario.setDataAdmissao(dto.getDataAdmissao());
-        funcionario.setDescricao(dto.getDescricao() != null ? dto.getDescricao() : "");
-        funcionario.setFechoContas(dto.getFechoContas() != null ? dto.getFechoContas() : "");
+        funcionario.setDescricao(dto.getDescricao());
+        funcionario.setCargo(dto.getCargo());
+        funcionario.setDepartamentoId(dto.getDepartamentoId());
+        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
+        funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
         return funcionario;
     }
@@ -212,22 +241,28 @@ public class FuncionarioService {
         FuncionarioDTO dto = new FuncionarioDTO();
         dto.setId(funcionario.getId());
         dto.setPessoaId(funcionario.getPessoaId());
-        dto.setTipoDeContrato(funcionario.getTipoDeContrato());
+        dto.setTipoDeContrato(funcionario.getTipoContrato().name());
         dto.setSalario(funcionario.getSalario());
         dto.setDataAdmissao(funcionario.getDataAdmissao());
         dto.setDescricao(funcionario.getDescricao());
-        dto.setFechoContas(funcionario.getFechoContas());
+        dto.setCargo(funcionario.getCargo());
+        dto.setDepartamentoId(funcionario.getDepartamentoId());
+        dto.setFechoContas(funcionario.getFechoPeriodo().name());
+        dto.setSegurancaSocial(funcionario.getSegurancaSocial().name());
         dto.setEstadoFuncionario(funcionario.getEstadoFuncionario());
         return dto;
     }
 
     private void updateEntity(Funcionario funcionario, FuncionarioDTO dto) {
         funcionario.setPessoaId(dto.getPessoaId());
-        funcionario.setTipoDeContrato(dto.getTipoDeContrato());
+        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoDeContrato()));
         funcionario.setSalario(dto.getSalario());
         funcionario.setDataAdmissao(dto.getDataAdmissao());
-        funcionario.setDescricao(dto.getDescricao() != null ? dto.getDescricao() : "");
-        funcionario.setFechoContas(dto.getFechoContas() != null ? dto.getFechoContas() : "");
+        funcionario.setDescricao(dto.getDescricao());
+        funcionario.setCargo(dto.getCargo());
+        funcionario.setDepartamentoId(dto.getDepartamentoId());
+        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
+        funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
     }
 }
