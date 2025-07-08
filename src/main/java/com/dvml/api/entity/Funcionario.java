@@ -26,9 +26,11 @@ public class Funcionario {
     @Column(name = "pessoa_id")
     private Long pessoaId;
 
-    @Column(name = "tipoContrato", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_contrato", nullable = false)
     @NotNull(message = "O tipo de contrato é obrigatório.")
     private TipoContrato tipoContrato;
+
 
     @Column(precision = 12, scale = 2)
     @NotNull(message = "O salário é obrigatório.")
@@ -52,13 +54,16 @@ public class Funcionario {
     @NotNull(message = "A descrição é obrigatória.")
     private Long departamentoId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "fecho_periodo", nullable = false)
     @NotNull(message = "Fecho de conta é obrigatório.")
     private FechoPeriodo fechoPeriodo;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "seguranca_social", nullable = false)
     @NotNull(message = "Fecho de conta é obrigatório.")
     private SegurancaSocial segurancaSocial;
+
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "O estado do funcionário é obrigatório.")
