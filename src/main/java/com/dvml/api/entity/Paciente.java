@@ -1,14 +1,11 @@
 package com.dvml.api.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -31,5 +28,4 @@ public class Paciente {
 
     @Column(name = "pessoa_id")
     private long pessoaId;
-
 }
