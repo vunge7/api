@@ -33,43 +33,44 @@ public class TriagemService {
     @Autowired
     private LinhaTriagemService linhaTriagemService;
 
-    public TriagemDTO  convertEntityToDto(Triagem triagem){
+    public TriagemDTO convertEntityToDto(Triagem triagem) {
         TriagemDTO triagemDTO = new TriagemDTO();
         triagemDTO.setId(triagem.getId());
         triagemDTO.setDataCriacao(triagem.getDataCriacao());
-        triagemDTO.setIncricaoId(triagem.getFkInscricao());
-        triagemDTO.setPaciente(  getNomePacienteByIdInscricao(triagem.getFkInscricao()) );
-        triagemDTO.setUserId( triagem.getFkUser());
+        triagemDTO.setIncricaoId(triagem.getInscricaoId());
+        System.out.println("InscricaoID" + triagem.getInscricaoId());
+        triagemDTO.setPaciente(getNomePacienteByIdInscricao(triagem.getInscricaoId()));
+        triagemDTO.setUserId(triagem.getUsuarioId());
 
+        /*
         if (Objects.nonNull(triagem.getTriagens())){
             triagemDTO.setTriagens(
                     triagem.getTriagens().stream().map(
                             linhaTriagemService::convertEntityToDto
                     ).collect(Collectors.toList()) );
         }
-
+*/
         return triagemDTO;
 
     }
 
-    private String getNomePacienteByIdInscricao(long id){
-           Inscricao inscricao =  repoInscricao.findById(id).get();
-           Paciente paciente =  repoPaciente.getReferenceById(inscricao.getPacienteId());
-           Pessoa pessoa =  pessoaRepository.findById(paciente.getPessoaId()).get();
-           return pessoa.getNome() + " " +pessoa.getApelido();
+    private String getNomePacienteByIdInscricao(long id) {
+        Inscricao inscricao = repoInscricao.findById(id).get();
+        Paciente paciente = repoPaciente.getReferenceById(inscricao.getPacienteId());
+        Pessoa pessoa = pessoaRepository.findById(paciente.getPessoaId()).get();
+        return pessoa.getNome() + " " + pessoa.getApelido();
     }
 
 
-    public List<TriagemDTO> listarTodos(){
+    public List<TriagemDTO> listarTodos() {
         return repo.findAll().stream().map(
                 this::convertEntityToDto
         ).collect(Collectors.toList());
     }
 
-    public Triagem  salvar(Triagem entity){
-          return  repo.save(entity);
+    public Triagem salvar(Triagem entity) {
+        return repo.save(entity);
     }
-
 
 
 }

@@ -21,12 +21,10 @@ public class Triagem {
     @Column(name = "data_criacao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataCriacao;
+    @Column(name = "inscricao_id")
+    private long inscricaoId;
+    @Column(name = "usuario_id")
+    private long usuarioId;
 
-    @Column(name = "fk_inscricao")
-    private long fkInscricao;
-    @Column(name = "fk_user")
-    private long fkUser;
 
-    @OneToMany(mappedBy = "triagem" , cascade = CascadeType.ALL)
-    private List<LinhaTriagem> triagens;
 }

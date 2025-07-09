@@ -27,9 +27,7 @@ public class LinhaTriagemService {
         linhaTriagemDTO.setCampo(entity.getCampo());
         linhaTriagemDTO.setValor(entity.getValor());
         linhaTriagemDTO.setUnidade(entity.getUnidade());
-
-
-        linhaTriagemDTO.setTriagemId(entity.getTriagem().getId());
+        linhaTriagemDTO.setTriagemId(entity.getTriagemId());
         return linhaTriagemDTO;
     }
 
