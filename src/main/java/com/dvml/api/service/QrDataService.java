@@ -12,6 +12,8 @@ public class QrDataService {
         this.ultimoQrData = data;
     }
 
+
+
     public QrData obter() {
         return ultimoQrData;
     }
