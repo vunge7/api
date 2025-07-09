@@ -21,7 +21,6 @@ public class LinhaTriagem {
     @Column(name = "unidade", nullable = false, length = 50)
     private String unidade;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_triagem")
-    private Triagem triagem;
+    @Column(name = "triagem_id")
+   private long triagemId;
 }
