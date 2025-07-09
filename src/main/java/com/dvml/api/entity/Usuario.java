@@ -43,7 +43,7 @@ public class Usuario {
     @Column(name = "tipo_usuario")
     private TipoUsuario tipoUsuario;
     @Column(name = "funcao_id")
-    private int  funcaoId;
+    private long  funcaoId;
 
     @Column(name = "funcionario_id", nullable = false, length = 100)
     private long funcionarioId;

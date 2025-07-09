@@ -1,6 +1,9 @@
 package com.dvml.api.entity;
 
 import com.dvml.api.util.EstadoFuncionario;
+import com.dvml.api.util.FechoPeriodo;
+import com.dvml.api.util.SegurancaSocial;
+import com.dvml.api.util.TipoContrato;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -23,9 +26,11 @@ public class Funcionario {
     @Column(name = "pessoa_id")
     private Long pessoaId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_contrato", nullable = false)
     @NotNull(message = "O tipo de contrato é obrigatório.")
-    private String tipoDeContrato;
+    private TipoContrato tipoContrato;
+
 
     @Column(precision = 12, scale = 2)
     @NotNull(message = "O salário é obrigatório.")
@@ -41,9 +46,24 @@ public class Funcionario {
     @NotNull(message = "A descrição é obrigatória.")
     private String descricao;
 
-    @Column(name = "fecho_contas", nullable = false)
+    @Column(name = "cargo", nullable = false)
+    @NotNull(message = "A descrição é obrigatória.")
+    private String cargo;
+
+    @Column(name = "departamento_id", nullable = false)
+    @NotNull(message = "A descrição é obrigatória.")
+    private Long departamentoId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "fecho_periodo", nullable = false)
     @NotNull(message = "Fecho de conta é obrigatório.")
-    private String fechoContas;
+    private FechoPeriodo fechoPeriodo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seguranca_social", nullable = false)
+    @NotNull(message = "Fecho de conta é obrigatório.")
+    private SegurancaSocial segurancaSocial;
+
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "O estado do funcionário é obrigatório.")

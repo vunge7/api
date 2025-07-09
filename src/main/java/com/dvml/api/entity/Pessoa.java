@@ -1,6 +1,5 @@
 package com.dvml.api.entity;
 
-
 import com.dvml.api.util.Genero;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -94,6 +92,4 @@ public class Pessoa {
 
     @Column(name = "nome_photo")
     private String nomePhoto;
-
-
 }

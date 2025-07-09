@@ -70,5 +70,5 @@ public class Produto {
     private long unidadeMedidaId;
 
     @Column(name = "imagem", length = 255)
-    private String imagem; // Nome do arquivo da imagem
+    private String imagem;
 }

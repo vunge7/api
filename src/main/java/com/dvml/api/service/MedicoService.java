@@ -6,9 +6,9 @@ import com.dvml.api.dto.MedicoDTO;
 import com.dvml.api.entity.*;
 import com.dvml.api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -63,11 +63,11 @@ public class MedicoService {
                     pessoa.getEmail(),
                     pessoa.getDataNascimento(),
                     funcionario.getDataAdmissao(),
-                    funcionario.getTipoDeContrato(),
+                    funcionario.getTipoContrato().name(), // Corrigido de getTipoDeContrato() para getTipoContrato().name()
                     funcionario.getSalario(),
-                   new BigDecimal(0d),
+                    new BigDecimal(0d),
                     funcionario.getDescricao(),
-                    funcionario.getFechoContas(),
+                    funcionario.getFechoPeriodo().name(), // Corrigido de getFechoContas() para getFechoPeriodo().name()
                     pessoa.getEndereco(),
                     pessoa.getGenero(),
                     usuario.getId(),
@@ -116,7 +116,7 @@ public class MedicoService {
                 .collect(Collectors.toList());
     }
 
-    // Método adicional: Lista todos os médicos (opcional)
+    // Método adicional: Lista todos os médicos
     public List<MedicoDTO> getAllMedicos() {
         List<Usuario> usuarios = usuarioRepository.findAll(); // Assumindo que todos os usuários são médicos
 
@@ -140,11 +140,11 @@ public class MedicoService {
                                 pessoa.getEmail(),
                                 pessoa.getDataNascimento(),
                                 funcionario.getDataAdmissao(),
-                                funcionario.getTipoDeContrato(),
+                                funcionario.getTipoContrato().name(), // Corrigido de getTipoDeContrato() para getTipoContrato().name()
                                 funcionario.getSalario(),
                                 new BigDecimal(0d),
                                 funcionario.getDescricao(),
-                                funcionario.getFechoContas(),
+                                funcionario.getFechoPeriodo().name(), // Corrigido de getFechoContas() para getFechoPeriodo().name()
                                 pessoa.getEndereco(),
                                 pessoa.getGenero(),
                                 usuario.getId(),
