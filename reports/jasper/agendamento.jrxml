@@ -57,76 +57,105 @@
 		<property name="com.jaspersoft.studio.field.tree.path" value="agenda"/>
 	</field>
 	<title>
-		<band height="40">
+		<band height="159">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image scaleImage="FillFrame">
+				<reportElement x="130" y="-13" width="295" height="163" uuid="2da7f520-2e66-402f-b4ad-c3de80cc6fd3"/>
+				<imageExpression><![CDATA["/img/agenda_medico.png"]]></imageExpression>
+			</image>
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="40" uuid="e2b7c1d2-3a4b-5c6d-7e8f-23456789abcd"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true"/>
+				<reportElement x="222" y="-21" width="110" height="24" forecolor="#FFFFFF" uuid="097b977f-7a19-41ea-a338-03b06b8c884a"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Relatório de Agendamentos]]></text>
+				<text><![CDATA[Agendamento]]></text>
 			</staticText>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="30">
+		<band height="18">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="0" y="0" width="40" height="30" uuid="f3c8d2e3-4b5c-6d7e-8f9a-3456789abcde"/>
+				<reportElement mode="Opaque" x="0" y="0" width="40" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="f3c8d2e3-4b5c-6d7e-8f9a-3456789abcde">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="40" y="0" width="120" height="30" uuid="a4d9e3f4-5c6d-7e8f-9a0b-456789abcdef"/>
-				<text><![CDATA[Paciente]]></text>
+				<reportElement mode="Opaque" x="40" y="0" width="120" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="a4d9e3f4-5c6d-7e8f-9a0b-456789abcdef"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[  Paciente]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="160" y="0" width="120" height="30" uuid="b5e0f405-6d7e-8f9a-0b1c-56789abcdef0"/>
-				<text><![CDATA[Médico]]></text>
+				<reportElement mode="Opaque" x="160" y="0" width="120" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="b5e0f405-6d7e-8f9a-0b1c-56789abcdef0"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[  Médico]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="0" width="100" height="30" uuid="c6f1a516-7e8f-9a0b-1c2d-6789abcdef01"/>
+				<reportElement mode="Opaque" x="280" y="0" width="100" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="c6f1a516-7e8f-9a0b-1c2d-6789abcdef01"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Consulta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="380" y="0" width="80" height="30" uuid="d7a2b627-8f9a-0b1c-2d3e-789abcdef012"/>
+				<reportElement mode="Opaque" x="380" y="0" width="80" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="d7a2b627-8f9a-0b1c-2d3e-789abcdef012"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Data/Hora]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="460" y="0" width="50" height="30" uuid="e8b3c738-9a0b-1c2d-3e4f-89abcdef0123"/>
+				<reportElement mode="Opaque" x="460" y="0" width="50" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="e8b3c738-9a0b-1c2d-3e4f-89abcdef0123"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Conf.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="510" y="0" width="45" height="30" uuid="f9c4d849-a0b1-c2d3-e4f5-9abcdef01234"/>
+				<reportElement mode="Opaque" x="510" y="0" width="45" height="18" forecolor="#FFFFFF" backcolor="#002366" uuid="f9c4d849-a0b1-c2d3-e4f5-9abcdef01234"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="25">
+		<band height="14">
 			<textField>
-				<reportElement x="0" y="0" width="40" height="25" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890"/>
+				<reportElement x="0" y="0" width="40" height="14" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="40" y="0" width="120" height="25" uuid="b2c3d4e5-f6a7-8901-bcde-f234567890ab"/>
+				<reportElement x="40" y="0" width="120" height="14" uuid="b2c3d4e5-f6a7-8901-bcde-f234567890ab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{paciente_nome}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="0" width="120" height="25" uuid="c3d4e5f6-a7b8-9012-cdef-34567890abcd"/>
+				<reportElement x="160" y="0" width="120" height="14" uuid="c3d4e5f6-a7b8-9012-cdef-34567890abcd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{medico_nome}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="0" width="100" height="25" uuid="d4e5f6a7-b8c9-0123-def0-4567890abcde"/>
+				<reportElement x="280" y="0" width="100" height="14" uuid="d4e5f6a7-b8c9-0123-def0-4567890abcde">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{agenda_descricao}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="0" width="80" height="25" uuid="e5f6a7b8-c9d0-1234-ef01-567890abcdef"/>
+				<reportElement x="380" y="0" width="80" height="14" uuid="e5f6a7b8-c9d0-1234-ef01-567890abcdef">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[((java.time.LocalDateTime)$F{data_realizacao}).format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="460" y="0" width="50" height="25" uuid="f6a7b8c9-d0e1-2345-f012-67890abcdef1"/>
+				<reportElement x="460" y="0" width="50" height="14" uuid="f6a7b8c9-d0e1-2345-f012-67890abcdef1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{confirmacao} ? "Sim" : "Não"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="510" y="0" width="45" height="25" uuid="a7b8c9d0-e1f2-3456-0123-7890abcdef12"/>
+				<reportElement x="510" y="0" width="45" height="14" uuid="a7b8c9d0-e1f2-3456-0123-7890abcdef12">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{status} ? "Ativo" : "Inativo"]]></textFieldExpression>
 			</textField>
 		</band>
