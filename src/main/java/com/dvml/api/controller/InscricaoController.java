@@ -21,6 +21,7 @@ public class InscricaoController {
 
     @GetMapping("/inscricao/all")
     public List<InscricaoFullDTO> getAllInscricao(){
+        System.out.println("Lista todos os pacientes inscritos");
         return  service.listarInscricaoNaoTriados();
     }
 
@@ -33,7 +34,6 @@ public class InscricaoController {
     public List<InscricaoFullDTO> getAllInscricaoDeEncaminhamentoConsulta(){
         return  service.listarInscricaoByEncameninhamentoConsulta();
     }
-
 
     @GetMapping("/inscricao/all/{estado}")
     public List<InscricaoFullDTO> getAllInscricao(@PathVariable String estado){

@@ -455,9 +455,9 @@ WHERE r.id = $P{id};]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="325" splitType="Stretch">
+		<band height="145" splitType="Stretch">
 			<componentElement>
-				<reportElement x="-12" y="211" width="89" height="61" uuid="9fc59b25-989a-41a7-98f5-5d4b70424096">
+				<reportElement x="-12" y="69" width="89" height="61" uuid="9fc59b25-989a-41a7-98f5-5d4b70424096">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
@@ -465,35 +465,35 @@ WHERE r.id = $P{id};]]>
 				</jr:QRCode>
 			</componentElement>
 			<textField>
-				<reportElement x="80" y="220" width="200" height="14" uuid="4273b0a5-3800-4a25-ae39-fcd1699521d3"/>
+				<reportElement x="80" y="78" width="200" height="14" uuid="4273b0a5-3800-4a25-ae39-fcd1699521d3"/>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_filial}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="233" width="200" height="14" uuid="ae91baaf-1335-4f2c-897b-423347a8d7ea"/>
+				<reportElement x="80" y="91" width="200" height="14" uuid="ae91baaf-1335-4f2c-897b-423347a8d7ea"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nome Comercial: "+$F{nome_comercial_filial}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="245" width="200" height="14" uuid="b18e2dde-4cca-4653-9b3c-3b9ece5a78a8"/>
+				<reportElement x="80" y="103" width="200" height="14" uuid="b18e2dde-4cca-4653-9b3c-3b9ece5a78a8"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA["NIF: "+$F{nif_filial}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="220" width="100" height="15" uuid="d4fb1dd3-bb4f-4f7b-b12d-8f9ee9e5d16c"/>
+				<reportElement x="280" y="78" width="100" height="15" uuid="d4fb1dd3-bb4f-4f7b-b12d-8f9ee9e5d16c"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{telefone_filial}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="280" y="233" width="104" height="15" uuid="66b0a86c-8a72-4e8a-aabb-436cfb0c5011">
+				<reportElement x="280" y="91" width="104" height="15" uuid="66b0a86c-8a72-4e8a-aabb-436cfb0c5011">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -502,7 +502,7 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Email:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="205" width="104" height="15" forecolor="#48CAE4" uuid="22a25943-e818-4063-a9a9-044886f073e2">
+				<reportElement x="80" y="63" width="104" height="15" forecolor="#48CAE4" uuid="22a25943-e818-4063-a9a9-044886f073e2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
@@ -511,7 +511,7 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Dados da Clinica]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="205" width="104" height="15" forecolor="#48CAE4" uuid="cd5a1743-8aa5-4277-9173-c4697db6474f">
+				<reportElement x="280" y="63" width="104" height="15" forecolor="#48CAE4" uuid="cd5a1743-8aa5-4277-9173-c4697db6474f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
@@ -520,15 +520,15 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Contactos]]></text>
 			</staticText>
 			<image>
-				<reportElement x="-47" y="271" width="1203" height="16" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
+				<reportElement x="-47" y="129" width="1203" height="16" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
 				<imageExpression><![CDATA["/img/BARRA_INFERIOR.png"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="355" y="143" width="50" height="107" uuid="8a17c4af-e77e-4e1c-9771-bdf005fdb832"/>
+				<reportElement x="355" y="1" width="50" height="107" uuid="8a17c4af-e77e-4e1c-9771-bdf005fdb832"/>
 				<imageExpression><![CDATA["/img/DETALHES_LATERAIS.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="80" y="256" width="200" height="14" uuid="f0be254d-e7db-458a-b830-6f5f86d4a514"/>
+				<reportElement x="80" y="114" width="200" height="14" uuid="f0be254d-e7db-458a-b830-6f5f86d4a514"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
