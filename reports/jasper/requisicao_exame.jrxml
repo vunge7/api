@@ -520,7 +520,7 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Contactos]]></text>
 			</staticText>
 			<image>
-				<reportElement x="-47" y="129" width="1203" height="16" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
+				<reportElement x="-12" y="39" width="477" height="93" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
 				<imageExpression><![CDATA["/img/BARRA_INFERIOR.png"]]></imageExpression>
 			</image>
 			<image>
