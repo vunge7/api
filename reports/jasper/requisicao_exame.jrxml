@@ -31,6 +31,7 @@
     pe.data_nascimento AS data_nascimento_paciente,
     pe.genero AS genero_paciente,
     pr.preco AS preco_exame,
+    r.data_requisicao AS data_requisicao,
     pr.product_description AS descricao_produto,
     
     (SELECT f.nome FROM filial f WHERE f.id = 1) AS nome_filial,
@@ -129,6 +130,11 @@ WHERE r.id = $P{id};]]>
 		<property name="com.jaspersoft.studio.field.name" value="preco"/>
 		<property name="com.jaspersoft.studio.field.label" value="preco_exame"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="produto"/>
+	</field>
+	<field name="data_requisicao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data_requisicao"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_requisicao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicao_exame"/>
 	</field>
 	<field name="descricao_produto" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="product_description"/>
@@ -520,7 +526,7 @@ WHERE r.id = $P{id};]]>
 				<text><![CDATA[Contactos]]></text>
 			</staticText>
 			<image>
-				<reportElement x="-47" y="129" width="1203" height="16" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
+				<reportElement x="-12" y="39" width="477" height="93" uuid="c3e085e3-9426-47f1-a71c-274bfdc6a057"/>
 				<imageExpression><![CDATA["/img/BARRA_INFERIOR.png"]]></imageExpression>
 			</image>
 			<image>
@@ -533,6 +539,14 @@ WHERE r.id = $P{id};]]>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Endereço "+$F{endereco_filial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="106" width="28" height="20" uuid="e4b65dc3-6283-4ebd-8e3a-4e1482b51f3a"/>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="308" y="106" width="75" height="20" uuid="e8ee309c-4b99-44c6-981a-12be0208e437"/>
+				<textFieldExpression><![CDATA[$F{data_requisicao}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

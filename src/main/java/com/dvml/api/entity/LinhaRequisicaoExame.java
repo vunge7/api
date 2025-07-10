@@ -32,4 +32,10 @@ public class LinhaRequisicaoExame {
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
+    @Column(name = "resultado")
+    private String resultado;
+
+    @Column(name = "finalizado", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean finalizado = false;
+
 }

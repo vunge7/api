@@ -26,7 +26,7 @@
     pe.estado_civil AS estado_civil_paciente,
     pe.data_nascimento AS data_nascimento_paciente,
     pe.genero AS genero_paciente,
-    co.historia_clinica AS historia_clinica,
+    co.motivo_consulta AS motivo_consulta,
     
         (SELECT f.nome FROM filial f WHERE f.id = 1) AS nome_filial,
     (SELECT f.nome_comercial FROM filial f WHERE f.id = 1) AS nome_comercial_filial,
@@ -99,9 +99,9 @@ WHERE ins.id  = $P{id};]]>
 		<property name="com.jaspersoft.studio.field.label" value="genero_paciente"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
 	</field>
-	<field name="historia_clinica" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="historia_clinica"/>
-		<property name="com.jaspersoft.studio.field.label" value="historia_clinica"/>
+	<field name="motivo_consulta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="motivo_consulta"/>
+		<property name="com.jaspersoft.studio.field.label" value="motivo_consulta"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="consulta"/>
 	</field>
 	<field name="nome_filial" class="java.lang.String">
@@ -316,7 +316,7 @@ WHERE ins.id  = $P{id};]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="19" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HISTÓRIA CLINICA]]></text>
+				<text><![CDATA[MOTIVO DA CONSULTA]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -327,7 +327,7 @@ WHERE ins.id  = $P{id};]]>
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{historia_clinica}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{motivo_consulta}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
