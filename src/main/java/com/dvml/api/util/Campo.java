@@ -1,0 +1,9 @@
+package com.dvml.api.util;
+
+public enum Campo {
+    PRESSAO_ARTERIAL,
+    FREQUENCIA_CARDIACA,
+    TEMPERATURA,
+    FREQUENCIA_RESPIRATORIA,
+    SATURACAO_OXIGENIO
+}
