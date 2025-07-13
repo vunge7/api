@@ -11,10 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("linhatriagem")
+@RequestMapping(value = "linhatriagem", produces = "application/json")
 public class LinhaTriagemController {
 
     @Autowired
@@ -53,7 +54,11 @@ public class LinhaTriagemController {
         return service.obterTodosSinaisPorPacienteNativo(pacienteId);
     }
 
-    @PutMapping("/{id}")
+    // 🔹 NOVO: Endpoint agrupado por tipo de sinal vital (campo)
+    @GetMapping("/grouped/{pacienteId}")
+    public Map<String, List<SinalVitalDTO>> getSinaisAgrupados(@PathVariable Long pacienteId) {
+        return service.agruparSinaisPorCampo(pacienteId);
+    }
     public ResponseEntity<LinhaTriagem> atualizar(
             @PathVariable Long id,
             @RequestBody LinhaTriagem linha) {

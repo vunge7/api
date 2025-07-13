@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface LinhaTriagemRepositoty extends JpaRepository<LinhaTriagem, Long> {
 
+    // 🔹 JPQL por campo específico
     @Query("""
         SELECT new com.dvml.api.dto.SinalVitalDTO(t.dataCriacao, lt.valor)
         FROM LinhaTriagem lt
@@ -25,6 +26,7 @@ public interface LinhaTriagemRepositoty extends JpaRepository<LinhaTriagem, Long
             @Param("campo") Campo campo
     );
 
+    // 🔹 Query nativa básica (data + valor)
     @Query(value = """
         SELECT t.data_criacao, lt.valor
         FROM linha_triagem lt
@@ -34,4 +36,15 @@ public interface LinhaTriagemRepositoty extends JpaRepository<LinhaTriagem, Long
         WHERE p.id = :pacienteId
     """, nativeQuery = true)
     List<Object[]> buscarTodosSinaisPorPacienteNativo(@Param("pacienteId") Long pacienteId);
+
+    // 🔹 NOVA: Query nativa com campo (tipo de sinal)
+    @Query(value = """
+        SELECT t.data_criacao, lt.valor, lt.campo
+        FROM linha_triagem lt
+        JOIN triagem t ON t.id = lt.triagem_id
+        JOIN inscricao i ON i.id = t.inscricao_id
+        JOIN paciente p ON p.id = i.paciente_id
+        WHERE p.id = :pacienteId
+    """, nativeQuery = true)
+    List<Object[]> buscarTodosSinaisComCampo(@Param("pacienteId") Long pacienteId);
 }

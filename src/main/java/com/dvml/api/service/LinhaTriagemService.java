@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,5 +67,18 @@ public class LinhaTriagemService {
             String valor = (String) obj[1];
             return new SinalVitalDTO(data, valor);
         }).collect(Collectors.toList());
+    }
+
+    // 🔹 Agrupar sinais vitais por tipo (campo)
+    public Map<String, List<SinalVitalDTO>> agruparSinaisPorCampo(Long pacienteId) {
+        List<Object[]> resultados = repo.buscarTodosSinaisComCampo(pacienteId);
+
+        return resultados.stream().collect(Collectors.groupingBy(
+                obj -> obj[2].toString(), // campo (TEMPERATURA, PRESSAO, etc.)
+                Collectors.mapping(
+                        obj -> new SinalVitalDTO((Date) obj[0], (String) obj[1]),
+                        Collectors.toList()
+                )
+        ));
     }
 }
