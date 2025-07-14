@@ -25,4 +25,8 @@ public class LinhaResultado {
 
     @Column(name = "unidade_id")
     private Long unidadeId;
+    @Column(name = "resutaldo_id")
+    private Long resutaldoId;
+    @Column(name = "Observação")
+    private String observacao;
 }

@@ -68,6 +68,7 @@ public class UsuarioService {
             usuario.setDataCadastro(new Date());
             usuario.setDataAtualizacao(new Date());
 
+
             // Validar usuário
             validarUsuario(usuario);
 
