@@ -8,16 +8,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDate;
 import java.util.Date;
 
-import static com.dvml.api.util.EstadoInscricao.*;
-
 @Entity
-@Setter
+@Table(name = "inscricao")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Inscricao {
     @Id
@@ -36,6 +33,7 @@ public class Inscricao {
     @Column(name = "data_criacao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataCriacao;
+
     @Column(name = "data_actualizacao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataActualizacao;
@@ -51,9 +49,7 @@ public class Inscricao {
     @Enumerated(EnumType.STRING)
     @Column(name = "encaminhamento")
     private EncaminhamentoInscricao encaminhamento;
+
     @Column(name = "paciente_id")
     private long pacienteId;
-
-
-
 }
