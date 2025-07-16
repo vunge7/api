@@ -26,10 +26,8 @@ public class MedicoService {
 
     @Autowired
     private PessoaRepository PessoaRepository;
-
     @Autowired
     private AgendaRepository AgendaRepository;
-
     @Autowired
     private LinhaAgendaRepository LinhaAgendaRepository;
 
