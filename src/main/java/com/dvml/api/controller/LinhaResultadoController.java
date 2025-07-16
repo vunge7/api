@@ -24,6 +24,14 @@ public class LinhaResultadoController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
+    @GetMapping("linharesultado/resultado/{resultadoId}")
+    public ResponseEntity<List<LinhaResultado>> listarPorResultadoId(@PathVariable Long resultadoId) {
+        List<LinhaResultado> linhas = service.listarTodos().stream()
+                .filter(lr -> lr.getResultadoId() != null && lr.getResultadoId().equals(resultadoId))
+                .toList();
+        return ResponseEntity.ok(linhas);
+    }
+
     @GetMapping("linharesultado/{id}")
     public ResponseEntity<LinhaResultado> buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)
