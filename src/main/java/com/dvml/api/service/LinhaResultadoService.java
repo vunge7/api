@@ -32,7 +32,7 @@ public class LinhaResultadoService {
                     existing.setExameId(novo.getExameId());
                     existing.setValorReferencia(novo.getValorReferencia());
                     existing.setUnidadeId(novo.getUnidadeId());
-                    existing.setResutaldoId(novo.getResutaldoId());
+                    existing.setResultadoId(novo.getResultadoId());
                     existing.setObservacao(novo.getObservacao());
                     return repository.save(existing);
                 })
