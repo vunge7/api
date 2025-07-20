@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "linhatriagem", produces = "application/json")
+@RequestMapping("linhatriagem")
 public class LinhaTriagemController {
 
     @Autowired
@@ -59,6 +59,8 @@ public class LinhaTriagemController {
     public Map<String, List<SinalVitalDTO>> getSinaisAgrupados(@PathVariable Long pacienteId) {
         return service.agruparSinaisPorCampo(pacienteId);
     }
+
+    @PutMapping("/{id}")
     public ResponseEntity<LinhaTriagem> atualizar(
             @PathVariable Long id,
             @RequestBody LinhaTriagem linha) {
