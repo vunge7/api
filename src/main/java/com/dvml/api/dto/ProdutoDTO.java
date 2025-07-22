@@ -22,4 +22,7 @@ public class ProdutoDTO {
     private BigDecimal finalPrice;
     private String imagem;
     private long unidadeMedidaId;
+
+    private String unidadeMedida;
+    private Boolean status;
 }
