@@ -43,6 +43,8 @@ public class ProdutoService {
         produtoDTO.setProductDescription(produto.getProductDescription());
         produtoDTO.setUnidadeMedidaId(produto.getUnidadeMedidaId());
         produtoDTO.setImagem(produto.getImagem());
+        produtoDTO.setUnidadeMedida(produto.getUnidadeMedida());
+        produtoDTO.setStatus(produto.getStatus());
         return produtoDTO;
     }
 
