@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class LinhaResultado {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "exame_id")
@@ -25,8 +25,10 @@ public class LinhaResultado {
 
     @Column(name = "unidade_id")
     private Long unidadeId;
-    @Column(name = "resutaldo_id")
-    private Long resutaldoId;
-    @Column(name = "Observação")
+
+    @Column(name = "resultado_id")
+    private Long resultadoId;
+
+    @Column(name = "observacao")
     private String observacao;
 }

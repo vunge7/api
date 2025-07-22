@@ -15,7 +15,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("linhatriagem")
+@RequestMapping(value = "linhatriagem")
+
 public class LinhaTriagemController {
 
     @Autowired
