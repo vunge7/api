@@ -64,6 +64,8 @@ public class FilialService {
                 });
         filial.setNome(filialDTO.getNome());
         filial.setNif(filialDTO.getNif());
+        filial.setProvincia(filialDTO.getProvincia()); // <--- ADICIONADO
+        filial.setMunicipio(filialDTO.getMunicipio()); // <--- ADICIONADO
         filial.setStatus(filialDTO.isStatus());
         repository.save(filial);
     }

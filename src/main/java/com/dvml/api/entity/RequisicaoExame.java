@@ -24,7 +24,6 @@ public class RequisicaoExame {
     @Column(name = "usuario_id")
     private long usuarioId;
 
-
     @Column(name = "inscricao_id")
     private long inscricaoId;
 

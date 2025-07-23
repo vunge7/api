@@ -30,4 +30,14 @@ public class Filial {
 
     @Column(name = "status", nullable = false)
     private boolean status = true;
+
+    @Column(name = "provincia", nullable = false)
+    @NotBlank(message = "Província é obrigatória")
+    @Size(min = 2, max = 100, message = "Província deve ter entre 2 e 100 caracteres")
+    private String provincia;
+
+    @Column(name = "municipio", nullable = false)
+    @NotBlank(message = "Município é obrigatório")
+    @Size(min = 2, max = 100, message = "Município deve ter entre 2 e 100 caracteres")
+    private String municipio;
 }

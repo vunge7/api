@@ -1,126 +1,62 @@
 package com.dvml.api.controller;
 
+import com.dvml.api.dto.ProdutoArvoreDTO;
 import com.dvml.api.dto.ProdutoDTO;
 import com.dvml.api.entity.Produto;
 import com.dvml.api.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/produto")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ProdutoController {
+
     @Autowired
-    private ProdutoService service;
+    private ProdutoService produtoService;
 
+    // 🔹 Criar um novo produto
+    @PostMapping("/add")
+    public ResponseEntity<String> create(@RequestBody @Valid ProdutoDTO produtoDTO) {
+        return produtoService.criar(produtoDTO);
+    }
+
+    // 🔹 Atualizar um produto existente
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody @Valid ProdutoDTO produtoDTO) {
+        return produtoService.update(id, produtoDTO);
+    }
+
+    // 🔹 Ativar ou desativar um produto (status lógico)
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> delete(@PathVariable Long id, @RequestParam boolean status) {
+        return produtoService.deleteProduct(id, status);
+    }
+
+    // 🔹 Listar todos os produtos
     @GetMapping("/all")
-    public List<ProdutoDTO> getAllProduto() {
-        return service.listarTodosProdutos();
+    public ResponseEntity<List<ProdutoDTO>> findAll() {
+        return ResponseEntity.ok(produtoService.listarTodosProdutos());
     }
 
+    // 🔹 Buscar um produto pelo ID
     @GetMapping("/{id}")
-    public Produto getAllProdutoById(@PathVariable long id) {
-        return service.getProdutoById(id);
+    public ResponseEntity<ProdutoDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.convertEntityToDto(produtoService.getProdutoById(id)));
     }
 
-    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> adicionar(
-            @RequestParam("productType") String productType,
-            @RequestParam("productTypeId") long productTypeId,
-            @RequestParam("productCode") String productCode,
-            @RequestParam("productGroup") String productGroup,
-            @RequestParam("productGroupId") long productGroupId,
-            @RequestParam("productDescription") String productDescription,
-            @RequestParam("unidadeMedida") String unidadeMedida,
-            @RequestParam("unidadeMedidaId") long unidadeMedidaId,
-            @RequestParam("preco") String preco,
-            @RequestParam("taxIva") String taxIva,
-            @RequestParam("finalPrice") String finalPrice,
-            @RequestParam("status") String status,
-            @RequestParam(value = "imagem", required = true) MultipartFile imagem) {
-        boolean statusBool = status.equals("1");
-        return service.criar(
-                productType,
-                productTypeId,
-                productCode,
-                productGroup,
-                productGroupId,
-                productDescription,
-                unidadeMedida,
-                unidadeMedidaId,
-                new BigDecimal(preco),
-                new BigDecimal(taxIva),
-                new BigDecimal(finalPrice),
-                statusBool,
-                imagem);
+    // 🔹 Listar produtos por grupo
+    @GetMapping("/grupo/{grupoId}")
+    public ResponseEntity<List<Produto>> findByGrupo(@PathVariable Long grupoId) {
+        return ResponseEntity.ok(produtoService.listarProdutosPorGrupo(grupoId));
     }
 
-    @PutMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateProduto(
-            @RequestParam("id") long id,
-            @RequestParam("productType") String productType,
-            @RequestParam("productTypeId") long productTypeId,
-            @RequestParam("productCode") String productCode,
-            @RequestParam("productGroup") String productGroup,
-            @RequestParam("productGroupId") long productGroupId,
-            @RequestParam("productDescription") String productDescription,
-            @RequestParam("unidadeMedida") String unidadeMedida,
-            @RequestParam("unidadeMedidaId") long unidadeMedidaId,
-            @RequestParam("preco") String preco,
-            @RequestParam("taxIva") String taxIva,
-            @RequestParam("finalPrice") String finalPrice,
-            @RequestParam("status") String status,
-            @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
-        boolean statusBool = status.equals("1");
-        return service.update(
-                id,
-                productType,
-                productTypeId,
-                productCode,
-                productGroup,
-                productGroupId,
-                productDescription,
-                unidadeMedida,
-                unidadeMedidaId,
-                new BigDecimal(preco),
-                new BigDecimal(taxIva),
-                new BigDecimal(finalPrice),
-                statusBool,
-                imagem);
-    }
-
-    @PutMapping("/del")
-    public ResponseEntity<String> deleteProduct(@RequestBody Map<String, Object> request) {
-        long id = Long.parseLong(request.get("id").toString());
-        boolean status = Boolean.parseBoolean(request.get("status").toString());
-        return service.deleteProduct(id, status);
-    }
-    @GetMapping("/all/grupo/{id}")
-    public List<Produto> getAllProdutosPorGrupo(@PathVariable long id) {
-        return service.listarProdutosPorGrupo(id);
-    }
-
-    @GetMapping("/imagens/{nome}")
-    public ResponseEntity<Resource> getImagem(@PathVariable String nome) throws MalformedURLException {
-        Path filePath = Paths.get("uploads/produtos").resolve(nome).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
-        if (resource.exists()) {
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "inline; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        }
-        return ResponseEntity.notFound().build();
+    // 🔹 Buscar a árvore de produtos (produto pai e seus filhos)
+    @GetMapping("/{id}/arvore")
+    public ResponseEntity<ProdutoArvoreDTO> getArvore(@PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.montarArvoreProduto(id));
     }
 }
