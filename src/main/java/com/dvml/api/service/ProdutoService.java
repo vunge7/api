@@ -130,6 +130,7 @@ public class ProdutoService {
         return repo.findAllProdutosPorGrupoId(grupoId);
     }
 
+    // MONTA A ÁRVORE DE PRODUTOS RECURSIVAMENTE
     public ProdutoArvoreDTO montarArvoreProduto(Long produtoId) {
         Produto produto = repo.findById(produtoId)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
