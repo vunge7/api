@@ -45,7 +45,6 @@ public class Produto {
 
     @Column(name = "preco", nullable = false)
     @NotNull(message = "O preço do produto é obrigatório.")
-    @DecimalMin(value = "0.01", inclusive = true, message = "O preço deve ser maior que zero.")
     private BigDecimal preco;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
@@ -53,12 +52,10 @@ public class Produto {
 
     @Column(name = "tax_iva", nullable = false)
     @NotNull(message = "A taxa do produto é obrigatória.")
-    @DecimalMin(value = "0.00", inclusive = true, message = "A taxa deve ser maior ou igual a zero.")
     private BigDecimal taxIva;
 
     @Column(name = "final_price", nullable = false)
     @NotNull(message = "O preço final é obrigatório.")
-    @DecimalMin(value = "0.00", inclusive = true, message = "O preço final deve ser maior ou igual a zero.")
     private BigDecimal finalPrice;
 
     @Column(name = "product_group_id")

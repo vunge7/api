@@ -1,5 +1,4 @@
 package com.dvml.api.service;
-
 import com.dvml.api.dto.UsuarioDTO;
 import com.dvml.api.entity.Funcao;
 import com.dvml.api.entity.Funcionario;
@@ -12,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,33 +32,32 @@ public class UsuarioService {
     @Autowired
     private FuncaoRepository funcaoRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Transactional
     public ResponseEntity<?> cadastrarUsuario(UsuarioDTO usuarioDTO) {
         try {
-            // Verificar se o username já está associado a outro usuário
             if (usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Erro ao cadastrar usuário: Username já associado a outro usuário");
             }
 
-            // Verificar se funcionarioId existe
             Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
             if (!funcionarioOpt.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Erro ao cadastrar usuário: Funcionário não encontrado");
             }
 
-            // Verificar se funcaoId existe
             Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
             if (!funcaoOpt.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Erro ao cadastrar usuário: Função não encontrada");
             }
 
-            // Criar entidade Usuario
             Usuario usuario = new Usuario();
             usuario.setUserName(usuarioDTO.getUserName());
-            usuario.setSenha(usuarioDTO.getSenha());
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
             usuario.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
             usuario.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
             usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
@@ -67,15 +66,13 @@ public class UsuarioService {
             usuario.setIp(usuarioDTO.getIp());
             usuario.setDataCadastro(new Date());
             usuario.setDataAtualizacao(new Date());
+            usuario.setUsuarioId(0L); // Ajustar conforme necessário
+            usuario.setStatus(true);
 
-
-            // Validar usuário
             validarUsuario(usuario);
 
-            // Salvar usuário
             usuario = usuarioRepository.save(usuario);
 
-            // Converter entidade salva para DTO
             UsuarioDTO responseDTO = convertToDTO(usuario);
             return ResponseEntity.ok(responseDTO);
         } catch (IllegalArgumentException e) {
@@ -84,6 +81,60 @@ public class UsuarioService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao cadastrar usuário: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
+        try {
+            Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+            if (!usuarioOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Erro ao editar usuário: Usuário não encontrado com ID: " + id);
+            }
+
+            Usuario usuarioExistente = usuarioOpt.get();
+
+            if (!usuarioExistente.getUserName().equals(usuarioDTO.getUserName()) &&
+                    usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Erro ao editar usuário: Username já associado a outro usuário");
+            }
+
+            Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
+            if (!funcionarioOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Erro ao editar usuário: Funcionário não encontrado");
+            }
+
+            Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
+            if (!funcaoOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Erro ao editar usuário: Função não encontrada");
+            }
+
+            usuarioExistente.setUserName(usuarioDTO.getUserName());
+            usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+            usuarioExistente.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
+            usuarioExistente.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
+            usuarioExistente.setTipoUsuario(usuarioDTO.getTipoUsuario());
+            usuarioExistente.setFuncionarioId(usuarioDTO.getFuncionarioId());
+            usuarioExistente.setFuncaoId(usuarioDTO.getFuncaoId());
+            usuarioExistente.setIp(usuarioDTO.getIp());
+            usuarioExistente.setDataAtualizacao(new Date());
+
+            validarUsuario(usuarioExistente);
+
+            usuarioExistente = usuarioRepository.save(usuarioExistente);
+
+            UsuarioDTO responseDTO = convertToDTO(usuarioExistente);
+            return ResponseEntity.ok(responseDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao editar usuário: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao editar usuário: " + e.getMessage());
         }
     }
 
@@ -107,69 +158,22 @@ public class UsuarioService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    //Editar ususario
-    public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
-        try {
-            // Verificar se o usuário existe
-            Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-            if (!usuarioOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Erro ao editar usuário: Usuário não encontrado com ID: " + id);
-            }
 
-            Usuario usuarioExistente = usuarioOpt.get();
-
-            // Verificar unicidade do username
-            if (!usuarioExistente.getUserName().equals(usuarioDTO.getUserName()) &&
-                    usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Username já associado a outro usuário");
-            }
-
-            // Verificar se funcionarioId existe
-            Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
-            if (!funcionarioOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Funcionário não encontrado");
-            }
-
-            // Verificar se funcaoId existe
-            Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
-            if (!funcaoOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Função não encontrada");
-            }
-
-            // Atualizar campos
-            usuarioExistente.setUserName(usuarioDTO.getUserName());
-            usuarioExistente.setSenha(usuarioDTO.getSenha());
-            usuarioExistente.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
-            usuarioExistente.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
-            usuarioExistente.setTipoUsuario(usuarioDTO.getTipoUsuario());
-            usuarioExistente.setFuncionarioId(usuarioDTO.getFuncionarioId());
-            usuarioExistente.setFuncaoId(usuarioDTO.getFuncaoId());
-            usuarioExistente.setIp(usuarioDTO.getIp());
-            usuarioExistente.setDataAtualizacao(new Date());
-
-            // Validar usuário
-            validarUsuario(usuarioExistente);
-
-            // Salvar usuário
-            usuarioExistente = usuarioRepository.save(usuarioExistente);
-
-            // Converter entidade salva para DTO
-            UsuarioDTO responseDTO = convertToDTO(usuarioExistente);
-            return ResponseEntity.ok(responseDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Erro ao editar usuário: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao editar usuário: " + e.getMessage());
-        }
+    @Transactional(readOnly = true)
+    public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
+        return usuarioRepository.findByFuncionarioId(funcionarioId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
- //Deletar Usuario
+    @Transactional(readOnly = true)
+    public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
+        return usuarioRepository.findByFuncaoId(funcaoId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public ResponseEntity<String> deleteUsuario(Long id) {
         if (usuarioRepository.existsById(id)) {
             usuarioRepository.deleteById(id);
@@ -181,7 +185,7 @@ public class UsuarioService {
         }
     }
 
- //Usuario INATIVO
+    @Transactional
     public ResponseEntity<String> inativarUsuario(Long id) {
         try {
             Usuario usuario = usuarioRepository.findById(id)
@@ -199,55 +203,41 @@ public class UsuarioService {
         }
     }
 
-    // Converter entidade para DTO
     private UsuarioDTO convertToDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
         dto.setUserName(usuario.getUserName());
-        dto.setSenha(usuario.getSenha());
         dto.setNumeroOrdem(usuario.getNumeroOrdem());
         dto.setEstadoUsuario(usuario.getEstadoUsuario());
         dto.setTipoUsuario(usuario.getTipoUsuario());
         dto.setFuncionarioId(usuario.getFuncionarioId());
         dto.setFuncaoId(usuario.getFuncaoId());
         dto.setIp(usuario.getIp());
-        dto.setId(usuario.getId());
         return dto;
     }
 
-    // Validações comuns usando sinais de comparação
     private void validarUsuario(Usuario usuario) {
-        // Validação de userName
         if (usuario.getUserName() == null || usuario.getUserName().trim().length() < 3 || usuario.getUserName().trim().length() > 100) {
             throw new IllegalArgumentException("Username inválido: deve ter entre 3 e 100 caracteres");
         }
-
-        // Validação de senha
         if (usuario.getSenha() == null || usuario.getSenha().trim().length() < 8 || usuario.getSenha().trim().length() > 100) {
             throw new IllegalArgumentException("Senha inválida: deve ter entre 8 e 100 caracteres");
         }
-
-        // Validação de numeroOrdem
         if (usuario.getNumeroOrdem() == null || usuario.getNumeroOrdem().trim().length() < 1 || usuario.getNumeroOrdem().trim().length() > 100) {
             throw new IllegalArgumentException("Número de ordem inválido: deve ter entre 1 e 100 caracteres");
         }
-
-        // Validação de estadoUsuario
         if (usuario.getEstadoUsuario() == null) {
             throw new IllegalArgumentException("Estado do usuário inválido");
         }
-
-        // Validação de tipoUsuario
         if (usuario.getTipoUsuario() == null) {
             throw new IllegalArgumentException("Tipo de usuário inválido");
         }
-
-        // Validação de ip
         if (usuario.getIp() != null && usuario.getIp().trim().length() > 100) {
             throw new IllegalArgumentException("IP inválido: deve ter no máximo 100 caracteres");
         }
     }
 
-    public boolean existsByUserName(String userName) {
-        return usuarioRepository.existsByUserName(userName);
+    public Optional<Usuario> findByUserName(String userName) {
+        return usuarioRepository.findByUserName(userName);
     }
 }
