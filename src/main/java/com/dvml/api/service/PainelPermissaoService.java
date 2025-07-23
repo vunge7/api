@@ -45,6 +45,14 @@ public class PainelPermissaoService {
 
     @Transactional
     public PainelPermissaoDTO create(PainelPermissaoDTO dto, Long usuarioIdCriacao) {
+        boolean exists = painelPermissaoRepository.existsByUsuarioIdAndPainelIdAndFilialId(
+                dto.getUsuarioId(), dto.getPainelId(), dto.getFilialId()
+        );
+
+        if (exists) {
+            throw new RuntimeException("Permissão já existe para este usuário, painel e filial.");
+        }
+
         PainelPermissao painelPermissao = convertToEntity(dto);
         painelPermissao.setDataCriacao(LocalDateTime.now());
         painelPermissao.setUsuarioIdCriacao(usuarioIdCriacao);

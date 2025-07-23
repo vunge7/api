@@ -10,4 +10,7 @@ import java.util.List;
 public interface PainelPermissaoRepository extends JpaRepository<PainelPermissao, Long> {
     List<PainelPermissao> findByUsuarioId(Long usuarioId);
     List<PainelPermissao> findByUsuarioIdAndFilialId(Long usuarioId, Long filialId);
+
+    // 👇 Adicione esse método:
+    boolean existsByUsuarioIdAndPainelIdAndFilialId(Long usuarioId, Long painelId, Long filialId);
 }
