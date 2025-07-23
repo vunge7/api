@@ -1,82 +1,62 @@
 package com.dvml.api.controller;
-
 import com.dvml.api.dto.UsuarioDTO;
 import com.dvml.api.service.UsuarioService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("usuario/add")
-    public ResponseEntity<?> cadastrarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+    @PostMapping("/cadastrar")
+    public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         return usuarioService.cadastrarUsuario(usuarioDTO);
     }
 
-    @GetMapping("usuario/all")
+    @GetMapping("/listar")
     public ResponseEntity<List<UsuarioDTO>> listarTodosUsuarios() {
-        List<UsuarioDTO> usuarios = usuarioService.listarTodosUsuarios();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(usuarioService.listarTodosUsuarios());
     }
 
-    @GetMapping("usuario/ativos")
+    @GetMapping("/listar/ativos")
     public ResponseEntity<List<UsuarioDTO>> listarUsuariosAtivos() {
-        List<UsuarioDTO> usuarios = usuarioService.listarUsuariosAtivos();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(usuarioService.listarUsuariosAtivos());
     }
 
-    @GetMapping("usuario/inativos")
+    @GetMapping("/listar/inativos")
     public ResponseEntity<List<UsuarioDTO>> listarUsuariosInativos() {
-        List<UsuarioDTO> usuarios = usuarioService.listarUsuariosInativos();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(usuarioService.listarUsuariosInativos());
     }
 
-    @PutMapping("usuario/{id}")
-    public ResponseEntity<?> editarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuarioDTO) {
-        // Validação básica do ID
-        if (id == null || id <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("ID inválido: deve ser um número positivo.");
-        }
-
-        // Chama o serviço para editar o usuário
-        ResponseEntity<?> serviceResponse = usuarioService.editarUsuario(id, usuarioDTO);
-
-        // Personaliza a resposta de sucesso
-        if (serviceResponse.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("mensagem", "Usuário com ID " + id + " editado com sucesso!");
-            response.put("usuario", serviceResponse.getBody());
-            return ResponseEntity.ok(response);
-        }
-
-        // Propaga erros do serviço
-        return serviceResponse;
+    @GetMapping("/listar/por-funcionario/{funcionarioId}")
+    public ResponseEntity<List<UsuarioDTO>> listarUsuariosPorFuncionario(@PathVariable Long funcionarioId) {
+        return ResponseEntity.ok(usuarioService.listarUsuariosPorFuncionario(funcionarioId));
     }
 
-    @DeleteMapping("usuario/{id}")
+    @GetMapping("/listar/por-funcao/{funcaoId}")
+    public ResponseEntity<List<UsuarioDTO>> listarUsuariosPorFuncao(@PathVariable Long funcaoId) {
+        return ResponseEntity.ok(usuarioService.listarUsuariosPorFuncao(funcaoId));
+    }
+
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> editarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+        return usuarioService.editarUsuario(id, usuarioDTO);
+    }
+
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarUsuario(@PathVariable Long id) {
         return usuarioService.deleteUsuario(id);
     }
 
-    @PutMapping("usuario/inativar/{id}")
+    @PutMapping("/inativar/{id}")
     public ResponseEntity<String> inativarUsuario(@PathVariable Long id) {
         return usuarioService.inativarUsuario(id);
     }
 
-    @GetMapping("usuario/{userName}")
-    public ResponseEntity<Boolean> verificarUserName(@PathVariable String userName) {
-        boolean exists = usuarioService.existsByUserName(userName);
-        return ResponseEntity.ok(exists);
-    }
 }
