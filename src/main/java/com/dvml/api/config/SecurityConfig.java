@@ -1,4 +1,4 @@
-package com.dvml.api.Config;
+package com.dvml.api.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,5 +1,5 @@
 package com.dvml.api.service;
-import com.dvml.api.Config.JwtUtil;
+import com.dvml.api.config.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
