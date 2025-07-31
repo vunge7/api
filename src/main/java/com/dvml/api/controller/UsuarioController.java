@@ -13,7 +13,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("usuario/all")
+    @PostMapping("usuario/add")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         return usuarioService.cadastrarUsuario(usuarioDTO);
     }
