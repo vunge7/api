@@ -1,11 +1,8 @@
 package com.dvml.api.controller;
 
-import com.dvml.api.dto.InscricaoDTO;
 import com.dvml.api.dto.InscricaoFullDTO;
 import com.dvml.api.entity.Inscricao;
-import com.dvml.api.entity.Paciente;
 import com.dvml.api.service.InscricaoService;
-import com.dvml.api.util.EstadoInscricao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
