@@ -1,4 +1,4 @@
-package com.dvml.api.Config;
+package com.dvml.api.config;
 import com.dvml.api.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
