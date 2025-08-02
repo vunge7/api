@@ -61,7 +61,9 @@ public class Produto {
     @Column(name = "product_group_id")
     @NotNull(message = "Product Group Id é obrigatório.")
     private long productGroupId;
-
+    @Column(name = "product_type_id")
+    @NotNull(message = "Product Type Id é obrigatório.")
+    private long productTypeId;
     @Column(name = "produto_pai_id")
     private Long produtoPaiId;
 
