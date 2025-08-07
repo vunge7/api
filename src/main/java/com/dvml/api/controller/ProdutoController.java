@@ -53,6 +53,12 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> findByGrupo(@PathVariable Long grupoId) {
         return ResponseEntity.ok(produtoService.listarProdutosPorGrupo(grupoId));
     }
+    // 🔹 Listar produtos por Tipo
+    @GetMapping("/tipo/{tipoId}")
+    public ResponseEntity<List<Produto>> findByTipo(@PathVariable Long tipoId) {
+        return ResponseEntity.ok(produtoService.listarProdutosPorTipo(tipoId));
+    }
+
 
     // 🔹 Buscar a árvore de produtos (produto pai e seus filhos)
     @GetMapping("/{id}/arvore")

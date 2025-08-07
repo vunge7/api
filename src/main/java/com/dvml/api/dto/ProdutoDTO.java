@@ -43,6 +43,9 @@ public class ProdutoDTO {
     @NotNull(message = "Product Group Id é obrigatório.")
     private Long productGroupId;
 
+    @NotNull(message = "Product Type Id é obrigatório.")
+    private Long productTypeId;
+
     private Long produtoPaiId;
 
     @NotNull(message = "Unidade de Medida Id é obrigatório.")
@@ -131,6 +134,14 @@ public class ProdutoDTO {
 
     public void setProductGroupId(Long productGroupId) {
         this.productGroupId = productGroupId;
+    }
+
+    public Long getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Long productTypeId) {
+        this.productTypeId= productTypeId;
     }
 
     public Long getProdutoPaiId() {

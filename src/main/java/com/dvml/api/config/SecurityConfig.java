@@ -33,12 +33,10 @@ public class SecurityConfig {
                         // Endpoints públicos
                         .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**","/**").permitAll()
                         // Liberar requisições OPTIONS para todos os endpoints
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        // Todos os outros endpoints exigem autenticação
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()// Todos os outros endpoints exigem autenticação
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
