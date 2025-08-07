@@ -35,11 +35,15 @@ public class LinhasLotesController {
         }
     }
 
+    // CORREÇÃO: Remover @PathVariable e usar ID do DTO
     @PutMapping("linhaslotes/edit")
-    public ResponseEntity<?> atualizarLinhasLotes(@PathVariable Long id, @Valid @RequestBody LinhasLotesDTO linhasLotesDTO) {
-        logger.info("Recebendo requisição para atualizar LinhasLotes com ID: {}", id);
+    public ResponseEntity<?> atualizarLinhasLotes(@Valid @RequestBody LinhasLotesDTO linhasLotesDTO) {
+        logger.info("Recebendo requisição para atualizar LinhasLotes com ID: {}", linhasLotesDTO.getId());
         try {
-            LinhasLotes updated = linhasLotesService.atualizarLinhasLotes(id, linhasLotesDTO);
+            if (linhasLotesDTO.getId() == null) {
+                return new ResponseEntity<>("ID é obrigatório para atualização", HttpStatus.BAD_REQUEST);
+            }
+            LinhasLotes updated = linhasLotesService.atualizarLinhasLotes(linhasLotesDTO.getId(), linhasLotesDTO);
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             logger.error("Erro ao atualizar LinhasLotes: {}", e.getMessage());
