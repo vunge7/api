@@ -15,11 +15,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-<<<<<<< HEAD
-    @PostMapping("usuario/add")
-=======
+
     @PostMapping("/add")
->>>>>>> 9c004978dda034cc81e966a8d9c5b64ee18c4f34
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
