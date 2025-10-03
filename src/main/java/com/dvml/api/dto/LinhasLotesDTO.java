@@ -12,5 +12,6 @@ public class LinhasLotesDTO {
     private Long id;
     private Long lotes_id;
     private Long produto_id;
+    private Long armazem_id;
     private Integer quantidade;
 }

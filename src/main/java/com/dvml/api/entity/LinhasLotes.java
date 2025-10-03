@@ -25,6 +25,10 @@ public class LinhasLotes {
     @NotNull(message = "produto_id é obrigatório")
     private Long produto_id;
 
+    @Column(name = "armazem_id")
+    @NotNull(message = "ID do armazém é obrigatório")
+    private Long armazem_id;
+
     @Column(name = "quantidade", nullable = false)
     @NotNull(message = "quantidade é obrigatória")
     private Integer quantidade;

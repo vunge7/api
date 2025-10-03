@@ -1,4 +1,5 @@
 package com.dvml.api.controller;
+
 import com.dvml.api.dto.UsuarioDTO;
 import com.dvml.api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,54 +9,79 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("usuario")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("usuario/all")
+
+    @PostMapping("/add")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        return usuarioService.cadastrarUsuario(usuarioDTO);
+        usuarioService.cadastrarUsuario(usuarioDTO);
+        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
     }
 
-    @GetMapping("usuario/all")
-    public ResponseEntity<List<UsuarioDTO>> listarTodosUsuarios() {
-        return ResponseEntity.ok(usuarioService.listarTodosUsuarios());
+    @GetMapping("/all")
+    public ResponseEntity<?> listarTodosUsuarios() {
+        List<UsuarioDTO> lista = usuarioService.listarTodosUsuarios();
+        if (lista.isEmpty()) {
+            return ResponseEntity.ok("Nenhum usuário encontrado.");
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("usuario/ativos")
-    public ResponseEntity<List<UsuarioDTO>> listarUsuariosAtivos() {
-        return ResponseEntity.ok(usuarioService.listarUsuariosAtivos());
+    @GetMapping("/ativos")
+    public ResponseEntity<?> listarUsuariosAtivos() {
+        List<UsuarioDTO> lista = usuarioService.listarUsuariosAtivos();
+        if (lista.isEmpty()) {
+            return ResponseEntity.ok("Nenhum usuário ativo encontrado.");
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("usuario/inativos")
-    public ResponseEntity<List<UsuarioDTO>> listarUsuariosInativos() {
-        return ResponseEntity.ok(usuarioService.listarUsuariosInativos());
+    @GetMapping("/inativos")
+    public ResponseEntity<?> listarUsuariosInativos() {
+        List<UsuarioDTO> lista = usuarioService.listarUsuariosInativos();
+        if (lista.isEmpty()) {
+            return ResponseEntity.ok("Nenhum usuário inativo encontrado.");
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("usuario/funcionario/{funcionarioId}")
-    public ResponseEntity<List<UsuarioDTO>> listarUsuariosPorFuncionario(@PathVariable Long funcionarioId) {
-        return ResponseEntity.ok(usuarioService.listarUsuariosPorFuncionario(funcionarioId));
+    @GetMapping("/funcionario/{funcionarioId}")
+    public ResponseEntity<?> listarUsuariosPorFuncionario(@PathVariable Long funcionarioId) {
+        List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncionario(funcionarioId);
+        if (lista.isEmpty()) {
+            return ResponseEntity.ok("Nenhum usuário encontrado para o funcionário com ID: " + funcionarioId);
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("usuario/funcao/{funcaoId}")
-    public ResponseEntity<List<UsuarioDTO>> listarUsuariosPorFuncao(@PathVariable Long funcaoId) {
-        return ResponseEntity.ok(usuarioService.listarUsuariosPorFuncao(funcaoId));
+    @GetMapping("/funcao/{funcaoId}")
+    public ResponseEntity<?> listarUsuariosPorFuncao(@PathVariable Long funcaoId) {
+        List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncao(funcaoId);
+        if (lista.isEmpty()) {
+            return ResponseEntity.ok("Nenhum usuário encontrado com a função ID: " + funcaoId);
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @PutMapping("usuario/editar/{id}")
+    @PutMapping("/editar/{id}")
     public ResponseEntity<?> editarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
-        return usuarioService.editarUsuario(id, usuarioDTO);
+        usuarioService.editarUsuario(id, usuarioDTO);
+        return ResponseEntity.ok("Usuário com ID " + id + " atualizado com sucesso.");
     }
 
-    @DeleteMapping("usuario/deletar/{id}")
-    public ResponseEntity<String> deletarUsuario(@PathVariable Long id) {
-        return usuarioService.deleteUsuario(id);
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
+        usuarioService.deleteUsuario(id);
+        return ResponseEntity.ok("Usuário com ID " + id + " deletado com sucesso.");
     }
 
-    @PutMapping("usuario/inativar/{id}")
-    public ResponseEntity<String> inativarUsuario(@PathVariable Long id) {
-        return usuarioService.inativarUsuario(id);
+    @PutMapping("/inativar/{id}")
+    public ResponseEntity<?> inativarUsuario(@PathVariable Long id) {
+        usuarioService.inativarUsuario(id);
+        return ResponseEntity.ok("Usuário com ID " + id + " foi inativado com sucesso.");
     }
-
 }
