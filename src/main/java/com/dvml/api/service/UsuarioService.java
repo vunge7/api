@@ -8,7 +8,10 @@ import com.dvml.api.repository.FuncionarioRepository;
 import com.dvml.api.repository.UsuarioRepository;
 import com.dvml.api.util.EstadoUsuario;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,54 +39,81 @@ public class UsuarioService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public ResponseEntity<?> cadastrarUsuario(UsuarioDTO usuarioDTO) {
-        try {
-            if (usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao cadastrar usuário: Username já associado a outro usuário");
-            }
+    public UsuarioDTO cadastrarUsuario(UsuarioDTO usuarioDTO) {
+        Logger log = LoggerFactory.getLogger(UsuarioService.class);
+        log.info("Iniciando cadastro de usuário: {}", usuarioDTO.getUserName());
 
-            Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
-            if (!funcionarioOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao cadastrar usuário: Funcionário não encontrado");
-            }
-
-            Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
-            if (!funcaoOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao cadastrar usuário: Função não encontrada");
-            }
-
-            Usuario usuario = new Usuario();
-            usuario.setUserName(usuarioDTO.getUserName());
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
-            usuario.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
-            usuario.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
-            usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
-            usuario.setFuncionarioId(usuarioDTO.getFuncionarioId());
-            usuario.setFuncaoId(usuarioDTO.getFuncaoId());
-            usuario.setIp(usuarioDTO.getIp());
-            usuario.setDataCadastro(new Date());
-            usuario.setDataAtualizacao(new Date());
-            usuario.setUsuarioId(0L); // Ajustar conforme necessário
-            usuario.setStatus(true);
-
-            validarUsuario(usuario);
-
-            usuario = usuarioRepository.save(usuario);
-
-            UsuarioDTO responseDTO = convertToDTO(usuario);
-            return ResponseEntity.ok(responseDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Erro ao cadastrar usuário: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao cadastrar usuário: " + e.getMessage());
+        // Validações iniciais
+        if (usuarioDTO.getUserName() == null || usuarioDTO.getUserName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username não pode ser nulo ou vazio");
         }
-    }
+        if (usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
+            throw new IllegalArgumentException("Username já associado a outro usuário");
+        }
 
+        // Busca funcionário
+        Optional<Funcionario> funcionarioOpt;
+        try {
+            log.debug("Buscando funcionário com ID: {}", usuarioDTO.getFuncionarioId());
+            funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
+        } catch (DataAccessException e) {
+            log.error("Erro ao buscar funcionário com ID {}: {}", usuarioDTO.getFuncionarioId(), e.getMessage(), e);
+            throw new RuntimeException("Falha ao buscar funcionário no banco de dados", e);
+        }
+        if (!funcionarioOpt.isPresent()) {
+            log.warn("Funcionário não encontrado com ID: {}", usuarioDTO.getFuncionarioId());
+            throw new IllegalArgumentException("Funcionário não encontrado com ID: " + usuarioDTO.getFuncionarioId());
+        }
+
+        // Busca função
+        Optional<Funcao> funcaoOpt;
+        try {
+            log.debug("Buscando função com ID: {}", usuarioDTO.getFuncaoId());
+            funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
+        } catch (DataAccessException e) {
+            log.error("Erro ao buscar função com ID {}: {}", usuarioDTO.getFuncaoId(), e.getMessage(), e);
+            throw new RuntimeException("Falha ao buscar função no banco de dados", e);
+        }
+        if (!funcaoOpt.isPresent()) {
+            log.warn("Função não encontrada com ID: {}", usuarioDTO.getFuncaoId());
+            throw new IllegalArgumentException("Função não encontrada com ID: " + usuarioDTO.getFuncaoId());
+        }
+
+        // Valida senha
+        if (usuarioDTO.getSenha() == null || usuarioDTO.getSenha().trim().length() < 8) {
+            throw new IllegalArgumentException("Senha inválida, deve ter pelo menos 8 caracteres");
+        }
+
+        // Criar usuário
+        Usuario usuario = new Usuario();
+        usuario.setUserName(usuarioDTO.getUserName());
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        usuario.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
+        usuario.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
+        usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
+        usuario.setFuncionarioId(usuarioDTO.getFuncionarioId());
+        usuario.setFuncaoId(usuarioDTO.getFuncaoId());
+        usuario.setIp(usuarioDTO.getIp());
+        usuario.setDataCadastro(new Date());
+        usuario.setDataAtualizacao(new Date());
+        usuario.setStatus(true);
+
+        // Validar usuário
+        log.debug("Validando usuário");
+        validarUsuario(usuario);
+
+        // Salvar no banco
+        try {
+            log.debug("Salvando usuário no banco");
+            usuario = usuarioRepository.save(usuario);
+            log.info("Usuário salvo com sucesso: {}", usuario.getUserName());
+        } catch (DataAccessException e) {
+            log.error("Erro ao salvar usuário no banco: {}", e.getMessage(), e);
+            throw new RuntimeException("Falha ao salvar usuário no banco de dados: " + e.getMessage(), e);
+        }
+
+        return convertToDTO(usuario);
+    }
     @Transactional
     public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
         try {

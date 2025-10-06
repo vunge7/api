@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.Date;
 
 @Entity
@@ -15,11 +14,9 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class Exame {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotNull(message = "Requisição de exame é obrigatória")
     @Column(name = "requisicao_exame_id", nullable = false)
     private Long requisicaoExameId;
