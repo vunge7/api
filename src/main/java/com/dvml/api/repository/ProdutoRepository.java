@@ -18,6 +18,11 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query(value = "SELECT * FROM produto WHERE product_group_id = :grupoId", nativeQuery = true)
     List<Produto> findAllProdutosPorGrupoId(@Param("grupoId") long grupoId);
 
+    // Buscar todos produtos de um Tipo específico
+    @Query(value = "SELECT * FROM produto WHERE product_type_id = :typeId", nativeQuery = true)
+    List<Produto> findAllByProductTypeId(@Param("typeId") Long typeId);
+
+
     // Buscar todos produtos filhos de um produto pai específico
     List<Produto> findByProdutoPaiId(Long produtoPaiId);
 

@@ -1,11 +1,8 @@
 package com.dvml.api.controller;
 
-import com.dvml.api.dto.InscricaoDTO;
 import com.dvml.api.dto.InscricaoFullDTO;
 import com.dvml.api.entity.Inscricao;
-import com.dvml.api.entity.Paciente;
 import com.dvml.api.service.InscricaoService;
-import com.dvml.api.util.EstadoInscricao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +40,11 @@ public class InscricaoController {
     @PutMapping("/inscricao/edit/{id}/{estado}/{encaminhamento}")
     public void editInscricao( @PathVariable long id,  @PathVariable String estado,  @PathVariable String encaminhamento){
           service.update(id, estado, encaminhamento);
+    }
+
+    @PutMapping("/inscricao/estadocondicao/edit/{id}/{estado}")
+    public void editEstadoInscricao( @PathVariable long id,  @PathVariable String estado){
+        service.updateEstadoCondicaoInscricao(id, estado);
     }
 
 

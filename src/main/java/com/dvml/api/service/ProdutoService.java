@@ -130,6 +130,11 @@ public class ProdutoService {
         return repo.findAllProdutosPorGrupoId(grupoId);
     }
 
+
+    public List<Produto> listarProdutosPorTipo(Long tipoId) {
+        return repo.findAllByProductTypeId(tipoId);
+    }
+
     // MONTA A ÁRVORE DE PRODUTOS RECURSIVAMENTE
     public ProdutoArvoreDTO montarArvoreProduto(Long produtoId) {
         Produto produto = repo.findById(produtoId)
