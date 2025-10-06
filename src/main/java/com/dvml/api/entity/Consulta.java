@@ -49,10 +49,10 @@ public class Consulta{
     @Column(name = "receita", length = 1000)
     private String receita;
 
-    @Column(name = "diagnostico_inicial", length = 200)
+    @Column(name = "diagnostico_inicial",columnDefinition = "TEXT")
     private String diagnosticoInicial;
 
-    @Column(name = "diagnostico_final", length = 200)
+    @Column(name = "diagnostico_final", columnDefinition = "TEXT")
     private String diagnosticoFinal;
 
     @Enumerated(EnumType.STRING)

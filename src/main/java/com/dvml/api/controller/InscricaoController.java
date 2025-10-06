@@ -42,6 +42,11 @@ public class InscricaoController {
           service.update(id, estado, encaminhamento);
     }
 
+    @PutMapping("/inscricao/estadocondicao/edit/{id}/{estado}")
+    public void editEstadoInscricao( @PathVariable long id,  @PathVariable String estado){
+        service.updateEstadoCondicaoInscricao(id, estado);
+    }
+
 
     @PutMapping("/inscricao/edit/tm/{id}/{cor}/{minuto}")
     public ResponseEntity editTriagemManchester(@PathVariable long id, @PathVariable String cor, @PathVariable long minuto){

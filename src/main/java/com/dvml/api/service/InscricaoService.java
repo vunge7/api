@@ -34,6 +34,8 @@ public class InscricaoService {
 
     @Autowired
     private PacienteService pacienteService;
+    @Autowired
+    private ConsultaService consultaService;
 
 
 
@@ -139,6 +141,21 @@ public class InscricaoService {
       System.out.println("ENCAMINHAMENTO: " +getEncaminhamento(encaminhamento));
         inscricao.setEncaminhamento(getEncaminhamento(encaminhamento));
         repo.save(inscricao);
+    }
+
+
+    public void updateEstadoCondicaoInscricao(long id, String condicao) {
+        repo.findById(id).ifPresentOrElse(inscricao -> {
+            inscricao.setCondicaoInscricao(
+                    condicao.equals("ABERTO") ? CondicaoInscricao.ABERTO :
+                            condicao.equals("FECHADO") ? CondicaoInscricao.FECHADO :
+                                    CondicaoInscricao.CANCELADO
+            );
+            repo.save(inscricao);
+            consultaService.updateEstadoCondicaoConsulta(id);
+        }, () -> {
+            throw new IllegalArgumentException("Inscrição com ID " + id + " não encontrada.");
+        });
     }
 
     public ResponseEntity updateEstadoTriagemManchester(long id, String cor, long minuto) {

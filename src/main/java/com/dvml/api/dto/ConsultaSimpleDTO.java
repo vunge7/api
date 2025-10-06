@@ -18,7 +18,8 @@ public class ConsultaSimpleDTO {
     private String historiaClinica;
     private String exameFisico;
     private String receita;
-    private List<String> diagnosticos;
+    private String diagnosticoInicial;
+    private String diagnosticoFinal;
     private List<String> examesComplementares;
     private EstadoConsulta estadoConsulta;
 
