@@ -16,7 +16,6 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-<<<<<<< HEAD
     @PostMapping("/usuario/all")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
@@ -30,16 +29,16 @@ public class UsuarioController {
                     .body("Erro ao cadastrar usuário: " + e.getMessage());
         }
     }
-    @GetMapping("usuario/all")
+    /*@GetMapping("usuario/all")
     public ResponseEntity<List<UsuarioDTO>> listarTodosUsuarios() {
         return ResponseEntity.ok(usuarioService.listarTodosUsuarios());
-=======
+    }*/
 
-    @PostMapping("/add")
+    /*@PostMapping("/add")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
-    }
+    }*/
 
     @GetMapping("/all")
     public ResponseEntity<?> listarTodosUsuarios() {
@@ -48,7 +47,7 @@ public class UsuarioController {
             return ResponseEntity.ok("Nenhum usuário encontrado.");
         }
         return ResponseEntity.ok(lista);
->>>>>>> 6314628d6e4b5382e1c7b18b10a62308ea82a8ca
+
     }
 
     @GetMapping("/ativos")
