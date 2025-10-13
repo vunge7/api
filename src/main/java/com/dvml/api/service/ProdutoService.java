@@ -43,6 +43,7 @@ public class ProdutoService {
         produtoDTO.setStatus(produto.getStatus());
         produtoDTO.setProdutoPaiId(produto.getProdutoPaiId());
         produtoDTO.setProductGroupId(produto.getProductGroupId());
+        produtoDTO.setIntervaloReferencia(produto.getIntervaloReferencia());
         return produtoDTO;
     }
 
@@ -71,6 +72,7 @@ public class ProdutoService {
         produto.setStatus(produtoDTO.isStatus());
         produto.setImagem(produtoDTO.getImagem());
         produto.setProdutoPaiId(produtoDTO.getProdutoPaiId());
+        produto.setIntervaloReferencia(produtoDTO.getIntervaloReferencia());
 
         if (Objects.nonNull(repo.save(produto))) {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -101,6 +103,7 @@ public class ProdutoService {
         produto.setStatus(produtoDTO.isStatus());
         produto.setImagem(produtoDTO.getImagem());
         produto.setProdutoPaiId(produtoDTO.getProdutoPaiId());
+        produto.setIntervaloReferencia(produtoDTO.getIntervaloReferencia());
 
         if (Objects.nonNull(repo.save(produto))) {
             return ResponseEntity.status(HttpStatus.OK)

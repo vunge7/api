@@ -55,6 +55,10 @@ public class ProdutoDTO {
 
     private String imagem;
 
+    @Size(max = 50, message = "O intervalo de referência deve ter no máximo 50 caracteres.")
+    @Pattern(regexp = "^$|^\\d+(\\.\\d+)?-\\d+(\\.\\d+)?$", message = "O intervalo de referência deve estar no formato 'min-max' (ex.: 4.5-5.9) ou vazio.")
+    private String intervaloReferencia;
+
     // Getters e Setters
     public Long getId() {
         return id;
@@ -141,7 +145,7 @@ public class ProdutoDTO {
     }
 
     public void setProductTypeId(Long productTypeId) {
-        this.productTypeId= productTypeId;
+        this.productTypeId = productTypeId;
     }
 
     public Long getProdutoPaiId() {
@@ -174,5 +178,13 @@ public class ProdutoDTO {
 
     public void setImagem(String imagem) {
         this.imagem = imagem;
+    }
+
+    public String getIntervaloReferencia() {
+        return intervaloReferencia;
+    }
+
+    public void setIntervaloReferencia(String intervaloReferencia) {
+        this.intervaloReferencia = intervaloReferencia;
     }
 }
