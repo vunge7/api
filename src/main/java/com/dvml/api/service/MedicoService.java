@@ -100,6 +100,7 @@ public class MedicoService {
                                     linha.getConsultaId(),
                                     linha.getFuncionarioId(),
                                     linha.getPacienteId(),
+                                    linha.getProdutoId(),       // ✅ novo campo
                                     linha.getDataRealizacao(),
                                     linha.getStatus()
                             ))

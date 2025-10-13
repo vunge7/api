@@ -16,7 +16,7 @@ public class TransformReportToPDF {
     private HashMap<String, Object> parametros;
 
     public TransformReportToPDF(String templateName, HashMap<String, Object> hash, String pdfFileName) {
-        conexao = new BDConexao().connection;
+        conexao = new BDConexao().getConnection();
         this.parametros = hash;
         // Caminho do arquivo .jrxml (design do relatório)
         jrxmlFile = "reports/jasper/" + templateName + ".jrxml";
