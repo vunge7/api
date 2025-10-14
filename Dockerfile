@@ -21,8 +21,10 @@ RUN apt-get update && apt-get install -y \
     libx11-6 \
     libxext6 \
     libxrender1 \
-    ttf-mscorefonts-installer \
     fonts-dejavu \
+    debconf-utils \
+    && echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections \
+    && apt-get install -y ttf-mscorefonts-installer \
     && fc-cache -f -v \
     && rm -rf /var/lib/apt/lists/*
 
@@ -34,4 +36,4 @@ EXPOSE 8080
 COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar /app/api.jar
 COPY --from=build /app/reports /app/reports
 
-ENTRYPOINT ["java","-jar","/app/api.jar"]
+ENTRYPOINT ["java", "-jar", "/app/api.jar"]
