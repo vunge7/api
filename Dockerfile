@@ -1,52 +1,46 @@
 # === STAGE 1: BUILD ===
-FROM ubuntu:latest AS build
-
-# Instalar dependências e o Maven
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
-    maven \
-    && rm -rf /var/lib/apt/lists/*
+FROM maven:3.9.4-openjdk-17-slim AS build
 
 # Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar todos os ficheiros do projeto
-COPY . .
+# Copiar ficheiros de dependências primeiro para cache do Maven
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Gerar o JAR (sem executar testes)
+# Copiar todo o código-fonte
+COPY src ./src
+
+# Build do projeto
 RUN mvn clean package -DskipTests
-
 
 # === STAGE 2: RUNTIME ===
 FROM openjdk:17-jdk-slim
 
-# Instalar bibliotecas necessárias para JasperReports (fontes, gráficos, etc.)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    fontconfig \
-    libfreetype6 \
-    libx11-6 \
-    libxext6 \
-    libxrender1 \
-    wget \
-    cabextract \
-    xfonts-utils && \
-    echo "msttcorefonts msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
-    apt-get install -y ttf-mscorefonts-installer && \
-    fc-cache -f -v && \
-    rm -rf /var/lib/apt/lists/*
-
-# Definir diretório de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# Expor a porta do Spring Boot
+# Expor porta da aplicação
 EXPOSE 8080
 
-# Copiar o JAR da build anterior
-COPY --from=build /target/api-0.0.1-SNAPSHOT.jar -api.jar
+# Instalar bibliotecas necessárias para JasperReports + fontes
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        fontconfig \
+        libfreetype6 \
+        libx11-6 \
+        libxext6 \
+        libxrender1 \
+        ttf-mscorefonts-installer \
+        ca-certificates \
+    && fc-cache -f -v \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copiar a pasta de relatórios JasperReports
-COPY --from=build /reports /reports
+# Copiar JAR gerado do build
+COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar ./app.jar
 
-# Comando para iniciar a aplicação
-ENTRYPOINT ["java", "-jar", "/api.jar"]
+# Copiar reports se necessário
+COPY --from=build /app/reports ./reports
+
+# Entrypoint
+ENTRYPOINT ["java", "-jar", "app.jar"]
