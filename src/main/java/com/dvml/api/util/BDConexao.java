@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class BDConexao {
 
     // Configurações da conexão PostgreSQL
-    private static final String URL = "jdbc:postgresql://localhost:5432/kitanda_hospitalar_db";
-    private static final String USUARIO = "postgres";
-    private static final String SENHA = "DM.2016#321"; // <-- ajusta conforme a tua senha
+    private static final String URL = "jdbc:postgresql://dpg-d3mfr3ripnbc73ao9ae0-a.oregon-postgres.render.com:5432/kitanda_hospitalar_db";
+    private static final String USUARIO = "kitanda_hospitalar_db_user";
+    private static final String SENHA = "AfZuQ7oZGg5VdDrBkg8rtJ4sSSY2FxQx"; // <-- ajusta conforme a tua senha
     private Connection connection = null;
 
     public BDConexao() {

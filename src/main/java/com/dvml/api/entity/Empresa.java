@@ -1,26 +1,45 @@
 package com.dvml.api.entity;
 
-
+import com.dvml.api.util.TipoEmpresa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "empresa")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Empresa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
-    @Column(name = "nome")
+    private Long id;
+
+    @Column(nullable = false, length = 150)
     private String nome;
-    @Column(name = "nif")
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private TipoEmpresa tipo;
+
+    @Column(name = "empresa_matriz_id")
+    private Long empresaMatrizId; // null ou 0 = matriz
+
+
+    @Column(name = "nif", length = 20)
     private String nif;
-    @Column(name = "telefone")
+
+    @Column(name = "email", length = 100)
+    private String email;
+
+    @Column(name = "telefone", length = 30)
     private String telefone;
 
-    @Column(name = "seguradora_id")
-    private String seguradoraId;
+    @Column(name = "endereco", length = 200)
+    private String endereco;
+
+    @Column(name = "seguradora_id", length = 50)
+    private String seguradoraId; // Mantido conforme seu projeto
 }
