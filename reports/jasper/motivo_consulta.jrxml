@@ -162,7 +162,7 @@ WHERE ins.id  = $P{id};]]>
 			<textField>
 				<reportElement x="222" y="-19" width="110" height="24" forecolor="#FFFFFF" uuid="a1892a29-c4ff-4649-b892-fc25a2eb177a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nome_paciente}]]></textFieldExpression>
 			</textField>
@@ -307,7 +307,7 @@ WHERE ins.id  = $P{id};]]>
 			<textField>
 				<reportElement x="243" y="54" width="70" height="69" forecolor="#002366" uuid="3be0c727-3e80-4d52-a6e5-88301c794af1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paciente_id}]]></textFieldExpression>
 			</textField>
@@ -339,7 +339,7 @@ WHERE ins.id  = $P{id};]]>
 			<textField>
 				<reportElement x="0" y="6" width="552" height="224" uuid="e281a1d4-2eb6-4e01-8517-3a3a84e8198f"/>
 				<textElement>
-					<font size="12"/>
+					<font fontName="Arial" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{motivo_consulta}]]></textFieldExpression>
 			</textField>
