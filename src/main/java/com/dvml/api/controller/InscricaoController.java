@@ -11,50 +11,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/inscricao")
 public class InscricaoController {
     @Autowired
     InscricaoService service;
 
 
-    @GetMapping("/inscricao/all")
+    @GetMapping("/all")
     public List<InscricaoFullDTO> getAllInscricao(){
         System.out.println("Lista todos os pacientes inscritos");
         return  service.listarInscricaoNaoTriados();
     }
 
-    @GetMapping("/inscricao/{id}")
+    @GetMapping("/{id}")
     public InscricaoFullDTO getInscricaoById(@PathVariable long id){
         return  service.getInscricaoById(id);
     }
 
-    @GetMapping("/inscricao/all/consulta")
+    @GetMapping("/all/consulta")
     public List<InscricaoFullDTO> getAllInscricaoDeEncaminhamentoConsulta(){
         return  service.listarInscricaoByEncameninhamentoConsulta();
     }
 
-    @GetMapping("/inscricao/all/{estado}")
+    @GetMapping("/all/{estado}")
     public List<InscricaoFullDTO> getAllInscricao(@PathVariable String estado){
         return  service.listarTodosFullByEstado(estado);
     }
 
-    @PutMapping("/inscricao/edit/{id}/{estado}/{encaminhamento}")
+    @PutMapping("/edit/{id}/{estado}/{encaminhamento}")
     public void editInscricao( @PathVariable long id,  @PathVariable String estado,  @PathVariable String encaminhamento){
           service.update(id, estado, encaminhamento);
     }
 
-    @PutMapping("/inscricao/estadocondicao/edit/{id}/{estado}")
+    @PutMapping("/estadocondicao/edit/{id}/{estado}")
     public void editEstadoInscricao( @PathVariable long id,  @PathVariable String estado){
         service.updateEstadoCondicaoInscricao(id, estado);
     }
 
 
-    @PutMapping("/inscricao/edit/tm/{id}/{cor}/{minuto}")
+    @PutMapping("/edit/tm/{id}/{cor}/{minuto}")
     public ResponseEntity editTriagemManchester(@PathVariable long id, @PathVariable String cor, @PathVariable long minuto){
         return service.updateEstadoTriagemManchester(id, cor, minuto);
     }
 
 
-    @PostMapping("/inscricao/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void criarInscricao(@RequestBody Inscricao inscricao){
         service.salvar(inscricao);
