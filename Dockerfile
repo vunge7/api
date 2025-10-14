@@ -1,12 +1,3 @@
-# === STAGE 1: BUILD  ===
-FROM ubuntu:latest AS build
-
-RUN apt-get update && apt-get install -y openjdk-17-jdk maven
-
-COPY . .
-
-RUN mvn clean package -DskipTests
-
 # === STAGE 2: RUNTIME ===
 FROM openjdk:17-jdk-slim
 
@@ -17,6 +8,9 @@ RUN apt-get update && apt-get install -y \
     libx11-6 \
     libxext6 \
     libxrender1 \
+    ttf-mscorefonts-installer \
+    fonts-dejavu \
+    && fc-cache -f -v \
     && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
