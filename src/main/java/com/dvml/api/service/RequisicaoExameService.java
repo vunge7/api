@@ -45,19 +45,28 @@ public class RequisicaoExameService {
 
 
     public List<RequisicaoExameDTO> listarTodasRequisicoesComposto() {
-        List<RequisicaoExame> listaRequisicao = repo.findAllOrderByNomeAsc();
-        List<RequisicaoExameDTO> listaReuisicaoDTO = new ArrayList<>();
 
-        for (RequisicaoExame l : listaRequisicao) {
-            RequisicaoExameDTO linha = new RequisicaoExameDTO();
-            linha.setId(l.getId());
-            linha.setMedico(getPessoaBydUsuario( l.getUsuarioId()).getNome() + " " + getPessoaBydUsuario( l.getUsuarioId()).getApelido());
-            linha.setPaciente(getPessoaBydInscricao( l.getInscricaoId()).getNome() + " " + getPessoaBydInscricao( l.getUsuarioId()).getApelido());
-            linha.setData(l.getDataRequisicao());
-            listaReuisicaoDTO.add(linha);
+
+        try {
+            List<RequisicaoExame> listaRequisicao = repo.findAllOrderByNomeAsc();
+            List<RequisicaoExameDTO> listaReuisicaoDTO = new ArrayList<>();
+
+            for (RequisicaoExame l : listaRequisicao) {
+                RequisicaoExameDTO linha = new RequisicaoExameDTO();
+                linha.setId(l.getId());
+                linha.setMedico(getPessoaBydUsuario( l.getUsuarioId()).getNome() + " " + getPessoaBydUsuario( l.getUsuarioId()).getApelido());
+                linha.setPaciente(getPessoaBydInscricao( l.getInscricaoId()).getNome() + " " + getPessoaBydInscricao( l.getUsuarioId()).getApelido());
+                linha.setData(l.getDataRequisicao());
+                listaReuisicaoDTO.add(linha);
+            }
+
+            return listaReuisicaoDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao listar todas as requisições compostas: " + e.getMessage());
         }
+        return null;
 
-        return listaReuisicaoDTO;
     }
 
 

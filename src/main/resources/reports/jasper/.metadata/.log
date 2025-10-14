@@ -1,0 +1,16 @@
+!SESSION 2024-12-17 17:07:32.194 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=pt_PT
+Framework arguments:  -keyring /Users/mac/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -data @noDefault -keyring /Users/mac/.eclipse_keyring
+
+!ENTRY com.jaspersoft.studio 1 0 2024-12-17 17:07:40.787
+!MESSAGE Starting JaspersoftStudio bundle - Version: 6.21.2.final
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-12-17 17:08:14.262
+!MESSAGE No repository found at https://jaspersoft.github.io/jaspersoftstudio/rcp-updates/e4/.
+
+!ENTRY org.eclipse.core.resources 2 10035 2024-12-17 17:16:14.342
+!MESSAGE The workspace will exit with unsaved changes in this session.
