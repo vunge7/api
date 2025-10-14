@@ -17,9 +17,6 @@ RUN mvn clean package -DskipTests
 # === STAGE 2: RUNTIME ===
 FROM openjdk:17-jdk-slim
 
-# Diretório de trabalho
-WORKDIR /app
-
 # Expor porta da aplicação
 EXPOSE 8080
 
