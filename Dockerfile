@@ -1,3 +1,16 @@
+# === STAGE 1: BUILD ===
+FROM maven:3.9.8-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+# Copiar pom.xml e baixar dependências (cache eficiente)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copiar todo o código-fonte e gerar o .jar
+COPY . .
+RUN mvn clean package -DskipTests
+
 # === STAGE 2: RUNTIME ===
 FROM openjdk:17-jdk-slim
 
@@ -13,12 +26,12 @@ RUN apt-get update && apt-get install -y \
     && fc-cache -f -v \
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
+
 EXPOSE 8080
 
-# Copiar o jar
-COPY --from=build target/api-0.0.1-SNAPSHOT.jar /api.jar
+# Copiar o jar gerado e os relatórios
+COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar /app/api.jar
+COPY --from=build /app/reports /app/reports
 
-# Copiar a pasta de relatórios
-COPY --from=build reports /reports
-
-ENTRYPOINT ["java","-jar","/api.jar"]
+ENTRYPOINT ["java","-jar","/app/api.jar"]
