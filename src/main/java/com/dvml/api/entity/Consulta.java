@@ -64,4 +64,7 @@ public class Consulta{
     @Column(name = "inscricao_id")
     private long inscricaoId;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 }

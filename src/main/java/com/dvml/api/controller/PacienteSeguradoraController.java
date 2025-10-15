@@ -12,29 +12,30 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/pacienteSeguradora")
 public class PacienteSeguradoraController {
     @Autowired
     private PacienteSeguradoraService service;
 
 
-    @GetMapping("pacienteSeguradora/all")
+    @GetMapping("/all")
     public List<PacienteSeguradora> getAllPacientSeguradora(){
         return service.listarTodosPacientesSeguradoras();
     }
 
 
-    @GetMapping("pacienteSeguradora/all/{id}")
+    @GetMapping("/all/{id}")
     public List<PacienteSeguradora> getAllPacientSeguradoraByPaciente(@PathVariable long id){
         return service.getAllSeguradorasByIdPaciente(id);
     }
 
 
 
-    @GetMapping("pacienteSeguradora/{id}")
+    @GetMapping("/{id}")
     public PacienteSeguradora getAllPacienteSeguradoraById(@PathVariable long id){
         return service.getPacienteSeguradoraById(id);
     }
-    @PostMapping("pacienteSeguradora/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid PacienteSeguradora pacienteSeguradora) {
         return service.criar(pacienteSeguradora);
@@ -45,7 +46,7 @@ public class PacienteSeguradoraController {
     public void updatPacienteseguradora(@RequestBody @Valid PacienteSeguradora pacienteSeguradora){
         service.update(pacienteSeguradora);}
 
-    @DeleteMapping("/pacienteSeguradora/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable long id) {
         if (service.getPacienteSeguradoraById(id) != null) {
             service.deletPacienteSeguradora(id);

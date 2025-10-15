@@ -18,5 +18,6 @@ public class Funcao {
     @Column(name = "designacao")
     private String designacao;
 
-
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

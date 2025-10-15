@@ -63,4 +63,7 @@ public class Line {
     private BigDecimal lineDiscount;
     @Column(name = "line_total", precision = 30, scale = 2)
     private BigDecimal lineTotal;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

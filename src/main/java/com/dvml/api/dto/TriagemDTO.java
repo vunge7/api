@@ -15,5 +15,6 @@ public class TriagemDTO {
     private String paciente;
     private long userId;
     private String nomeUsuario;
+    private Long empresaId;
     private List<LinhaTriagemDTO> triagens;
 }

@@ -24,6 +24,9 @@ public class Empresa {
     @Column(nullable = false, length = 20)
     private TipoEmpresa tipo;
 
+    @Column(nullable = false)
+    private boolean status = true; // ✅ adiciona este campo
+
     @Column(name = "empresa_matriz_id")
     private Long empresaMatrizId; // null ou 0 = matriz
 
@@ -41,5 +44,5 @@ public class Empresa {
     private String endereco;
 
     @Column(name = "seguradora_id", length = 50)
-    private String seguradoraId; // Mantido conforme seu projeto
+    private long seguradoraId; // Mantido conforme seu projeto
 }

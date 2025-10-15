@@ -33,6 +33,9 @@ public class Procedimento {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataActualizacao;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;

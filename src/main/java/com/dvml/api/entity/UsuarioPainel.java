@@ -14,15 +14,25 @@ public class UsuarioPainel {
     private Long usuarioCadastradoId;
     private Date dataRegistro;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Long getPainelId() { return painelId; }
     public void setPainelId(Long painelId) { this.painelId = painelId; }
+
     public Long getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+
     public Long getUsuarioCadastradoId() { return usuarioCadastradoId; }
     public void setUsuarioCadastradoId(Long usuarioCadastradoId) { this.usuarioCadastradoId = usuarioCadastradoId; }
+
     public Date getDataRegistro() { return dataRegistro; }
     public void setDataRegistro(Date dataRegistro) { this.dataRegistro = dataRegistro; }
+
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
 }

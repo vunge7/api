@@ -19,4 +19,7 @@ public class UnidadeMedidas {
 
     @Column(name = "abreviacao", length = 5, nullable = false)
     private String abrevicao;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

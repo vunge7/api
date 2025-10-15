@@ -12,31 +12,32 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/linhareceita")
 public class LinhaReceitaController {
     @Autowired
     private LinhaReceitaService service;
 
-    @GetMapping("linhareceita/all")
+    @GetMapping("/all")
     public List<LinhaReceita> getAllLinhaReceita() {
         return service.listarTodasLinhasReceitas();
     }
-    @GetMapping("linhareceita/{id}")
+    @GetMapping("/{id}")
     public LinhaReceita getAllLinhaReceitaById(@PathVariable long id) {
         return service.getLinhaReceitaById(id);
     }
 
-    @PostMapping("linhareceita/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid LinhaReceita linhareceita){
         return service.criar(linhareceita);
     }
 
-    @PutMapping("linhareceita/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateLinhaReceita(@RequestBody @Valid LinhaReceita linhareceita){
         service.update(linhareceita);}
 
-    @DeleteMapping("linhareceita/{id}")
+    @DeleteMapping("/{id}")
     public void deletelinhareceita(@PathVariable long id) {
         if (service.getLinhaReceitaById(id) != null) {
             service.deleteLinhaReceita(id);

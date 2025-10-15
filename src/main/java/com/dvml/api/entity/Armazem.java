@@ -27,4 +27,7 @@ public class Armazem {
     @Column(name = "filial_id", nullable = false)
     @NotNull(message = "Filial é obrigatória")
     private Long filialId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

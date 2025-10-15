@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
-
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RequisicaoExameService {
+
     @Autowired
     private RequisicaoExameRepository repo;
 
@@ -28,7 +28,6 @@ public class RequisicaoExameService {
     @Autowired
     private FuncionarioRepository funcionarioRepo;
 
-
     @Autowired
     private InscricaoRepository inscricaoRepo;
 
@@ -36,83 +35,75 @@ public class RequisicaoExameService {
     private PacienteRepository pacienteRepo;
 
     public RequisicaoExame getRequisicaoById(long id) {
-        return repo.findById(id).get();
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
     }
 
     public List<RequisicaoExame> listarTodasRequisicoes() {
         return repo.findAllOrderByNomeAsc();
     }
 
-
     public List<RequisicaoExameDTO> listarTodasRequisicoesComposto() {
         List<RequisicaoExame> listaRequisicao = repo.findAllOrderByNomeAsc();
-        List<RequisicaoExameDTO> listaReuisicaoDTO = new ArrayList<>();
+        List<RequisicaoExameDTO> listaRequisicaoDTO = new ArrayList<>();
 
         for (RequisicaoExame l : listaRequisicao) {
             RequisicaoExameDTO linha = new RequisicaoExameDTO();
             linha.setId(l.getId());
-            linha.setMedico(getPessoaBydUsuario( l.getUsuarioId()).getNome() + " " + getPessoaBydUsuario( l.getUsuarioId()).getApelido());
-            linha.setPaciente(getPessoaBydInscricao( l.getInscricaoId()).getNome() + " " + getPessoaBydInscricao( l.getUsuarioId()).getApelido());
+            linha.setMedico(getPessoaBydUsuario(l.getUsuarioId()).getNome() + " " + getPessoaBydUsuario(l.getUsuarioId()).getApelido());
+            linha.setPaciente(getPessoaBydInscricao(l.getInscricaoId()).getNome() + " " + getPessoaBydInscricao(l.getInscricaoId()).getApelido());
             linha.setData(l.getDataRequisicao());
-            listaReuisicaoDTO.add(linha);
+            listaRequisicaoDTO.add(linha);
         }
 
-        return listaReuisicaoDTO;
+        return listaRequisicaoDTO;
     }
-
 
     private Pessoa getPessoaBydInscricao(long idInscricao) {
-
         Inscricao inscricao = inscricaoRepo.findById(idInscricao).get();
         Paciente paciente = pacienteRepo.findById(inscricao.getPacienteId()).get();
-        Pessoa pessoa = pessoaRepo.findById(paciente.getPessoaId()).get();
-
-        return pessoa;
+        return pessoaRepo.findById(paciente.getPessoaId()).get();
     }
-
 
     private Pessoa getPessoaBydUsuario(long idUser) {
         Usuario usuario = userRepo.findById(idUser).get();
         long idPessoa = funcionarioRepo.findById(usuario.getFuncionarioId()).get().getPessoaId();
-        Pessoa pessoa = pessoaRepo.findById(idPessoa).get();
-        return pessoa;
+        return pessoaRepo.findById(idPessoa).get();
     }
 
-
     public RequisicaoExame criar(RequisicaoExame requisicaoExame) {
-
         requisicaoExame.setDataRequisicao(new Date());
-
+        // ✅ Considera empresaId que vem do objeto
         return repo.save(requisicaoExame);
-       /*
-        if(Objects.nonNull(repo.save(requisicaoExame))) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Requisicao criada com sucesso!");
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Falha ao criar o Requisicao.");
-
-        */
     }
 
     public ResponseEntity<String> update(RequisicaoExame requisicaoExame) {
-        RequisicaoExame RequisicaoToUpdate = repo.findById(requisicaoExame.getId()).get();
-        RequisicaoToUpdate.setDataRequisicao(requisicaoExame.getDataRequisicao());
-        RequisicaoToUpdate.setStatus(requisicaoExame.getStatus());
-        RequisicaoToUpdate.setUsuarioId(requisicaoExame.getUsuarioId());
-        if (Objects.nonNull(repo.save(requisicaoExame))) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Requisicao editado com sucesso!");
+        RequisicaoExame requisicaoToUpdate = repo.findById(requisicaoExame.getId())
+                .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
+
+        requisicaoToUpdate.setDataRequisicao(requisicaoExame.getDataRequisicao());
+        requisicaoToUpdate.setStatus(requisicaoExame.getStatus());
+        requisicaoToUpdate.setUsuarioId(requisicaoExame.getUsuarioId());
+        requisicaoToUpdate.setInscricaoId(requisicaoExame.getInscricaoId());
+
+        // ✅ Atualizando empresaId
+        requisicaoToUpdate.setEmpresaId(requisicaoExame.getEmpresaId());
+
+        if (Objects.nonNull(repo.save(requisicaoToUpdate))) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Requisição editada com sucesso!");
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao editar o Requisicao.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Falha ao editar a Requisição.");
     }
 
     public ResponseEntity<String> deleteRequisicao(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Requisicao deletada com sucesso!");
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Requisição deletada com sucesso!");
         } else {
-            //throw new IllegalArgumentException("Linha não encontrado com o ID: " + id);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar a Requisicao.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao deletar a Requisição.");
         }
     }
 }

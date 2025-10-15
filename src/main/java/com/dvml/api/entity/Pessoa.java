@@ -92,4 +92,7 @@ public class Pessoa {
 
     @Column(name = "nome_photo")
     private String nomePhoto;
+
+    @Column(name = "empresa_id")
+    private Long empresaId; // ✅ Adicionado
 }

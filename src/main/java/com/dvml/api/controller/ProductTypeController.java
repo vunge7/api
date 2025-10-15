@@ -12,32 +12,33 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/producttype")
 public class ProductTypeController {
     @Autowired
    private ProductTypeService service;
 
-    @GetMapping("producttype/all")
+    @GetMapping("/all")
     public List<ProductType> getAllProduto() {
         return service.listarTodosTipos();
     }
 
-    @GetMapping("producttype/{id}")
+    @GetMapping("/{id}")
     public ProductType getAllProdutoById(@PathVariable long id) {
         return service.getProdutoById(id);
     }
 
-    @PostMapping("producttype/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid ProductType type){
         return service.criar(type);
     }
 
-    @PutMapping("producttype/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateProduto(@RequestBody @Valid ProductType tytpe){
         service.update(tytpe);}
 
-    @DeleteMapping("producttype/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable long id) {
         if (service.getProdutoById(id) != null) {
             service.deleteType(id);

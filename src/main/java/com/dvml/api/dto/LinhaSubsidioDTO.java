@@ -21,4 +21,5 @@ public class LinhaSubsidioDTO {
     private Double valor;
 
     private Long usuarioId;
+    private Long empresaId;
 }

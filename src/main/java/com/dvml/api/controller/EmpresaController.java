@@ -1,6 +1,7 @@
 package com.dvml.api.controller;
 
 import com.dvml.api.dto.EmpresaDTO;
+import com.dvml.api.entity.Empresa;
 import com.dvml.api.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,76 +15,49 @@ import java.util.List;
 public class EmpresaController {
 
     @Autowired
-    private EmpresaService service;
+    private EmpresaService empresaService;
 
-    // ===================================
-    // ➕ CRIAR EMPRESA
-    // ===================================
-    @PostMapping("/add")
-    public ResponseEntity<?> criar(@RequestBody EmpresaDTO dto) {
-        try {
-            EmpresaDTO nova = service.criar(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nova);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{ \"" + e.getMessage() + "\"}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{ \"Erro ao criar empresa.\"}");
-        }
-    }
-
-    // ===================================
-    // 🔁 ATUALIZAR EMPRESA
-    // ===================================
-    @PutMapping("/edit")
-    public ResponseEntity<?> atualizar(@RequestBody EmpresaDTO dto) {
-        try {
-            EmpresaDTO atualizada = service.update(dto);
-            return ResponseEntity.ok(atualizada);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{ \"" + e.getMessage() + "\"}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"Erro ao atualizar empresa.\"}");
-        }
-    }
-
-    // ===================================
-    // 📋 LISTAR TODAS AS EMPRESAS
-    // ===================================
+    // Listar todas as empresas ativas
     @GetMapping("/all")
-    public ResponseEntity<List<EmpresaDTO>> listarTodas() {
-        List<EmpresaDTO> lista = service.listarTodas();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<Empresa>> listarTodasEmpresas() {
+        List<Empresa> empresas = empresaService.findAll();
+        return ResponseEntity.ok(empresas);
     }
 
-    // ===================================
-    // 🔍 BUSCAR POR ID
-    // ===================================
+    // Buscar empresa por ID (com filiais)
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        EmpresaDTO dto = service.buscarPorId(id);
-        if (dto != null) {
-            return ResponseEntity.ok(dto);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"Empresa não encontrada.\"}");
+    public ResponseEntity<EmpresaDTO> getEmpresaById(@PathVariable Long id) {
+        return empresaService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // Criar nova empresa
+    @PostMapping("/add")
+    public ResponseEntity<Empresa> criarEmpresa(@RequestBody Empresa empresa) {
+        try {
+            Empresa novaEmpresa = empresaService.save(empresa);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa);
+        } catch (org.springframework.web.server.ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
 
-    // ===================================
-    // ❌ DELETAR EMPRESA
-    // ===================================
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        boolean deleted = service.deletarPorId(id);
-        if (deleted) {
-            return ResponseEntity.ok("{ \"Empresa deletada com sucesso.\"}");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("{\"Empresa não encontrada.\"}");
+    // Atualizar empresa
+    @PutMapping("/{id}")
+    public ResponseEntity<Empresa> atualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresa) {
+        try {
+            Empresa atualizada = empresaService.update(id, empresa);
+            return ResponseEntity.ok(atualizada);
+        } catch (org.springframework.web.server.ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
+    }
+
+    // Listar árvore completa de empresas
+    @GetMapping("/arvore")
+    public ResponseEntity<List<EmpresaDTO>> listarArvoreCompleta() {
+        List<EmpresaDTO> arvore = empresaService.listarArvoreCompleta();
+        return ResponseEntity.ok(arvore);
     }
 }

@@ -24,4 +24,5 @@ public class LinhaSubsidioItemDTO {
     private BigDecimal valor;
 
     private Long usuarioId;
+    private Long empresaId;
 }

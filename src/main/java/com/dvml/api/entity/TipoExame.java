@@ -27,6 +27,10 @@ public class TipoExame {
     @Column(name = "descricao")
     private String descricao;
 
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @NotBlank(message = "Tipo de amostra é obrigatório")
     @Size(max = 50, message = "Tipo de amostra deve ter no máximo 50 caracteres")
     @Column(name = "tipo_amostra", nullable = false)

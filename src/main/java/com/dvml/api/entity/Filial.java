@@ -65,5 +65,8 @@ public class Filial {
     @Size(min = 2, max = 100, message = "Província deve ter entre 2 e 100 caracteres")
     private String provincia;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 
 }

@@ -68,4 +68,7 @@ public class Funcionario {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "O estado do funcionário é obrigatório.")
     private EstadoFuncionario estadoFuncionario;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

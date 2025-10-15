@@ -22,4 +22,8 @@ public class ProductType {
     @Size(min = 1, max = 50, message = "A designação  do produto deve ter entre 3 e 50 caracteres.")
     private String designacaoTipoProduto;
 
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 }

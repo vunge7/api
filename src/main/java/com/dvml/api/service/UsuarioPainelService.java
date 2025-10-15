@@ -24,6 +24,7 @@ public class UsuarioPainelService {
         entity.setUsuarioCadastradoId(dto.getUsuarioCadastradoId());
         entity.setUsuarioId(dto.getUsuarioId());
         entity.setDataRegistro(new Date());
+        entity.setEmpresaId(dto.getEmpresaId()); // ✅ Incluído
         entity = usuarioPainelRepository.save(entity);
         return toDTO(entity);
     }
@@ -50,7 +51,9 @@ public class UsuarioPainelService {
     public UsuarioPainelDTO update(Long id, UsuarioPainelDTO dto) {
         UsuarioPainel entity = usuarioPainelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vínculo não encontrado"));
-        // IDs constantes, não atualiza campos
+        // Atualiza apenas campos permitidos
+        entity.setEmpresaId(dto.getEmpresaId()); // ✅ Adicionado
+        entity = usuarioPainelRepository.save(entity);
         return toDTO(entity);
     }
 
@@ -73,6 +76,7 @@ public class UsuarioPainelService {
         dto.setUsuarioCadastradoId(entity.getUsuarioCadastradoId());
         dto.setUsuarioId(entity.getUsuarioId());
         dto.setDataRegistro(entity.getDataRegistro());
+        dto.setEmpresaId(entity.getEmpresaId()); // ✅ Incluído
         return dto;
     }
 }

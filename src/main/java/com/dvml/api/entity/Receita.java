@@ -36,6 +36,9 @@ public class Receita{
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date fimTratamento;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 

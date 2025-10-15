@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping ("/funcionario")
 public class FuncionarioController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FuncionarioController.class);
@@ -27,49 +28,49 @@ public class FuncionarioController {
     @Autowired
     private LinhaSubsidioService linhaSubsidioService;
 
-    @PostMapping("funcionario/add")
+    @PostMapping("/add")
     public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioDTO funcionarioDTO) {
         LOGGER.info("Criando funcionário com pessoaId: {}", funcionarioDTO.getPessoaId());
         FuncionarioDTO created = funcionarioService.create(funcionarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping("funcionario/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> findById(@PathVariable("id") Long id) {
         LOGGER.info("Buscando funcionário ID: {}", id);
         FuncionarioDTO funcionarioDTO = funcionarioService.findById(id);
         return ResponseEntity.ok(funcionarioDTO);
     }
 
-    @GetMapping("funcionario/all")
+    @GetMapping("/all")
     public ResponseEntity<List<FuncionarioDTO>> findAll() {
         LOGGER.info("Buscando todos os funcionários");
         List<FuncionarioDTO> funcionarios = funcionarioService.findAll();
         return ResponseEntity.ok(funcionarios);
     }
 
-    @PutMapping("funcionario/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("id") Long id, @Valid @RequestBody FuncionarioDTO funcionarioDTO) {
         LOGGER.info("Atualizando funcionário ID: {}", id);
         FuncionarioDTO updated = funcionarioService.update(id, funcionarioDTO);
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("funcionario/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         LOGGER.info("Deletando funcionário ID: {}", id);
         funcionarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("funcionario/{id}/subsidios")
+    @GetMapping("/{id}/subsidios")
     public ResponseEntity<List<LinhaSubsidioDTO>> getSubsidios(@PathVariable("id") Long id) {
         LOGGER.info("Buscando subsídios do funcionário ID: {}", id);
         List<LinhaSubsidioDTO> subsidios = linhaSubsidioService.findByFuncionarioId(id);
         return ResponseEntity.ok(subsidios);
     }
 
-    @GetMapping("funcionario/pessoa/{pessoaId}")
+    @GetMapping("/pessoa/{pessoaId}")
     public ResponseEntity<Map<String, Boolean>> checkFuncionarioByPessoaId(@PathVariable("pessoaId") Long pessoaId) {
         LOGGER.info("Verificando funcionário para pessoa ID: {}", pessoaId);
         boolean exists = funcionarioService.existsByPessoaId(pessoaId);

@@ -44,6 +44,7 @@ public class ProductGroupService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Erro: Designação já existe: " + group.getDesignacaoProduto());
             }
+            // ✅ EmpresaId já existe no group, mantido
             repository.save(group);
             logger.info("Grupo de produto criado com sucesso: ID {}", group.getId());
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -65,6 +66,7 @@ public class ProductGroupService {
             logger.warn("Designação já existe: {}", group.getDesignacaoProduto());
             throw new IllegalArgumentException("Designação já existe: " + group.getDesignacaoProduto());
         }
+        // ✅ EmpresaId já existe no group, mantido
         repository.save(group);
         logger.info("Grupo de produto atualizado com sucesso: ID {}", group.getId());
     }

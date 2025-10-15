@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,47 +15,42 @@ import java.util.List;
 public class FornecedorController {
 
     @Autowired
-    private FornecedorService service;
+    private FornecedorService fornecedorService;
 
+    // Listar todos os fornecedores
     @GetMapping("/all")
-    public List<Fornecedor> getAllFornecedores() {
-        return service.listarTodosFornecedores();
+    public ResponseEntity<List<FornecedorDTO>> listarTodosFornecedores() {
+        List<FornecedorDTO> fornecedores = fornecedorService.listarTodosFornecedores();
+        return ResponseEntity.ok(fornecedores);
     }
 
+    // Buscar fornecedor por ID
     @GetMapping("/{id}")
-    public Fornecedor getFornecedorById(@PathVariable long id) {
-        return service.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Fornecedor com ID " + id + " não encontrado"));
+    public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable Long id) {
+        return fornecedorService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    // Cadastrar novo fornecedor
     @PostMapping("/add")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public Fornecedor adicionar(@RequestBody @Valid FornecedorDTO fornecedorDTO) {
-        ResponseEntity<?> response = service.cadastrarFornecedor(fornecedorDTO);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return (Fornecedor) response.getBody();
-        }
-        throw new IllegalArgumentException("Erro ao cadastrar fornecedor: " + response.getBody());
-    }
-
-    @PutMapping("/edit")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void updateFornecedor(@RequestBody @Valid FornecedorDTO fornecedorDTO) {
-        if (fornecedorDTO.getId() == null) {
-            throw new IllegalArgumentException("ID do fornecedor é obrigatório para atualização");
-        }
-        ResponseEntity<String> response = service.editarFornecedor(fornecedorDTO.getId(), fornecedorDTO);
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new IllegalArgumentException("Erro ao atualizar fornecedor: " + response.getBody());
+    public ResponseEntity<?> cadastrarFornecedor(@RequestBody FornecedorDTO fornecedorDTO) {
+        try {
+            return fornecedorService.cadastrarFornecedor(fornecedorDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar fornecedor");
         }
     }
 
+    // Editar fornecedor
+    @PutMapping("/{id}")
+    public ResponseEntity<String> editarFornecedor(@PathVariable Long id, @RequestBody FornecedorDTO fornecedorDTO) {
+        return fornecedorService.editarFornecedor(id, fornecedorDTO);
+    }
+
+    // Deletar fornecedor
     @DeleteMapping("/{id}")
-    public void deleteFornecedor(@PathVariable long id) {
-        if (service.findById(id).isPresent()) {
-            service.deleteFornecedor(id);
-        } else {
-            throw new IllegalArgumentException("Fornecedor com ID " + id + " não encontrado");
-        }
+    public ResponseEntity<String> deletarFornecedor(@PathVariable Long id) {
+        return fornecedorService.deleteFornecedor(id);
     }
 }

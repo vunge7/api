@@ -46,18 +46,22 @@ public class LinhaOperacaoStockDTO {
     @NotNull(message = "Operação de stock é obrigatória")
     private Long operacaoStockId;
 
+    // 🔹 Nova coluna
+    private Long empresaId;
+
     public LinhaOperacaoStock toEntity(OperacaoStock operacaoStock) {
         LinhaOperacaoStock entity = new LinhaOperacaoStock();
         entity.setId(this.id);
         entity.setArmazemIdOrigem(this.armazemIdOrigem);
         entity.setLoteIdOrigem(this.loteIdOrigem);
-        entity.setProdutoId(this.produtoId); // Será preenchido no controlador ou serviço
+        entity.setProdutoId(this.produtoId);
         entity.setQtdAnterior(this.qtdAnterior);
         entity.setQtdOperacao(this.qtdOperacao);
         entity.setQtdActual(this.qtdActual);
         entity.setArmazemIdDestino(this.armazemIdDestino);
         entity.setLoteIdDestino(this.loteIdDestino);
         entity.setOperacaoStock(operacaoStock);
+        entity.setEmpresaId(this.empresaId); // ⚡ mapeado para a entidade
         return entity;
     }
 }

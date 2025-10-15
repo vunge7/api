@@ -45,6 +45,7 @@ public class OperacaoStockService {
     @Transactional
     public OperacaoStock criarComLinhas(OperacaoStockDTO dto) {
         logger.info("Criando nova operação de estoque com linhas: {}", dto);
+
         OperacaoStock operacao = new OperacaoStock();
         operacao.setId(dto.getId());
         operacao.setDataOperacao(dto.getDataOperacao());
@@ -52,6 +53,9 @@ public class OperacaoStockService {
         operacao.setUsuarioId(dto.getUsuarioId());
         operacao.setArmazemId(dto.getArmazemId());
         operacao.setDescricao(dto.getDescricao());
+
+        // ✅ Suporte ao campo empresaId
+        operacao.setEmpresaId(dto.getEmpresaId());
 
         validateOperacao(operacao);
         OperacaoStock novaOperacao = operacaoStockRepository.save(operacao);
@@ -72,6 +76,7 @@ public class OperacaoStockService {
         if (!operacaoStockRepository.existsById(operacao.getId())) {
             throw new RuntimeException("Operação não encontrada para atualização com ID: " + operacao.getId());
         }
+
         validateOperacao(operacao);
         return operacaoStockRepository.save(operacao);
     }
@@ -87,6 +92,7 @@ public class OperacaoStockService {
 
     private void validateOperacao(OperacaoStock operacao) {
         logger.debug("Validando operação: {}", operacao);
+
         if (operacao.getTipoOperacao() == null) {
             throw new IllegalArgumentException("Tipo de operação é obrigatório");
         }
@@ -101,6 +107,11 @@ public class OperacaoStockService {
         }
         if (operacao.getDescricao() == null || operacao.getDescricao().trim().isEmpty()) {
             throw new IllegalArgumentException("Descrição não pode ser vazia");
+        }
+
+        // ✅ Nova validação opcional para empresaId
+        if (operacao.getEmpresaId() == null) {
+            logger.warn("Campo empresaId não informado — será salvo como NULL.");
         }
     }
 }

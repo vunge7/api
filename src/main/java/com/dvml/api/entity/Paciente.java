@@ -28,4 +28,7 @@ public class Paciente {
 
     @Column(name = "pessoa_id")
     private long pessoaId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

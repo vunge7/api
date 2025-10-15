@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 public class ProdutoService {
 
@@ -44,6 +43,10 @@ public class ProdutoService {
         produtoDTO.setProdutoPaiId(produto.getProdutoPaiId());
         produtoDTO.setProductGroupId(produto.getProductGroupId());
         produtoDTO.setIntervaloReferencia(produto.getIntervaloReferencia());
+
+        // ✅ Adicionando empresaId
+        produtoDTO.setEmpresaId(produto.getEmpresaId());
+
         return produtoDTO;
     }
 
@@ -73,6 +76,9 @@ public class ProdutoService {
         produto.setImagem(produtoDTO.getImagem());
         produto.setProdutoPaiId(produtoDTO.getProdutoPaiId());
         produto.setIntervaloReferencia(produtoDTO.getIntervaloReferencia());
+
+        // ✅ Setando empresaId
+        produto.setEmpresaId(produtoDTO.getEmpresaId());
 
         if (Objects.nonNull(repo.save(produto))) {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -105,6 +111,9 @@ public class ProdutoService {
         produto.setProdutoPaiId(produtoDTO.getProdutoPaiId());
         produto.setIntervaloReferencia(produtoDTO.getIntervaloReferencia());
 
+        // ✅ Atualizando empresaId
+        produto.setEmpresaId(produtoDTO.getEmpresaId());
+
         if (Objects.nonNull(repo.save(produto))) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Produto editado com sucesso!");
@@ -133,12 +142,10 @@ public class ProdutoService {
         return repo.findAllProdutosPorGrupoId(grupoId);
     }
 
-
     public List<Produto> listarProdutosPorTipo(Long tipoId) {
         return repo.findAllByProductTypeId(tipoId);
     }
 
-    // MONTA A ÁRVORE DE PRODUTOS RECURSIVAMENTE
     public ProdutoArvoreDTO montarArvoreProduto(Long produtoId) {
         Produto produto = repo.findById(produtoId)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));

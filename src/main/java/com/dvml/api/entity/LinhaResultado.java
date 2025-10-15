@@ -31,4 +31,7 @@ public class LinhaResultado {
 
     @Column(name = "observacao")
     private String observacao;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

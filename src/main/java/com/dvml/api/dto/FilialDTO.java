@@ -30,8 +30,13 @@ public class FilialDTO {
     @Size(min = 2, max = 100, message = "Município deve ter entre 2 e 100 caracteres")
     private String municipio;
 
+    private Long empresaId;
+
     private boolean status;
 
+    /**
+     * Converte o DTO para entidade, incluindo empresaId
+     */
     public Filial toEntity() {
         Filial filial = new Filial();
         filial.setId(this.id);
@@ -40,9 +45,13 @@ public class FilialDTO {
         filial.setProvincia(this.provincia);
         filial.setMunicipio(this.municipio);
         filial.setStatus(this.status);
+        filial.setEmpresaId(this.empresaId); // incluído
         return filial;
     }
 
+    /**
+     * Converte a entidade para DTO, incluindo empresaId
+     */
     public static FilialDTO fromEntity(Filial filial) {
         FilialDTO dto = new FilialDTO();
         dto.setId(filial.getId());
@@ -51,6 +60,7 @@ public class FilialDTO {
         dto.setProvincia(filial.getProvincia());
         dto.setMunicipio(filial.getMunicipio());
         dto.setStatus(filial.isStatus());
+        dto.setEmpresaId(filial.getEmpresaId()); // incluído
         return dto;
     }
 }

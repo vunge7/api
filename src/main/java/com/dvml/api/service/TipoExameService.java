@@ -66,6 +66,7 @@ public class TipoExameService {
         tipoExame.setNome(dto.getNome());
         tipoExame.setDescricao(dto.getDescricao());
         tipoExame.setTipoAmostra(dto.getTipoAmostra());
+        tipoExame.setEmpresaId(dto.getEmpresaId()); // <--- empresaId atualizado
         TipoExame updated = repository.save(tipoExame);
         logger.debug("Tipo de exame atualizado: {}", updated.getNome());
         return TipoExameDTO.fromEntity(updated);

@@ -36,6 +36,9 @@ public class Gasto {
     @Column(name = "convertido")
     private EstadoConvertido convertido;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;

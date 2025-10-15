@@ -13,6 +13,7 @@ public class FuncionarioComSubsidiosDTO {
     @Valid
     private List<LinhaSubsidioDTO> subsidios;
 
+
     // Getters e Setters
     public FuncionarioDTO getFuncionario() { return funcionario; }
     public void setFuncionario(FuncionarioDTO funcionario) { this.funcionario = funcionario; }

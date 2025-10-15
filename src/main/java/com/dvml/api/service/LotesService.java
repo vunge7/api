@@ -22,9 +22,19 @@ public class LotesService {
 
     public LotesDTO save(LotesDTO dto) {
         logger.info("Salvando lote: {}", dto.getDesignacao());
-        if (dto.getUsuarioId() == null || dto.getDesignacao() == null || dto.getDataCriacao() == null || dto.getDataVencimento() == null) {
+
+        if (dto.getUsuarioId() == null || dto.getDesignacao() == null ||
+                dto.getDataCriacao() == null || dto.getDataVencimento() == null) {
             throw new IllegalArgumentException("Campos obrigatórios não preenchidos.");
         }
+
+        // ✅ Log e validação adicional para empresaId (caso necessário)
+        if (dto.getEmpresaId() == null) {
+            logger.warn("Campo empresaId não informado — será salvo como NULL.");
+        } else {
+            logger.debug("Empresa ID associado ao lote: {}", dto.getEmpresaId());
+        }
+
         Lotes entity = dto.toEntity();
         Lotes savedEntity = lotesRepository.save(entity);
         return LotesDTO.fromEntity(savedEntity);
@@ -51,8 +61,16 @@ public class LotesService {
         if (!lotesRepository.existsById(id)) {
             throw new IllegalArgumentException("Lote não encontrado com ID: " + id);
         }
+
         dto.setId(id);
         Lotes entity = dto.toEntity();
+
+        // ✅ Garantir que empresaId seja mantido mesmo se vier nulo no DTO
+        Optional<Lotes> existing = lotesRepository.findById(id);
+        if (existing.isPresent() && dto.getEmpresaId() == null) {
+            entity.setEmpresaId(existing.get().getEmpresaId());
+        }
+
         Lotes updatedEntity = lotesRepository.save(entity);
         return LotesDTO.fromEntity(updatedEntity);
     }

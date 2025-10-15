@@ -46,6 +46,9 @@ public class AgendaAppService {
             pessoa.setTelefone(dto.getTelefone());
             pessoa.setGenero(dto.getGenero());
 
+            // ✅ Novo campo
+            pessoa.setEmpresaId(dto.getEmpresaId());
+
             // 🔹 Campos opcionais com "N/A"
             pessoa.setLocalNascimento("N/A");
             pessoa.setEmail("N/A");
@@ -80,6 +83,8 @@ public class AgendaAppService {
             paciente.setPessoaId(pessoa.getId());
             paciente.setDataCadastro(new Date());
             paciente.setDataActualizacao(new Date());
+            // ✅ Novo campo
+            paciente.setEmpresaId(dto.getEmpresaId());
             pacienteRepository.save(paciente);
         }
 
@@ -94,6 +99,8 @@ public class AgendaAppService {
         Agenda agenda = new Agenda();
         agenda.setDescricao(produto.getProductDescription()); // Usa o nome do produto como descrição
         agenda.setStatus(true);
+        // ✅ Novo campo
+        agenda.setEmpresaId(dto.getEmpresaId());
         agendaRepository.save(agenda);
 
         // 🔹 6. Cria a linha da agenda
@@ -105,6 +112,8 @@ public class AgendaAppService {
         linha.setPacienteId(paciente.getId());
         linha.setDataRealizacao(dto.getDataConsulta());
         linha.setConfirmacao(false);
+        // ✅ Novo campo
+        linha.setEmpresaId(dto.getEmpresaId());
         linhaAgendaRepository.save(linha);
 
         // 🔹 7. Retorna sucesso

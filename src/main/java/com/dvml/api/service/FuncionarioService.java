@@ -36,97 +36,63 @@ public class FuncionarioService {
     @Autowired
     private LinhaSubsidioService linhaSubsidioService;
 
+    // ======================== CRUD PRINCIPAL ========================
+
     public FuncionarioDTO create(FuncionarioDTO funcionarioDTO) {
         LOGGER.info("Criando funcionário com pessoaId: {}", funcionarioDTO.getPessoaId());
         validateFuncionarioDTO(funcionarioDTO);
 
         if (!pessoaRepository.existsById(funcionarioDTO.getPessoaId())) {
-            LOGGER.error("Pessoa não encontrada com ID: {}", funcionarioDTO.getPessoaId());
             throw new EntityNotFoundException("Pessoa não encontrada com ID: " + funcionarioDTO.getPessoaId());
         }
 
         if (funcionarioRepository.existsByPessoaId(funcionarioDTO.getPessoaId())) {
-            LOGGER.error("Funcionário já existe para pessoaId: {}", funcionarioDTO.getPessoaId());
             throw new IllegalArgumentException("Já existe um funcionário cadastrado para esta pessoa.");
         }
 
         Funcionario funcionario = toEntity(funcionarioDTO);
         funcionario = funcionarioRepository.save(funcionario);
-        LOGGER.info("Funcionário criado com sucesso! ID: {}", funcionario.getId());
 
         if (funcionarioDTO.getSubsidios() != null && !funcionarioDTO.getSubsidios().isEmpty()) {
-            LOGGER.info("Criando {} subsídios para funcionário ID: {}", funcionarioDTO.getSubsidios().size(), funcionario.getId());
-            try {
-                linhaSubsidioService.createFromRequest(funcionario.getId(), funcionarioDTO.getSubsidios());
-                LOGGER.info("Subsídios criados com sucesso para funcionário ID: {}", funcionario.getId());
-            } catch (Exception e) {
-                LOGGER.error("Erro ao criar subsídios para funcionário ID: {}. Mensagem: {}", funcionario.getId(), e.getMessage());
-                throw new RuntimeException("Falha ao criar subsídios: " + e.getMessage(), e);
-            }
-        } else {
-            LOGGER.info("Nenhum subsídio fornecido para funcionário ID: {}", funcionario.getId());
+            linhaSubsidioService.createFromRequest(funcionario.getId(), funcionarioDTO.getSubsidios());
         }
 
-        FuncionarioDTO result = findById(funcionario.getId());
-        LOGGER.info("Funcionário retornado com sucesso: ID {}", result.getId());
-        return result;
+        return findById(funcionario.getId());
     }
 
     public FuncionarioDTO update(Long id, FuncionarioDTO funcionarioDTO) {
-        LOGGER.info("Atualizando funcionário com ID: {}", id);
         validateFuncionarioDTO(funcionarioDTO);
 
         Funcionario funcionario = funcionarioRepository.findById(id)
-                .orElseThrow(() -> {
-                    LOGGER.error("Funcionário não encontrado com ID: {}", id);
-                    return new EntityNotFoundException("Funcionário não encontrado com ID: " + id);
-                });
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + id));
 
         if (!pessoaRepository.existsById(funcionarioDTO.getPessoaId())) {
-            LOGGER.error("Pessoa não encontrada com ID: {}", funcionarioDTO.getPessoaId());
             throw new EntityNotFoundException("Pessoa não encontrada com ID: " + funcionarioDTO.getPessoaId());
         }
 
         updateEntity(funcionario, funcionarioDTO);
         funcionario = funcionarioRepository.save(funcionario);
-        LOGGER.info("Funcionário atualizado com sucesso! ID: {}", funcionario.getId());
 
-        try {
-            linhaSubsidioService.deleteByFuncionarioId(id);
-            if (funcionarioDTO.getSubsidios() != null && !funcionarioDTO.getSubsidios().isEmpty()) {
-                LOGGER.info("Atualizando {} subsídios para funcionário ID: {}", funcionarioDTO.getSubsidios().size(), id);
-                linhaSubsidioService.createFromRequest(id, funcionarioDTO.getSubsidios());
-                LOGGER.info("Subsídios atualizados com sucesso para funcionário ID: {}", id);
-            } else {
-                LOGGER.info("Nenhum subsídio fornecido. Subsídios existentes removidos para funcionário ID: {}", id);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Erro ao atualizar subsídios para funcionário ID: {}. Mensagem: {}", id, e.getMessage());
-            throw new RuntimeException("Falha ao atualizar subsídios: " + e.getMessage(), e);
+        linhaSubsidioService.deleteByFuncionarioId(id);
+        if (funcionarioDTO.getSubsidios() != null && !funcionarioDTO.getSubsidios().isEmpty()) {
+            linhaSubsidioService.createFromRequest(id, funcionarioDTO.getSubsidios());
         }
 
-        FuncionarioDTO result = findById(id);
-        LOGGER.info("Funcionário retornado com sucesso após atualização: ID {}", result.getId());
-        return result;
+        return findById(id);
     }
 
     public FuncionarioDTO findById(Long id) {
-        LOGGER.info("Buscando funcionário com ID: {}", id);
         Funcionario funcionario = funcionarioRepository.findById(id)
-                .orElseThrow(() -> {
-                    LOGGER.error("Funcionário não encontrado com ID: {}", id);
-                    return new EntityNotFoundException("Funcionário não encontrado com ID: " + id);
-                });
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + id));
+
         FuncionarioDTO dto = toDTO(funcionario);
         List<LinhaSubsidioDTO> subsidios = linhaSubsidioService.findByFuncionarioId(id);
         dto.setSubsidios(subsidios);
-        LOGGER.info("Funcionário encontrado com sucesso: ID {}", id);
         return dto;
     }
 
     public List<FuncionarioDTO> findAll() {
-        LOGGER.info("Buscando todos os funcionários");
-        List<FuncionarioDTO> result = funcionarioRepository.findAll().stream()
+        return funcionarioRepository.findAll().stream()
                 .map(funcionario -> {
                     FuncionarioDTO dto = toDTO(funcionario);
                     List<LinhaSubsidioDTO> subsidios = linhaSubsidioService.findByFuncionarioId(funcionario.getId());
@@ -134,91 +100,35 @@ public class FuncionarioService {
                     return dto;
                 })
                 .collect(Collectors.toList());
-        LOGGER.info("Encontrados {} funcionários com sucesso", result.size());
-        return result;
     }
 
     public void delete(Long id) {
-        LOGGER.info("Deletando funcionário com ID: {}", id);
         if (!funcionarioRepository.existsById(id)) {
-            LOGGER.error("Funcionário não encontrado com ID: {}", id);
             throw new EntityNotFoundException("Funcionário não encontrado com ID: " + id);
         }
         linhaSubsidioService.deleteByFuncionarioId(id);
         funcionarioRepository.deleteById(id);
-        LOGGER.info("Funcionário deletado com sucesso: ID {}", id);
     }
 
     public boolean existsByPessoaId(Long pessoaId) {
-        LOGGER.info("Verificando se existe funcionário para pessoaId: {}", pessoaId);
-        boolean exists = funcionarioRepository.existsByPessoaId(pessoaId);
-        LOGGER.info("Funcionário existe para pessoaId {}: {}", pessoaId, exists);
-        return exists;
+        return funcionarioRepository.existsByPessoaId(pessoaId);
     }
 
+    // ======================== MÉTODOS PRIVADOS ========================
+
     private void validateFuncionarioDTO(FuncionarioDTO dto) {
-        if (dto == null) {
-            LOGGER.error("FuncionarioDTO não pode ser nulo");
-            throw new IllegalArgumentException("FuncionarioDTO não pode ser nulo.");
-        }
-        if (dto.getPessoaId() == null) {
-            LOGGER.error("PessoaId é obrigatório");
-            throw new IllegalArgumentException("PessoaId é obrigatório.");
-        }
-        if (dto.getTipoDeContrato() == null || dto.getTipoDeContrato().isEmpty()) {
-            LOGGER.error("Tipo de contrato é obrigatório");
-            throw new IllegalArgumentException("Tipo de contrato é obrigatório.");
-        }
-        try {
-            TipoContrato.valueOf(dto.getTipoDeContrato());
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Tipo de contrato inválido: {}", dto.getTipoDeContrato());
-            throw new IllegalArgumentException("Tipo de contrato inválido. Valores válidos: " + Arrays.toString(TipoContrato.values()));
-        }
-        if (dto.getSalario() == null || dto.getSalario().compareTo(BigDecimal.ZERO) <= 0) {
-            LOGGER.error("Salário deve ser maior que zero. Valor recebido: {}", dto.getSalario());
-            throw new IllegalArgumentException("Salário deve ser maior que zero.");
-        }
-        if (dto.getDataAdmissao() == null) {
-            LOGGER.error("Data de admissão é obrigatória");
-            throw new IllegalArgumentException("Data de admissão é obrigatória. Formato esperado: yyyy-MM-dd ou yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        }
-        if (dto.getDescricao() == null || dto.getDescricao().isEmpty()) {
-            LOGGER.error("Descrição é obrigatória");
-            throw new IllegalArgumentException("Descrição é obrigatória.");
-        }
-        if (dto.getCargo() == null || dto.getCargo().isEmpty()) {
-            LOGGER.error("Cargo é obrigatório");
-            throw new IllegalArgumentException("Cargo é obrigatório.");
-        }
-        if (dto.getDepartamentoId() == null) {
-            LOGGER.error("DepartamentoId é obrigatório");
-            throw new IllegalArgumentException("DepartamentoId é obrigatório.");
-        }
-        if (dto.getFechoContas() == null || dto.getFechoContas().isEmpty()) {
-            LOGGER.error("Fecho de período é obrigatório");
-            throw new IllegalArgumentException("Fecho de período é obrigatório.");
-        }
-        try {
-            FechoPeriodo.valueOf(dto.getFechoContas());
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Fecho de período inválido: {}", dto.getFechoContas());
-            throw new IllegalArgumentException("Fecho de período inválido. Valores válidos: " + Arrays.toString(FechoPeriodo.values()));
-        }
-        if (dto.getSegurancaSocial() == null || dto.getSegurancaSocial().isEmpty()) {
-            LOGGER.error("Segurança social é obrigatória");
-            throw new IllegalArgumentException("Segurança social é obrigatória.");
-        }
-        try {
-            SegurancaSocial.valueOf(dto.getSegurancaSocial());
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Segurança social inválida: {}", dto.getSegurancaSocial());
-            throw new IllegalArgumentException("Segurança social inválida. Valores válidos: " + Arrays.toString(SegurancaSocial.values()));
-        }
-        if (dto.getEstadoFuncionario() == null) {
-            LOGGER.error("Estado do funcionário é obrigatório");
-            throw new IllegalArgumentException("Estado do funcionário é obrigatório. Valores válidos: " + Arrays.toString(EstadoFuncionario.values()));
-        }
+        if (dto == null) throw new IllegalArgumentException("FuncionarioDTO não pode ser nulo.");
+        if (dto.getPessoaId() == null) throw new IllegalArgumentException("PessoaId é obrigatório.");
+        if (dto.getTipoDeContrato() == null || dto.getTipoDeContrato().isEmpty()) throw new IllegalArgumentException("Tipo de contrato é obrigatório.");
+        TipoContrato.valueOf(dto.getTipoDeContrato());
+        if (dto.getSalario() == null || dto.getSalario().compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Salário deve ser maior que zero.");
+        if (dto.getDataAdmissao() == null) throw new IllegalArgumentException("Data de admissão é obrigatória.");
+        if (dto.getDescricao() == null || dto.getDescricao().isEmpty()) throw new IllegalArgumentException("Descrição é obrigatória.");
+        if (dto.getCargo() == null || dto.getCargo().isEmpty()) throw new IllegalArgumentException("Cargo é obrigatório.");
+        if (dto.getDepartamentoId() == null) throw new IllegalArgumentException("DepartamentoId é obrigatório.");
+        FechoPeriodo.valueOf(dto.getFechoContas());
+        SegurancaSocial.valueOf(dto.getSegurancaSocial());
+        if (dto.getEstadoFuncionario() == null) throw new IllegalArgumentException("Estado do funcionário é obrigatório.");
     }
 
     private Funcionario toEntity(FuncionarioDTO dto) {
@@ -234,6 +144,8 @@ public class FuncionarioService {
         funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
         funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
+        // ✅ CAMPO EMPRESA
+        funcionario.setEmpresaId(dto.getEmpresaId());
         return funcionario;
     }
 
@@ -250,6 +162,8 @@ public class FuncionarioService {
         dto.setFechoContas(funcionario.getFechoPeriodo().name());
         dto.setSegurancaSocial(funcionario.getSegurancaSocial().name());
         dto.setEstadoFuncionario(funcionario.getEstadoFuncionario());
+        // ✅ CAMPO EMPRESA
+        dto.setEmpresaId(funcionario.getEmpresaId());
         return dto;
     }
 
@@ -264,5 +178,7 @@ public class FuncionarioService {
         funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
         funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
+        // ✅ CAMPO EMPRESA
+        funcionario.setEmpresaId(dto.getEmpresaId());
     }
 }

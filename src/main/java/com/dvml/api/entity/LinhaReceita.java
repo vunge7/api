@@ -48,6 +48,9 @@ public class LinhaReceita{
     @Column(name = "receita_id")
     private long receitaId;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 

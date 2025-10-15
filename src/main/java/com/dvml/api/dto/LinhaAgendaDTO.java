@@ -18,6 +18,8 @@ public class LinhaAgendaDTO {
     private Long funcionarioId;
     private Long pacienteId;
 
+    private Long empresaId;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataRealizacao;
 

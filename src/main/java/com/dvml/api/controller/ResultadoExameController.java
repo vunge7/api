@@ -3,32 +3,34 @@ package com.dvml.api.controller;
 import com.dvml.api.entity.ResultadoExame;
 import com.dvml.api.service.ResultadoExameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/resultados")
 public class ResultadoExameController {
 
     @Autowired
     private ResultadoExameService service;
 
     // 🔹 Criar um novo resultado de exame
-    @PostMapping("resultado/add")
+    @PostMapping
     public ResponseEntity<ResultadoExame> criar(@RequestBody ResultadoExame resultadoExame) {
         ResultadoExame salvo = service.salvar(resultadoExame);
-        return ResponseEntity.ok(salvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     // 🔹 Listar todos os resultados de exames
-    @GetMapping("resultado/all")
+    @GetMapping
     public ResponseEntity<List<ResultadoExame>> listarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }
 
     // 🔹 Buscar resultado de exame por ID
-    @GetMapping("resultado/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ResultadoExame> buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
@@ -36,20 +38,14 @@ public class ResultadoExameController {
     }
 
     // 🔹 Atualizar resultado de exame por ID
-    @PutMapping("resultado/{id}")
-    public ResponseEntity<ResultadoExame> atualizar(@PathVariable Long id, @RequestBody ResultadoExame resultadoExame) {
-        try {
-            ResultadoExame atualizado = service.atualizar(id, resultadoExame);
-            return ResponseEntity.ok(atualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody ResultadoExame resultadoExame) {
+        return service.atualizar(id, resultadoExame);
     }
 
     // 🔹 Deletar resultado de exame por ID
-    @DeleteMapping("resultado/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletar(@PathVariable Long id) {
+        return service.deletar(id);
     }
 }

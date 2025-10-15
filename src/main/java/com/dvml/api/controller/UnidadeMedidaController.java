@@ -10,32 +10,33 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/unidade")
 public class UnidadeMedidaController {
     @Autowired
     private UnidadeMedidaService service;
 
 
-    @GetMapping("unidade/all")
+    @GetMapping("/all")
     public List<UnidadeMedidas> getAllUnidadeMedidas(){
         return service.listarTodasUnidadeMedidas();
     }
 
-    @GetMapping("unidade/{id}")
+    @GetMapping("/{id}")
     public UnidadeMedidas getAllUnidadeMedidasId(@PathVariable long id){
         return service.getUnidadeMedidasById(id);
     }
 
-    @PostMapping("unidade/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public UnidadeMedidas adicionar(@RequestBody @Valid UnidadeMedidas unidadeMedidas){
         return service.criar(unidadeMedidas);
     }
-    @PutMapping("unidade/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateUnidadeMedida(@RequestBody @Valid UnidadeMedidas unidadeMedidas){
         service.update(unidadeMedidas);}
 
-    @DeleteMapping("unidade/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUnidadeMedida(@PathVariable long id) {
         if (service.getUnidadeMedidasById(id) != null) {
             service.deleteUnidadeMedidas(id);

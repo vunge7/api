@@ -6,67 +6,74 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/armazem")
+@RequestMapping("/armazen")
 public class ArmazemController {
 
     private static final Logger logger = LoggerFactory.getLogger(ArmazemController.class);
 
     @Autowired
-    private ArmazemService service;
+    private ArmazemService armazemService;
 
+    // Listar todos os armazéns
     @GetMapping("/all")
-    public List<ArmazemDTO> getAllArmazem() {
+    public ResponseEntity<List<ArmazemDTO>> listarTodosArmazens() {
         logger.info("Requisição para listar todos os armazéns");
-        List<ArmazemDTO> armazens = service.listarTodasArmazem();
-        logger.debug("Armazéns retornados: {}", armazens);
-        return armazens;
+        List<ArmazemDTO> armazens = armazemService.listarTodasArmazem();
+        return ResponseEntity.ok(armazens);
     }
 
+    // Buscar armazém por ID
     @GetMapping("/{id}")
-    public ArmazemDTO getArmazemById(@PathVariable Long id) {
-        logger.info("Requisição para buscar armazém com ID: {}", id);
-        ArmazemDTO armazem = service.getArmazemById(id);
-        logger.debug("Armazém retornado: {}", armazem);
-        return armazem;
+    public ResponseEntity<ArmazemDTO> getArmazemById(@PathVariable Long id) {
+        try {
+            ArmazemDTO armazem = armazemService.getArmazemById(id);
+            return ResponseEntity.ok(armazem);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao buscar armazém: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
+    // Criar novo armazém
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ArmazemDTO adicionar(@RequestBody @Valid ArmazemDTO armazemDTO) {
-        logger.info("Requisição para adicionar armazém: {}", armazemDTO.getDesignacao());
-        if (armazemDTO.getFilialId() == null) {
-            logger.error("Filial ID é obrigatório para armazém: {}", armazemDTO.getDesignacao());
-            throw new IllegalArgumentException("Filial ID é obrigatório");
+    public ResponseEntity<ArmazemDTO> criarArmazem(@RequestBody ArmazemDTO armazemDTO) {
+        try {
+            ArmazemDTO novoArmazem = armazemService.criar(armazemDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoArmazem);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao criar armazém: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        ArmazemDTO created = service.criar(armazemDTO);
-        logger.debug("Armazém criado: {}", created);
-        return created;
     }
 
-    @PutMapping("/edit")
-    @ResponseStatus(HttpStatus.OK)
-    public ArmazemDTO updateArmazem(@RequestBody @Valid ArmazemDTO armazemDTO) {
-        logger.info("Requisição para atualizar armazém com ID: {}", armazemDTO.getId());
-        if (armazemDTO.getFilialId() == null) {
-            logger.error("Filial ID é obrigatório para armazém ID: {}", armazemDTO.getId());
-            throw new IllegalArgumentException("Filial ID é obrigatório");
+    // Atualizar armazém
+    @PutMapping("/{id}")
+    public ResponseEntity<ArmazemDTO> atualizarArmazem(@PathVariable Long id, @RequestBody ArmazemDTO armazemDTO) {
+        try {
+            armazemDTO.setId(id);
+            ArmazemDTO atualizado = armazemService.update(armazemDTO);
+            return ResponseEntity.ok(atualizado);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao atualizar armazém: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        ArmazemDTO updated = service.update(armazemDTO);
-        logger.debug("Armazém atualizado: {}", updated);
-        return updated;
     }
 
+    // Deletar armazém
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteArmazem(@PathVariable Long id) {
-        logger.info("Requisição para deletar armazém com ID: {}", id);
-        service.deleteArmazem(id);
-        logger.debug("Armazém com ID {} deletado com sucesso", id);
+    public ResponseEntity<Void> deletarArmazem(@PathVariable Long id) {
+        try {
+            armazemService.deleteArmazem(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao deletar armazém: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

@@ -42,6 +42,9 @@ public class LinhaAgenda {
     @Column(name = "confirmacao", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean confirmacao = false;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 }

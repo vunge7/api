@@ -27,4 +27,8 @@ public class Triagem {
 
     @Column(name = "usuario_id")
     private long usuarioId;
+
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

@@ -31,4 +31,7 @@ public class LinhaSubsidio {
 
     @Column(name = "usuario_id")
     private Long usuarioId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

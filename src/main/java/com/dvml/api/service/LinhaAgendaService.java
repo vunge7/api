@@ -11,11 +11,14 @@ import java.util.Objects;
 
 @Service
 public class LinhaAgendaService {
+
     @Autowired
     private LinhaAgendaRepository repo;
+
     public List<LinhaAgenda> listarTodasLinhasAgenda() {
         return repo.findAll();
     }
+
     public LinhaAgenda getLinhaAgendaById(long id) {
         return repo.findById(id).get();
     }
@@ -30,10 +33,12 @@ public class LinhaAgendaService {
         linhaagendaToUpdate.setAgendaId(linhaagenda.getAgendaId());
         linhaagendaToUpdate.setStatus(linhaagenda.getStatus());
         linhaagendaToUpdate.setFuncionarioId(linhaagenda.getFuncionarioId());
-        linhaagendaToUpdate.setConsultaId((linhaagenda.getConsultaId()));
-        linhaagendaToUpdate.setConfirmacao((linhaagenda.getConfirmacao()));
+        linhaagendaToUpdate.setConsultaId(linhaagenda.getConsultaId());
+        linhaagendaToUpdate.setConfirmacao(linhaagenda.getConfirmacao());
         linhaagendaToUpdate.setDataRealizacao(linhaagenda.getDataRealizacao());
 
+        // ⚡ Adicionado empresaId
+        linhaagendaToUpdate.setEmpresaId(linhaagenda.getEmpresaId());
 
         if(Objects.nonNull(repo.save(linhaagendaToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,18 +47,15 @@ public class LinhaAgendaService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao editar LinhaAgenda.");
     }
-    public  ResponseEntity<String> deleteLinhaAgenda(long id) {
+
+    public ResponseEntity<String> deleteLinhaAgenda(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("LinhaAgenta  deletada com sucesso!");
+                    .body("LinhaAgenda deletada com sucesso!");
         } else {
-            //throw new IllegalArgumentException("LinhaAgenda não encontrado com o ID: " + id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Falha ao deletar LinhaAgenda.");
         }
-
     }
-
-
 }

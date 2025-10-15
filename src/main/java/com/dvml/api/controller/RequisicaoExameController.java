@@ -13,37 +13,38 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/requisicaoexame")
 public class RequisicaoExameController {
     @Autowired
     private RequisicaoExameService service;
 
 
-    @GetMapping("requisicaoexame/all")
+    @GetMapping("/all")
     public List<RequisicaoExame> getAllReceita() {
         return service.listarTodasRequisicoes();
     }
 
-    @GetMapping("requisicaoexame/all/composto")
+    @GetMapping("/all/composto")
     public List<RequisicaoExameDTO> getAllReceitaComposto() {
         return service.listarTodasRequisicoesComposto();
     }
 
-    @GetMapping("requisicaoexame/{id}")
+    @GetMapping("/{id}")
     public RequisicaoExame getAllRequisicaoById(@PathVariable long id) {
         return service.getRequisicaoById(id);
     }
 
-    @PostMapping("requisicaoexame/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public RequisicaoExame adicionar(@RequestBody @Valid RequisicaoExame requisicaoExame){
         return service.criar(requisicaoExame);
     }
-    @PutMapping("requisicaoexame/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateRequisicao(@RequestBody @Valid RequisicaoExame requisicaoExame){
         service.update(requisicaoExame);}
 
-    @DeleteMapping("requisicaoexame/{id}")
+    @DeleteMapping("/{id}")
     public void deleteequisicao(@PathVariable long id) {
         if (service.getRequisicaoById(id) != null) {
             service.deleteRequisicao(id);

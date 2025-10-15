@@ -36,17 +36,36 @@ public class LinhaOperacaoStockService {
     public LinhaOperacaoStock criar(LinhaOperacaoStock linha) {
         logger.info("Criando nova linha de operação de estoque: {}", linha);
         validateLinhaOperacao(linha);
+
+        // 🔹 Garantir que empresaId seja mantido se fornecido
+        if (linha.getEmpresaId() == null) {
+            logger.debug("empresaId não fornecido, definindo como padrão (opcional)");
+        }
+
         return linhaOperacaoStockRepository.save(linha);
     }
 
     @Transactional
     public LinhaOperacaoStock update(LinhaOperacaoStock linha) {
         logger.info("Atualizando linha de operação de estoque com ID: {}", linha.getId());
-        if (!linhaOperacaoStockRepository.existsById(linha.getId())) {
-            throw new RuntimeException("Linha de operação não encontrada para atualização com ID: " + linha.getId());
-        }
+        LinhaOperacaoStock existente = linhaOperacaoStockRepository.findById(linha.getId())
+                .orElseThrow(() -> new RuntimeException("Linha de operação não encontrada para atualização com ID: " + linha.getId()));
+
         validateLinhaOperacao(linha);
-        return linhaOperacaoStockRepository.save(linha);
+
+        // 🔹 Atualizando campos
+        existente.setArmazemIdOrigem(linha.getArmazemIdOrigem());
+        existente.setLoteIdOrigem(linha.getLoteIdOrigem());
+        existente.setProdutoId(linha.getProdutoId());
+        existente.setQtdAnterior(linha.getQtdAnterior());
+        existente.setQtdOperacao(linha.getQtdOperacao());
+        existente.setQtdActual(linha.getQtdActual());
+        existente.setArmazemIdDestino(linha.getArmazemIdDestino());
+        existente.setLoteIdDestino(linha.getLoteIdDestino());
+        existente.setOperacaoStock(linha.getOperacaoStock());
+        existente.setEmpresaId(linha.getEmpresaId()); // 🔹 Adicionado
+
+        return linhaOperacaoStockRepository.save(existente);
     }
 
     @Transactional
@@ -90,7 +109,6 @@ public class LinhaOperacaoStockService {
         if (linha.getOperacaoStock() == null) {
             throw new IllegalArgumentException("Operação de stock é obrigatória");
         }
-
 
         TipoOperacao tipoOperacao = linha.getOperacaoStock().getTipoOperacao();
 

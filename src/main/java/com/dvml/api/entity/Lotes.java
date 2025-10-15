@@ -28,6 +28,8 @@ public class Lotes {
 
     @Column(name = "status", nullable = false)
     private Boolean status;
+    @Column(name = "empresa_id")
+    private Long empresaId;
 
     // Getters e Setters
     public Long getId() { return id; }
@@ -42,6 +44,9 @@ public class Lotes {
     public void setDataVencimento(LocalDateTime dataVencimento) { this.dataVencimento = dataVencimento; }
     public LocalDateTime getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
+
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
     public Boolean getStatus() { return status; }
     public void setStatus(Boolean status) { this.status = status; }
 }

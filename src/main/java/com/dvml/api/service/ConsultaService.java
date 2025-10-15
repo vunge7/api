@@ -1,12 +1,9 @@
 package com.dvml.api.service;
 
-
 import com.dvml.api.dto.ConsultaSimpleDTO;
 import com.dvml.api.entity.Consulta;
-import com.dvml.api.entity.Inscricao;
 import com.dvml.api.repository.ConsultaRepository;
 import com.dvml.api.repository.InscricaoRepository;
-import com.dvml.api.util.CondicaoInscricao;
 import com.dvml.api.util.EstadoConsulta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,86 +13,88 @@ import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
+
     @Autowired
     private ConsultaRepository repo;
 
     @Autowired
     private InscricaoRepository inscricaoRepository;
 
-
-    public ConsultaSimpleDTO convertEntityToDto(Consulta consulta){
-        ConsultaSimpleDTO consultaDTO = new ConsultaSimpleDTO();
-        consultaDTO.setId(consulta.getId());
-        consultaDTO.setMotivoConsulta(consulta.getMotivoConsulta());
-        consultaDTO.setHistoriaClinica(consulta.getHistoriaClinica());
-        consultaDTO.setExameFisico(consulta.getExameFisico());
-        consultaDTO.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
-        consultaDTO.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
-        consultaDTO.setReceita(consulta.getReceita());
-        consultaDTO.setExamesComplementares(null);
-        return consultaDTO;
+    // Converter Consulta → ConsultaSimpleDTO
+    public ConsultaSimpleDTO convertEntityToDto(Consulta consulta) {
+        ConsultaSimpleDTO dto = new ConsultaSimpleDTO();
+        dto.setId(consulta.getId());
+        dto.setMotivoConsulta(consulta.getMotivoConsulta());
+        dto.setHistoriaClinica(consulta.getHistoriaClinica());
+        dto.setExameFisico(consulta.getExameFisico());
+        dto.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
+        dto.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
+        dto.setReceita(consulta.getReceita());
+        dto.setExamesComplementares(null); // pode ser ajustado se houver lista real
+        dto.setEstadoConsulta(consulta.getEstadoConsulta());
+        return dto;
     }
 
-
-    public Consulta adicionar(Consulta consulta){
-        return  repo.save(consulta);
+    // Criar nova consulta
+    public Consulta adicionar(Consulta consulta) {
+        return repo.save(consulta);
     }
 
-    public Consulta update(Consulta consulta){
-        Consulta consultaToUpdate = repo.findById(consulta.getId()).get();
-        consultaToUpdate.setDataConsulta(consulta.getDataConsulta());
-        consultaToUpdate.setQueixas(consulta.getQueixas());
-        consultaToUpdate.setMotivoConsulta(consulta.getMotivoConsulta());
-        consultaToUpdate.setHistoriaClinica(consulta.getHistoriaClinica());
-        consultaToUpdate.setExameFisico(consulta.getExameFisico());
-        consultaToUpdate.setExameObjectivoGeral(consulta.getExameObjectivoGeral());
-        consultaToUpdate.setHistoriaDoencaActual(consulta.getHistoriaDoencaActual());
-        consultaToUpdate.setDiagnosticoDefinitivo(consulta.getDiagnosticoDefinitivo());
-        consultaToUpdate.setEspecialidade(consulta.getEspecialidade());
-        consultaToUpdate.setInscricaoId( consulta.getInscricaoId());
-        consultaToUpdate.setRecomendacoes(consulta.getRecomendacoes());
-        consultaToUpdate.setObsParaAltaMedica(consulta.getObsParaAltaMedica());
-        consultaToUpdate.setMotivoConsulta(consulta.getMotivoConsulta());
-        consultaToUpdate.setDiagnosticoAoInternamento(consulta.getDiagnosticoAoInternamento());
-        consultaToUpdate.setUsuarioId(consulta.getUsuarioId());
-        consultaToUpdate.setEstadoConsulta(consulta.getEstadoConsulta());
-        consultaToUpdate.setReceita(consulta.getReceita());
-        consultaToUpdate.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
-        consultaToUpdate.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
+    // Atualizar consulta existente
+    public Consulta update(Consulta consulta) {
+        Consulta c = repo.findById(consulta.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
 
-        return  repo.save(consultaToUpdate);
+        c.setDataConsulta(consulta.getDataConsulta());
+        c.setQueixas(consulta.getQueixas());
+        c.setMotivoConsulta(consulta.getMotivoConsulta());
+        c.setHistoriaClinica(consulta.getHistoriaClinica());
+        c.setExameFisico(consulta.getExameFisico());
+        c.setExameObjectivoGeral(consulta.getExameObjectivoGeral());
+        c.setHistoriaDoencaActual(consulta.getHistoriaDoencaActual());
+        c.setDiagnosticoDefinitivo(consulta.getDiagnosticoDefinitivo());
+        c.setEspecialidade(consulta.getEspecialidade());
+        c.setInscricaoId(consulta.getInscricaoId());
+        c.setRecomendacoes(consulta.getRecomendacoes());
+        c.setObsParaAltaMedica(consulta.getObsParaAltaMedica());
+        c.setDiagnosticoAoInternamento(consulta.getDiagnosticoAoInternamento());
+        c.setUsuarioId(consulta.getUsuarioId());
+        c.setEstadoConsulta(consulta.getEstadoConsulta());
+        c.setReceita(consulta.getReceita());
+        c.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
+        c.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
+        c.setEmpresaId(consulta.getEmpresaId()); // ✅ atualizando empresaId
+
+        return repo.save(c);
     }
 
-    public List<ConsultaSimpleDTO> listarTodos(){
+    // Listar todas as consultas
+    public List<ConsultaSimpleDTO> listarTodos() {
         return repo.findAll().stream()
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
 
-
-
-  public ConsultaSimpleDTO getConsultaById(long id){
-        Consulta consulta =   repo.findById(id).get();
-        return  convertEntityToDto(consulta);
+    // Buscar consulta por ID
+    public ConsultaSimpleDTO getConsultaById(long id) {
+        Consulta c = repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+        return convertEntityToDto(c);
     }
 
-
-    public ConsultaSimpleDTO getConsultaByEstadoAndIdInscricao(String estado, long id){
-        Consulta consulta =   repo.getConsultaByEstadoInscricaoAndIdIscricao(estado, id);
-        return  convertEntityToDto(consulta);
+    // Buscar consulta por estado e inscrição
+    public ConsultaSimpleDTO getConsultaByEstadoAndIdInscricao(String estado, long idInscricao) {
+        Consulta c = repo.getConsultaByEstadoInscricaoAndIdIscricao(estado, idInscricao);
+        if (c == null) throw new IllegalArgumentException("Consulta não encontrada");
+        return convertEntityToDto(c);
     }
 
-
-    public void updateEstadoCondicaoConsulta(long id) {
-        Consulta consulta =   repo.getConsultaByEstadoInscricaoAndIdIscricao("ABERTO", id);
-        consulta.setEstadoConsulta(EstadoConsulta.FECHADO);
-        repo.save(consulta);
+    // Fechar consulta (alterar estado)
+    public void updateEstadoCondicaoConsulta(long idInscricao) {
+        Consulta c = repo.getConsultaByEstadoInscricaoAndIdIscricao("ABERTO", idInscricao);
+        if (c != null) {
+            c.setEstadoConsulta(EstadoConsulta.FECHADO);
+            repo.save(c);
+        }
     }
-
-
-
-
-
-
 }
-

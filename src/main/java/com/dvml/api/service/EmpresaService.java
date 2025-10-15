@@ -3,9 +3,10 @@ package com.dvml.api.service;
 import com.dvml.api.dto.EmpresaDTO;
 import com.dvml.api.entity.Empresa;
 import com.dvml.api.repository.EmpresaRepository;
-import com.dvml.api.util.TipoEmpresa;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,99 +16,119 @@ import java.util.stream.Collectors;
 public class EmpresaService {
 
     @Autowired
-    private EmpresaRepository repo;
+    private EmpresaRepository repository;
 
-    // ===================================
-    // ➕ CRIAR EMPRESA
-    // ===================================
-    public EmpresaDTO criar(EmpresaDTO dto) {
-        // Verificar se já existe empresa com o mesmo NIF
-        List<Empresa> existentes = repo.findByNif(dto.getNif());
+    // ✅ Criar nova empresa (matriz ou filial)
+    public Empresa save(Empresa empresa) {
+        // Se for MATRIZ, força empresaMatrizId = 0
+        if (empresa.getTipo() != null && empresa.getTipo().name().equalsIgnoreCase("MATRIZ")) {
+            empresa.setEmpresaMatrizId(0L);
+        }
+
+        // Valida NIF duplicado
+        List<Empresa> existentes = repository.findByNif(empresa.getNif());
         if (!existentes.isEmpty()) {
-            throw new IllegalArgumentException("Já existe uma empresa com este NIF: " + dto.getNif());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma empresa com este NIF.");
         }
 
-        Empresa nova = new Empresa();
-        nova.setNome(dto.getNome());
-        nova.setTipo(dto.getTipo() != null ? dto.getTipo() : TipoEmpresa.MATRIZ);
-        nova.setNif(dto.getNif());
-        nova.setEmail(dto.getEmail());
-        nova.setTelefone(dto.getTelefone());
-        nova.setEndereco(dto.getEndereco());
-        nova.setSeguradoraId(dto.getSeguradoraId());
-
-        // Se não for informado empresaMatrizId, define como 0 (é matriz)
-        nova.setEmpresaMatrizId(dto.getEmpresaMatrizId() == null ? 0L : dto.getEmpresaMatrizId());
-
-        Empresa salvo = repo.save(nova);
-        return mapToDTO(salvo);
+        return repository.save(empresa);
     }
 
-    // ===================================
-    // 🔁 ATUALIZAR EMPRESA
-    // ===================================
-    public EmpresaDTO update(EmpresaDTO dto) {
-        Optional<Empresa> opt = repo.findById(dto.getId());
-        if (opt.isEmpty()) {
-            throw new IllegalArgumentException("Empresa não encontrada com o ID: " + dto.getId());
-        }
+    // ✅ Atualizar empresa
+    public Empresa update(Long id, Empresa dadosAtualizados) {
+        Empresa empresa = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
 
-        Empresa empresa = opt.get();
-        empresa.setNome(dto.getNome());
-        empresa.setTipo(dto.getTipo());
-        empresa.setNif(dto.getNif());
-        empresa.setEmail(dto.getEmail());
-        empresa.setTelefone(dto.getTelefone());
-        empresa.setEndereco(dto.getEndereco());
-        empresa.setSeguradoraId(dto.getSeguradoraId());
-        empresa.setEmpresaMatrizId(dto.getEmpresaMatrizId() == null ? 0L : dto.getEmpresaMatrizId());
+        empresa.setNome(dadosAtualizados.getNome());
+        empresa.setNif(dadosAtualizados.getNif());
+        empresa.setEmail(dadosAtualizados.getEmail());
+        empresa.setTelefone(dadosAtualizados.getTelefone());
+        empresa.setEndereco(dadosAtualizados.getEndereco());
+        empresa.setTipo(dadosAtualizados.getTipo());
+        empresa.setEmpresaMatrizId(dadosAtualizados.getEmpresaMatrizId());
+        empresa.setSeguradoraId(dadosAtualizados.getSeguradoraId());
 
-        Empresa atualizada = repo.save(empresa);
-        return mapToDTO(atualizada);
+        return repository.save(empresa);
     }
 
-    // ===================================
-    // 📋 LISTAR TODAS AS EMPRESAS
-    // ===================================
-    public List<EmpresaDTO> listarTodas() {
-        return repo.findAll().stream()
-                .map(this::mapToDTO)
+    // ✅ Buscar todas as empresas ativas
+    public List<Empresa> findAll() {
+        return repository.findAllByStatusTrueOrderByNomeAsc();
+    }
+
+    // ✅ Buscar uma empresa com filiais
+    public Optional<EmpresaDTO> findById(Long id) {
+        return repository.findById(id)
+                .map(this::mapToDTOWithFiliais);
+    }
+
+    // ✅ Montar árvore completa (todas as matrizes → filiais → subfiliais)
+    public List<EmpresaDTO> listarArvoreCompleta() {
+        List<Empresa> matrizes = repository.findAll().stream()
+                .filter(e -> e.getEmpresaMatrizId() == null || e.getEmpresaMatrizId() == 0)
+                .collect(Collectors.toList());
+
+        return matrizes.stream()
+                .map(this::mapToDTOWithFiliais)
                 .collect(Collectors.toList());
     }
 
-    // ===================================
-    // 🔍 BUSCAR POR ID
-    // ===================================
-    public EmpresaDTO buscarPorId(Long id) {
-        Optional<Empresa> opt = repo.findById(id);
-        return opt.map(this::mapToDTO).orElse(null);
+    // ✅ Buscar filiais diretas de uma empresa
+    public List<EmpresaDTO> getFiliaisByEmpresaId(Long empresaId) {
+        List<Empresa> filiais = repository.findByEmpresaMatrizId(empresaId);
+        return filiais.stream()
+                .map(this::mapToDTOWithFiliais)
+                .collect(Collectors.toList());
     }
 
-    // ===================================
-    // ❌ DELETAR EMPRESA
-    // ===================================
-    public boolean deletarPorId(Long id) {
-        if (repo.existsById(id)) {
-            repo.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    // ===================================
-    // 🔁 MAPEAMENTO ENTITY → DTO
-    // ===================================
-    private EmpresaDTO mapToDTO(Empresa e) {
+    // ✅ Converter recursivamente Empresa → EmpresaDTO (com filiais e subfiliais)
+    private EmpresaDTO mapToDTOWithFiliais(Empresa empresa) {
         EmpresaDTO dto = new EmpresaDTO();
-        dto.setId(e.getId());
-        dto.setNome(e.getNome());
-        dto.setTipo(e.getTipo());
-        dto.setEmpresaMatrizId(e.getEmpresaMatrizId());
-        dto.setNif(e.getNif());
-        dto.setEmail(e.getEmail());
-        dto.setTelefone(e.getTelefone());
-        dto.setEndereco(e.getEndereco());
-        dto.setSeguradoraId(e.getSeguradoraId());
+        dto.setId(empresa.getId());
+        dto.setNome(empresa.getNome());
+        dto.setTipo(empresa.getTipo());
+        dto.setEmpresaMatrizId(empresa.getEmpresaMatrizId());
+        dto.setNif(empresa.getNif());
+        dto.setEmail(empresa.getEmail());
+        dto.setTelefone(empresa.getTelefone());
+        dto.setEndereco(empresa.getEndereco());
+        dto.setSeguradoraId(empresa.getSeguradoraId());
+
+        List<Empresa> filiais = repository.findByEmpresaMatrizId(empresa.getId());
+        List<EmpresaDTO> filiaisDTO = filiais.stream()
+                .map(this::mapToDTOWithFiliais)
+                .collect(Collectors.toList());
+        dto.setFiliais(filiaisDTO);
+
         return dto;
+    }
+
+    // ✅ Deletar empresa (bloqueia exclusão de matriz com filiais)
+    public void delete(Long id) {
+        Empresa empresa = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
+
+        if (empresa.getEmpresaMatrizId() == null || empresa.getEmpresaMatrizId() == 0) {
+            List<Empresa> filiais = repository.findByEmpresaMatrizId(empresa.getId());
+            if (!filiais.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Não é possível deletar a matriz enquanto houver filiais associadas.");
+            }
+        }
+
+        repository.deleteById(id);
+    }
+
+    // ✅ Deletar matriz e todas as filiais (recursivo)
+    public void deleteCascade(Long id) {
+        Empresa empresa = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
+
+        List<Empresa> filiais = repository.findByEmpresaMatrizId(empresa.getId());
+        for (Empresa filial : filiais) {
+            deleteCascade(filial.getId());
+        }
+
+        repository.deleteById(id);
     }
 }

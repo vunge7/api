@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +33,8 @@ public class OperacaoStockDTO {
 
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
     private String descricao;
+
+    private Long empresaId; // ✅ campo adicionado
 
     private List<LinhaOperacaoStockDTO> linhas = new ArrayList<>();
 }

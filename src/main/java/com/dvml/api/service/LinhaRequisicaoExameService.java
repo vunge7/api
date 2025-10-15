@@ -14,10 +14,11 @@ import java.util.Optional;
 
 @Service
 public class LinhaRequisicaoExameService {
+
     @Autowired
     private LinhaRequisicaoExameRepository repo;
 
-    public LinhaRequisicaoExame getLinhaRequisicaoById(long id){
+    public LinhaRequisicaoExame getLinhaRequisicaoById(long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -27,46 +28,47 @@ public class LinhaRequisicaoExameService {
 
     public ResponseEntity<String> criar(LinhaRequisicaoExame linhaRequisicaoExame) {
         linhaRequisicaoExame.setHora(LocalDateTime.now());
-        if(Objects.nonNull(repo.save(linhaRequisicaoExame))) {
+        if (Objects.nonNull(repo.save(linhaRequisicaoExame))) {
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Linha Requisicao criada com sucesso!");
+                    .body("Linha Requisição criada com sucesso!");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Falha ao criar o Linha Requisicao.");
+                .body("Falha ao criar a Linha Requisição.");
     }
 
-    public ResponseEntity<String> update(LinhaRequisicaoExame linhaRequisicaoExame){
+    public ResponseEntity<String> update(LinhaRequisicaoExame linhaRequisicaoExame) {
         Optional<LinhaRequisicaoExame> opt = repo.findById(linhaRequisicaoExame.getId());
         if (opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Linha Requisicao não encontrada!");
+                    .body("Linha Requisição não encontrada!");
         }
-        LinhaRequisicaoExame LinhaRequisicaoToUpdate = opt.get();
-        LinhaRequisicaoToUpdate.setRequisicaoExameId(linhaRequisicaoExame.getRequisicaoExameId());
-        LinhaRequisicaoToUpdate.setStatus(linhaRequisicaoExame.getStatus());
-        LinhaRequisicaoToUpdate.setExame(linhaRequisicaoExame.getExame());
-        LinhaRequisicaoToUpdate.setHora(linhaRequisicaoExame.getHora());
-        LinhaRequisicaoToUpdate.setEstado(linhaRequisicaoExame.getEstado());
-        LinhaRequisicaoToUpdate.setProdutoId(linhaRequisicaoExame.getProdutoId());
-        // CORREÇÃO: Atualizar o campo finalizado!
-        LinhaRequisicaoToUpdate.setFinalizado(linhaRequisicaoExame.getFinalizado());
 
-        if (Objects.nonNull(repo.save(LinhaRequisicaoToUpdate))){
+        LinhaRequisicaoExame linhaRequisicaoToUpdate = opt.get();
+        linhaRequisicaoToUpdate.setRequisicaoExameId(linhaRequisicaoExame.getRequisicaoExameId());
+        linhaRequisicaoToUpdate.setStatus(linhaRequisicaoExame.getStatus());
+        linhaRequisicaoToUpdate.setExame(linhaRequisicaoExame.getExame());
+        linhaRequisicaoToUpdate.setHora(linhaRequisicaoExame.getHora());
+        linhaRequisicaoToUpdate.setEstado(linhaRequisicaoExame.getEstado());
+        linhaRequisicaoToUpdate.setProdutoId(linhaRequisicaoExame.getProdutoId());
+        linhaRequisicaoToUpdate.setFinalizado(linhaRequisicaoExame.getFinalizado());
+        linhaRequisicaoToUpdate.setEmpresaId(linhaRequisicaoExame.getEmpresaId()); // ✅ campo adicionado
+
+        if (Objects.nonNull(repo.save(linhaRequisicaoToUpdate))) {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Linha Requisicao editada com sucesso!");
+                    .body("Linha Requisição editada com sucesso!");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Falha ao editar a Linha Requisicao.");
+                .body("Falha ao editar a Linha Requisição.");
     }
 
     public ResponseEntity<String> deleteLinhaRequisicao(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("LinhaRequisicao deletada com sucesso!");
+                    .body("Linha Requisição deletada com sucesso!");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Erro ao deletar a Linha Requisicao.");
+                    .body("Erro ao deletar a Linha Requisição.");
         }
     }
 

@@ -11,22 +11,23 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/productgroup")
 public class ProductGroupController {
     @Autowired
     private ProductGroupService service;
 
-    @GetMapping("productgroup/all")
+    @GetMapping("/all")
     public List<ProductGroup> getAllProduto() {
         return service.listarTodosGrupos();
     }
 
-    @PutMapping("productgroup/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateProduto(@RequestBody @Valid ProductGroup group) {
         service.update(group);
     }
 
-    @DeleteMapping("productgroup/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable long id) {
         if (service.getProdutoById(id) != null) {
             service.deleteGroup(id);
@@ -36,7 +37,7 @@ public class ProductGroupController {
 
     }
 
-    @PostMapping("productgroup/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid ProductGroup group) {
         return service.criar(group);

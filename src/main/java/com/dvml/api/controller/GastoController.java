@@ -13,32 +13,33 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/gasto")
 public class GastoController {
     @Autowired
     private GastoService service;
 
-    @GetMapping("gasto/all")
+    @GetMapping("/all")
     public List <Gasto> getAllGasto() {
         return service.listarTodosGasto();
     }
 
-    @GetMapping("gasto/{id}")
+    @GetMapping("/{id}")
     public Gasto getAllGastoById(@PathVariable long id) {
         return service.getGastoById(id);
     }
 
 
-    @PostMapping("gasto/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Gasto adicionar (@RequestBody  Gasto gasto){
         return service.criar(gasto);
     }
-    @PutMapping("gasto/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateGasto(@RequestBody @Valid Gasto gasto){
         service.update(gasto);}
 
-    @DeleteMapping("gasto/{id}")
+    @DeleteMapping("/{id}")
     public void deleteGasto(@PathVariable long id) {
         if (service.getGastoById(id) != null) {
             service.deleteGasto(id);

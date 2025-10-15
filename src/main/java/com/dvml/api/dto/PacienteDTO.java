@@ -44,5 +44,6 @@ public class PacienteDTO {
     private String endereco;
     private String nomePhoto;
     private long pessoaId;
+    private Long empresaId;
 
 }

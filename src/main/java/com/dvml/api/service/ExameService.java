@@ -75,7 +75,10 @@ public class ExameService {
     public ExameDTO criar(ExameDTO dto) {
         logger.info("Criando exame para requisição ID: {}", dto.getRequisicaoExameId());
         validateExameDTO(dto);
+
         Exame exame = dto.toEntity();
+        exame.setEmpresaId(dto.getEmpresaId()); // ✅ adiciona empresaId
+
         Exame saved = exameRepository.save(exame);
         logger.debug("Exame criado: ID {}", saved.getId());
         return convertToDTO(saved);
@@ -89,6 +92,7 @@ public class ExameService {
                     logger.error("Exame com ID {} não encontrado", dto.getId());
                     return new IllegalArgumentException("Exame não encontrado");
                 });
+
         validateExameDTO(dto);
         exame.setRequisicaoExameId(dto.getRequisicaoExameId());
         exame.setPacienteId(dto.getPacienteId());
@@ -100,6 +104,8 @@ public class ExameService {
         exame.setResultadoQuantitativo(dto.getResultadoQuantitativo());
         exame.setStatusAmostra(dto.getStatusAmostra());
         exame.setObservacoes(dto.getObservacoes());
+        exame.setEmpresaId(dto.getEmpresaId()); // ✅ atualiza empresaId
+
         Exame updated = exameRepository.save(exame);
         logger.debug("Exame atualizado: ID {}", updated.getId());
         return convertToDTO(updated);
@@ -168,6 +174,8 @@ public class ExameService {
                         .orElse(armazem.getDesignacao()))
                 .orElse("Armazém não encontrado");
 
-        return ExameDTO.fromEntity(exame, nomePaciente, nomeMedico, nomeTipoExame, nomeArmazem);
+        ExameDTO dto = ExameDTO.fromEntity(exame, nomePaciente, nomeMedico, nomeTipoExame, nomeArmazem);
+        dto.setEmpresaId(exame.getEmpresaId()); // ✅ garante que empresaId vá no DTO
+        return dto;
     }
 }

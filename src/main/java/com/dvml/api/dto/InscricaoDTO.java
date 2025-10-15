@@ -7,7 +7,6 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.Date;
 
-
 @Data
 @Getter
 public class InscricaoDTO {
@@ -18,8 +17,10 @@ public class InscricaoDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataActualizacao;
 
-    private  String estado;
-    private  String condicaoInscricao;
+    private String estado;
+    private String condicaoInscricao;
     private PacienteDTO paciente;
 
+    // ⚡ Adicionado
+    private Long empresaId;
 }

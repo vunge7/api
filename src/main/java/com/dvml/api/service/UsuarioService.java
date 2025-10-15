@@ -1,4 +1,5 @@
 package com.dvml.api.service;
+
 import com.dvml.api.dto.UsuarioDTO;
 import com.dvml.api.entity.Funcao;
 import com.dvml.api.entity.Funcionario;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class UsuarioService {
 
+    private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -40,51 +43,22 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO cadastrarUsuario(UsuarioDTO usuarioDTO) {
-        Logger log = LoggerFactory.getLogger(UsuarioService.class);
         log.info("Iniciando cadastro de usuário: {}", usuarioDTO.getUserName());
 
-        // Validações iniciais
-        if (usuarioDTO.getUserName() == null || usuarioDTO.getUserName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Username não pode ser nulo ou vazio");
-        }
         if (usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
             throw new IllegalArgumentException("Username já associado a outro usuário");
         }
 
-        // Busca funcionário
-        Optional<Funcionario> funcionarioOpt;
-        try {
-            log.debug("Buscando funcionário com ID: {}", usuarioDTO.getFuncionarioId());
-            funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
-        } catch (DataAccessException e) {
-            log.error("Erro ao buscar funcionário com ID {}: {}", usuarioDTO.getFuncionarioId(), e.getMessage(), e);
-            throw new RuntimeException("Falha ao buscar funcionário no banco de dados", e);
-        }
+        Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
         if (!funcionarioOpt.isPresent()) {
-            log.warn("Funcionário não encontrado com ID: {}", usuarioDTO.getFuncionarioId());
             throw new IllegalArgumentException("Funcionário não encontrado com ID: " + usuarioDTO.getFuncionarioId());
         }
 
-        // Busca função
-        Optional<Funcao> funcaoOpt;
-        try {
-            log.debug("Buscando função com ID: {}", usuarioDTO.getFuncaoId());
-            funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
-        } catch (DataAccessException e) {
-            log.error("Erro ao buscar função com ID {}: {}", usuarioDTO.getFuncaoId(), e.getMessage(), e);
-            throw new RuntimeException("Falha ao buscar função no banco de dados", e);
-        }
+        Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
         if (!funcaoOpt.isPresent()) {
-            log.warn("Função não encontrada com ID: {}", usuarioDTO.getFuncaoId());
             throw new IllegalArgumentException("Função não encontrada com ID: " + usuarioDTO.getFuncaoId());
         }
 
-        // Valida senha
-        if (usuarioDTO.getSenha() == null || usuarioDTO.getSenha().trim().length() < 8) {
-            throw new IllegalArgumentException("Senha inválida, deve ter pelo menos 8 caracteres");
-        }
-
-        // Criar usuário
         Usuario usuario = new Usuario();
         usuario.setUserName(usuarioDTO.getUserName());
         usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
@@ -94,82 +68,47 @@ public class UsuarioService {
         usuario.setFuncionarioId(usuarioDTO.getFuncionarioId());
         usuario.setFuncaoId(usuarioDTO.getFuncaoId());
         usuario.setIp(usuarioDTO.getIp());
+        usuario.setEmpresaId(usuarioDTO.getEmpresaId());
         usuario.setDataCadastro(new Date());
         usuario.setDataAtualizacao(new Date());
         usuario.setStatus(true);
 
-        // Validar usuário
-        log.debug("Validando usuário");
         validarUsuario(usuario);
 
-        // Salvar no banco
-        try {
-            log.debug("Salvando usuário no banco");
-            usuario = usuarioRepository.save(usuario);
-            log.info("Usuário salvo com sucesso: {}", usuario.getUserName());
-        } catch (DataAccessException e) {
-            log.error("Erro ao salvar usuário no banco: {}", e.getMessage(), e);
-            throw new RuntimeException("Falha ao salvar usuário no banco de dados: " + e.getMessage(), e);
-        }
-
+        usuario = usuarioRepository.save(usuario);
         return convertToDTO(usuario);
     }
+
     @Transactional
     public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
-        try {
-            Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-            if (!usuarioOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Erro ao editar usuário: Usuário não encontrado com ID: " + id);
-            }
-
-            Usuario usuarioExistente = usuarioOpt.get();
-
-            if (!usuarioExistente.getUserName().equals(usuarioDTO.getUserName()) &&
-                    usuarioRepository.existsByUserName(usuarioDTO.getUserName())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Username já associado a outro usuário");
-            }
-
-            Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
-            if (!funcionarioOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Funcionário não encontrado");
-            }
-
-            Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
-            if (!funcaoOpt.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Erro ao editar usuário: Função não encontrada");
-            }
-
-            usuarioExistente.setUserName(usuarioDTO.getUserName());
-            usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
-            usuarioExistente.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
-            usuarioExistente.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
-            usuarioExistente.setTipoUsuario(usuarioDTO.getTipoUsuario());
-            usuarioExistente.setFuncionarioId(usuarioDTO.getFuncionarioId());
-            usuarioExistente.setFuncaoId(usuarioDTO.getFuncaoId());
-            usuarioExistente.setIp(usuarioDTO.getIp());
-            usuarioExistente.setDataAtualizacao(new Date());
-
-            validarUsuario(usuarioExistente);
-
-            usuarioExistente = usuarioRepository.save(usuarioExistente);
-
-            UsuarioDTO responseDTO = convertToDTO(usuarioExistente);
-            return ResponseEntity.ok(responseDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Erro ao editar usuário: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao editar usuário: " + e.getMessage());
+        log.info("Atualizando usuário com ID: {}", id);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (!usuarioOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Usuário não encontrado com ID: " + id);
         }
+
+        Usuario usuarioExistente = usuarioOpt.get();
+        usuarioExistente.setUserName(usuarioDTO.getUserName());
+        usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        usuarioExistente.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
+        usuarioExistente.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
+        usuarioExistente.setTipoUsuario(usuarioDTO.getTipoUsuario());
+        usuarioExistente.setFuncionarioId(usuarioDTO.getFuncionarioId());
+        usuarioExistente.setFuncaoId(usuarioDTO.getFuncaoId());
+        usuarioExistente.setIp(usuarioDTO.getIp());
+        usuarioExistente.setEmpresaId(usuarioDTO.getEmpresaId());
+        usuarioExistente.setDataAtualizacao(new Date());
+
+        validarUsuario(usuarioExistente);
+        usuarioExistente = usuarioRepository.save(usuarioExistente);
+
+        return ResponseEntity.ok(convertToDTO(usuarioExistente));
     }
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarTodosUsuarios() {
+        log.info("Listando todos os usuários");
         return usuarioRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -177,6 +116,7 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosAtivos() {
+        log.info("Listando usuários ativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -184,13 +124,18 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosInativos() {
-        return usuarioRepository.findByEstadoUsuario(EstadoUsuario.DESACTIVO).stream()
+        log.info("Listando usuários inativos");
+        return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
+        log.info("Listando usuários por funcionário ID: {}", funcionarioId);
+        if (!funcionarioRepository.existsById(funcionarioId)) {
+            throw new IllegalArgumentException("Funcionário não encontrado com ID: " + funcionarioId);
+        }
         return usuarioRepository.findByFuncionarioId(funcionarioId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -198,6 +143,10 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
+        log.info("Listando usuários por função ID: {}", funcaoId);
+        if (!funcaoRepository.existsById(funcaoId)) {
+            throw new IllegalArgumentException("Função não encontrada com ID: " + funcaoId);
+        }
         return usuarioRepository.findByFuncaoId(funcaoId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -205,32 +154,42 @@ public class UsuarioService {
 
     @Transactional
     public ResponseEntity<String> deleteUsuario(Long id) {
-        if (usuarioRepository.existsById(id)) {
+        log.info("Deletando usuário com ID: {}", id);
+        if (!usuarioRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Usuário não encontrado com ID: " + id);
+        }
+        try {
             usuarioRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Usuário deletado com sucesso!");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Usuário não encontrado com ID: " + id);
+        } catch (DataAccessException e) {
+            log.error("Erro ao deletar usuário com ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao deletar usuário: " + e.getMessage());
         }
     }
 
     @Transactional
     public ResponseEntity<String> inativarUsuario(Long id) {
-        try {
-            Usuario usuario = usuarioRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
-            usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
-            usuarioRepository.save(usuario);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Usuário inativado com sucesso!");
-        } catch (EntityNotFoundException e) {
+        log.info("Inativando usuário com ID: {}", id);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (!usuarioOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Erro ao inativar usuário: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao inativar usuário: " + e.getMessage());
+                    .body("Usuário não encontrado com ID: " + id);
         }
+        Usuario usuario = usuarioOpt.get();
+        usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
+        usuario.setDataAtualizacao(new Date());
+        usuarioRepository.save(usuario);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Usuário inativado com sucesso!");
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Usuario> findByUserName(String username) {
+        log.info("Buscando usuário por username: {}", username);
+        return usuarioRepository.findByUserName(username);
     }
 
     private UsuarioDTO convertToDTO(Usuario usuario) {
@@ -243,31 +202,14 @@ public class UsuarioService {
         dto.setFuncionarioId(usuario.getFuncionarioId());
         dto.setFuncaoId(usuario.getFuncaoId());
         dto.setIp(usuario.getIp());
+        dto.setEmpresaId(usuario.getEmpresaId());
         return dto;
     }
 
     private void validarUsuario(Usuario usuario) {
-        if (usuario.getUserName() == null || usuario.getUserName().trim().length() < 3 || usuario.getUserName().trim().length() > 100) {
-            throw new IllegalArgumentException("Username inválido: deve ter entre 3 e 100 caracteres");
-        }
-        if (usuario.getSenha() == null || usuario.getSenha().trim().length() < 8 || usuario.getSenha().trim().length() > 100) {
-            throw new IllegalArgumentException("Senha inválida: deve ter entre 8 e 100 caracteres");
-        }
-        if (usuario.getNumeroOrdem() == null || usuario.getNumeroOrdem().trim().length() < 1 || usuario.getNumeroOrdem().trim().length() > 100) {
-            throw new IllegalArgumentException("Número de ordem inválido: deve ter entre 1 e 100 caracteres");
-        }
-        if (usuario.getEstadoUsuario() == null) {
-            throw new IllegalArgumentException("Estado do usuário inválido");
-        }
-        if (usuario.getTipoUsuario() == null) {
-            throw new IllegalArgumentException("Tipo de usuário inválido");
-        }
-        if (usuario.getIp() != null && usuario.getIp().trim().length() > 100) {
-            throw new IllegalArgumentException("IP inválido: deve ter no máximo 100 caracteres");
-        }
-    }
-
-    public Optional<Usuario> findByUserName(String userName) {
-        return usuarioRepository.findByUserName(userName);
+        if (usuario.getUserName() == null || usuario.getUserName().trim().length() < 3)
+            throw new IllegalArgumentException("Username inválido");
+        if (usuario.getSenha() == null || usuario.getSenha().trim().length() < 8)
+            throw new IllegalArgumentException("Senha inválida");
     }
 }

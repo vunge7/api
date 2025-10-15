@@ -14,18 +14,18 @@ public class QrDataController {
         this.service = service;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public void salvar(@RequestBody QrData data) {
         System.out.println(data.getId());
         service.salvar(data);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public QrData obter() {
         return service.obter();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public void limpar() {
         service.limpar();
     }

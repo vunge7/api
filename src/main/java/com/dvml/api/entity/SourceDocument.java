@@ -64,5 +64,8 @@ public class SourceDocument {
     @Column(name = "customer_id", length = 30)
     private int customerId;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
 
 }

@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/triagem")
 public class TriagemController {
 
     @Autowired
     TriagemService service;
 
-    @GetMapping("/triagem/all")
+    @GetMapping("/all")
     public List<TriagemDTO> getAllTriagem(){
        return  service.listarTodos();
     }

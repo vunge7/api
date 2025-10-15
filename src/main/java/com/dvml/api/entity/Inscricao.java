@@ -52,4 +52,7 @@ public class Inscricao {
 
     @Column(name = "paciente_id")
     private long pacienteId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

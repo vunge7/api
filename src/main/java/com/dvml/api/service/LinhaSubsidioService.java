@@ -55,6 +55,7 @@ public class LinhaSubsidioService {
             linha.setFuncionarioId(funcionarioId);
             linha.setValor(BigDecimal.valueOf(dto.getValor()));
             linha.setUsuarioId(dto.getUsuarioId());
+            linha.setEmpresaId(dto.getEmpresaId()); // ✅ adicionado
             return linha;
         }).collect(Collectors.toList());
 
@@ -106,6 +107,7 @@ public class LinhaSubsidioService {
         linha.setFuncionarioId(dto.getFuncionarioId());
         linha.setValor(BigDecimal.valueOf(dto.getValor()));
         linha.setUsuarioId(dto.getUsuarioId());
+        linha.setEmpresaId(dto.getEmpresaId()); // ✅ adicionado
 
         LinhaSubsidio updatedLinha = linhaSubsidioRepository.save(linha);
         return toDTO(updatedLinha);
@@ -143,6 +145,7 @@ public class LinhaSubsidioService {
         }
         dto.setValor(linha.getValor().doubleValue());
         dto.setUsuarioId(linha.getUsuarioId());
+        dto.setEmpresaId(linha.getEmpresaId()); // ✅ adicionado
         return dto;
     }
 }

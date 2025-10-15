@@ -1,9 +1,6 @@
 package com.dvml.api.service;
 
-
-import com.dvml.api.entity.Pessoa;
 import com.dvml.api.entity.Procedimento;
-import com.dvml.api.repository.PessoaRepository;
 import com.dvml.api.repository.ProcedimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +17,6 @@ public class ProcedimentoService {
     private ProcedimentoRepository repo;
 
     @Autowired
-
     private ProcedimentoRepository procedimentoRepository;
 
     public List<Procedimento> listarTodosProcedimentos() {
@@ -45,7 +41,7 @@ public class ProcedimentoService {
         procedimentoToUpdate.setInscricaoId(procedimento.getInscricaoId());
         procedimentoToUpdate.setStatus(procedimento.getStatus());
         procedimentoToUpdate.setDataActualizacao(procedimento.getDataActualizacao());
-
+        procedimentoToUpdate.setEmpresaId(procedimento.getEmpresaId()); // ✅ Adicionado
 
         if(Objects.nonNull(repo.save(procedimentoToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -54,21 +50,15 @@ public class ProcedimentoService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao editar Procedimento.");
     }
-    public  ResponseEntity<String> deleteProcedimento(long id) {
+
+    public ResponseEntity<String> deleteProcedimento(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Procedimento  deletada com sucesso!");
+                    .body("Procedimento deletado com sucesso!");
         } else {
-            //throw new IllegalArgumentException("Pessoa não encontrado com o ID: " + id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao deletar procedimento.");
+                    .body("Falha ao deletar Procedimento.");
         }
-
     }
-
-
 }
-
-
-

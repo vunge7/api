@@ -32,4 +32,7 @@ public class LinhasLotes {
     @Column(name = "quantidade", nullable = false)
     @NotNull(message = "quantidade é obrigatória")
     private Integer quantidade;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

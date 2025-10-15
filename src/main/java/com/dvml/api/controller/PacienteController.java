@@ -10,27 +10,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/paciente")
 public class PacienteController {
     @Autowired
     PacienteService service;
 
-    @GetMapping("/paciente/{id}")
+    @GetMapping("/{id}")
     public PacienteDTO getPacienteById(@PathVariable long id){
         return service.getPacienteById(id);
     }
 
-    @GetMapping("/paciente/all")
+    @GetMapping("/all")
     public List<PacienteDTO> getPacientes(){
         return service.listarTodos();
     }
 
-    @PostMapping("/paciente/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Paciente criarPaciente(@RequestBody Paciente paciente){
         return service.adicionar(paciente);
     }
 
-    @PutMapping("/paciente/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Paciente updatePaciente(@RequestBody Paciente paciente){
        return  service.update(paciente);

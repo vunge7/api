@@ -7,13 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/agenda-app")
 public class AgendaAppController {
 
     @Autowired
-    private AgendaAppService service;
+    private AgendaAppService agendaAppService;
 
-    @PostMapping("agenda/app/add")
+    // Criar agendamento via app
+    @PostMapping
     public ResponseEntity<?> criarAgendaViaApp(@RequestBody AgendaAppDTO dto) {
-        return service.criarAgendaViaApp(dto);
+        try {
+            return agendaAppService.criarAgendaViaApp(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao criar agendamento: " + e.getMessage());
+        }
     }
 }

@@ -10,20 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/seguradora")
 public class SeguradoraController {
     @Autowired
     private SeguradoraService service;
 
-    @GetMapping("seguradora/all")
+    @GetMapping("/all")
     public List<Seguradora> getAllSeguradora(){
         return service.listarTodasSeguradoras();
     }
 
-    @GetMapping("seguradora/{id}")
+    @GetMapping("/{id}")
     public Seguradora getAllSeguradoraById(@PathVariable long id){
         return service.getSeguradoraById(id);
     }
-    @PostMapping("seguradora/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public  Seguradora adicionar(@RequestBody Seguradora seguradora){
         System.out.println("Nome: " +seguradora.getNome());

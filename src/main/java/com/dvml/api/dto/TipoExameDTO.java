@@ -24,12 +24,15 @@ public class TipoExameDTO {
     @Size(max = 50, message = "Tipo de amostra deve ter no máximo 50 caracteres")
     private String tipoAmostra;
 
+    private Long empresaId; // <--- campo empresaId adicionado
+
     public TipoExame toEntity() {
         TipoExame tipoExame = new TipoExame();
         tipoExame.setId(this.id);
         tipoExame.setNome(this.nome);
         tipoExame.setDescricao(this.descricao);
         tipoExame.setTipoAmostra(this.tipoAmostra);
+        tipoExame.setEmpresaId(this.empresaId); // <--- empresaId convertido para Entity
         return tipoExame;
     }
 
@@ -39,6 +42,7 @@ public class TipoExameDTO {
         dto.setNome(tipoExame.getNome());
         dto.setDescricao(tipoExame.getDescricao());
         dto.setTipoAmostra(tipoExame.getTipoAmostra());
+        dto.setEmpresaId(tipoExame.getEmpresaId()); // <--- empresaId convertido para DTO
         return dto;
     }
 }

@@ -34,6 +34,7 @@ public class LinhaResultadoService {
                     existing.setUnidadeId(novo.getUnidadeId());
                     existing.setResultadoId(novo.getResultadoId());
                     existing.setObservacao(novo.getObservacao());
+                    existing.setEmpresaId(novo.getEmpresaId()); // ✅ adicionado
                     return repository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("LinhaResultado não encontrada com ID: " + id));

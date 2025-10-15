@@ -56,6 +56,9 @@ public class Exame {
     @Column(name = "observacoes", length = 500)
     private String observacoes;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     public enum ResultadoQualitativo {
         POSITIVO, NEGATIVO, INCONCLUSIVO
     }

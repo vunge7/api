@@ -24,4 +24,5 @@ public class InscricaoFullDTO {
     private String nomeCompleto;
     private String corTriagemManchester;
     private String condicaoInscricao;
+    private Long empresaId;
 }

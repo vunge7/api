@@ -27,6 +27,7 @@ public class PainelPermissaoService {
         dto.setPainelId(painelPermissao.getPainelId());
         dto.setUsuarioId(painelPermissao.getUsuarioId());
         dto.setFilialId(painelPermissao.getFilialId());
+        dto.setEmpresaId(painelPermissao.getEmpresaId()); // ✅ Adicionado
         return dto;
     }
 
@@ -40,6 +41,7 @@ public class PainelPermissaoService {
         painelPermissao.setPainelId(dto.getPainelId());
         painelPermissao.setUsuarioId(dto.getUsuarioId());
         painelPermissao.setFilialId(dto.getFilialId());
+        painelPermissao.setEmpresaId(dto.getEmpresaId()); // ✅ Adicionado
         return painelPermissao;
     }
 

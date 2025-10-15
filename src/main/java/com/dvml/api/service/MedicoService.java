@@ -26,8 +26,10 @@ public class MedicoService {
 
     @Autowired
     private PessoaRepository PessoaRepository;
+
     @Autowired
     private AgendaRepository AgendaRepository;
+
     @Autowired
     private LinhaAgendaRepository LinhaAgendaRepository;
 
@@ -53,7 +55,7 @@ public class MedicoService {
             Pessoa pessoa = pessoaOpt.get();
 
             MedicoDTO medicoDTO = new MedicoDTO(
-                    usuario.getId(), // Usando o ID do usuário como ID do médico
+                    usuario.getId(),
                     pessoa.getNome(),
                     usuario.getNumeroOrdem(),
                     usuario.getUserName(),
@@ -61,15 +63,16 @@ public class MedicoService {
                     pessoa.getEmail(),
                     pessoa.getDataNascimento(),
                     funcionario.getDataAdmissao(),
-                    funcionario.getTipoContrato().name(), // Corrigido de getTipoDeContrato() para getTipoContrato().name()
+                    funcionario.getTipoContrato().name(),
                     funcionario.getSalario(),
                     new BigDecimal(0d),
                     funcionario.getDescricao(),
-                    funcionario.getFechoPeriodo().name(), // Corrigido de getFechoContas() para getFechoPeriodo().name()
+                    funcionario.getFechoPeriodo().name(),
                     pessoa.getEndereco(),
                     pessoa.getGenero(),
                     usuario.getId(),
-                    funcionario.getId()
+                    funcionario.getId(),
+                    funcionario.getEmpresaId() // empresaId adicionado aqui
             );
 
             return ResponseEntity.ok(medicoDTO);
@@ -106,9 +109,11 @@ public class MedicoService {
                             ))
                             .collect(Collectors.toList());
 
+                    // corrigido: agora passa agenda.getEmpresaId() como terceiro argumento
                     return new AgendaDTO(
                             agenda.getId(),
                             agenda.getDescricao(),
+                            agenda.getEmpresaId(), // <-- correção
                             linhaDTOs
                     );
                 })
@@ -139,15 +144,16 @@ public class MedicoService {
                                 pessoa.getEmail(),
                                 pessoa.getDataNascimento(),
                                 funcionario.getDataAdmissao(),
-                                funcionario.getTipoContrato().name(), // Corrigido de getTipoDeContrato() para getTipoContrato().name()
+                                funcionario.getTipoContrato().name(),
                                 funcionario.getSalario(),
                                 new BigDecimal(0d),
                                 funcionario.getDescricao(),
-                                funcionario.getFechoPeriodo().name(), // Corrigido de getFechoContas() para getFechoPeriodo().name()
+                                funcionario.getFechoPeriodo().name(),
                                 pessoa.getEndereco(),
                                 pessoa.getGenero(),
                                 usuario.getId(),
-                                funcionario.getId()
+                                funcionario.getId(),
+                                funcionario.getEmpresaId() // empresaId adicionado aqui também
                         );
                     }
                     return null; // Ou lançar uma exceção, dependendo do requisito

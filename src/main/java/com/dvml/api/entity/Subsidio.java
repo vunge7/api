@@ -17,4 +17,7 @@ public class Subsidio {
 
     @Column(nullable = false)
     private String descricao;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

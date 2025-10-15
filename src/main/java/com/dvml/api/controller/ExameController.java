@@ -9,58 +9,83 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/exame")
 public class ExameController {
+
     private static final Logger logger = LoggerFactory.getLogger(ExameController.class);
 
     @Autowired
-    private ExameService service;
+    private ExameService exameService;
 
+    // Listar todos os exames
     @GetMapping("/all")
-    public ResponseEntity<List<ExameDTO>> getAll() {
+    public ResponseEntity<List<ExameDTO>> listarTodosExames() {
         logger.info("Requisição para listar todos os exames");
-        List<ExameDTO> exames = service.listarTodos();
-        logger.debug("Total de exames retornados: {}", exames.size());
+        List<ExameDTO> exames = exameService.listarTodos();
         return ResponseEntity.ok(exames);
     }
 
+    // Buscar exame por ID
     @GetMapping("/{id}")
-    public ResponseEntity<ExameDTO> getById(@PathVariable Long id) {
-        logger.info("Requisição para buscar exame com ID: {}", id);
-        ExameDTO exame = service.getById(id);
-        return ResponseEntity.ok(exame);
+    public ResponseEntity<ExameDTO> getExameById(@PathVariable Long id) {
+        try {
+            ExameDTO exame = exameService.getById(id);
+            return ResponseEntity.ok(exame);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao buscar exame: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
+    // Buscar exames por paciente
     @GetMapping("/paciente/{pacienteId}")
-    public ResponseEntity<List<ExameDTO>> getByPacienteId(@PathVariable Long pacienteId) {
-        logger.info("Requisição para buscar exames do paciente com ID: {}", pacienteId);
-        List<ExameDTO> exames = service.getByPacienteId(pacienteId);
-        logger.debug("Total de exames encontrados para o paciente: {}", exames.size());
-        return ResponseEntity.ok(exames);
+    public ResponseEntity<List<ExameDTO>> getExamesByPacienteId(@PathVariable Long pacienteId) {
+        try {
+            List<ExameDTO> exames = exameService.getByPacienteId(pacienteId);
+            return ResponseEntity.ok(exames);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao buscar exames por paciente: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
+    // Criar novo exame
     @PostMapping("/add")
-    public ResponseEntity<ExameDTO> create(@Valid @RequestBody ExameDTO dto) {
-        logger.info("Requisição para criar exame para requisição ID: {}", dto.getRequisicaoExameId());
-        ExameDTO created = service.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<ExameDTO> criarExame(@RequestBody ExameDTO dto) {
+        try {
+            ExameDTO novoExame = exameService.criar(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoExame);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao criar exame: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<ExameDTO> update(@Valid @RequestBody ExameDTO dto) {
-        logger.info("Requisição para atualizar exame com ID: {}", dto.getId());
-        ExameDTO updated = service.atualizar(dto);
-        return ResponseEntity.ok(updated);
+    // Atualizar exame
+    @PutMapping("/{id}")
+    public ResponseEntity<ExameDTO> atualizarExame(@PathVariable Long id, @RequestBody ExameDTO dto) {
+        try {
+            dto.setId(id);
+            ExameDTO atualizado = exameService.atualizar(dto);
+            return ResponseEntity.ok(atualizado);
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao atualizar exame: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
+    // Deletar exame
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        logger.info("Requisição para deletar exame com ID: {}", id);
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deletarExame(@PathVariable Long id) {
+        try {
+            exameService.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            logger.error("Erro ao deletar exame: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

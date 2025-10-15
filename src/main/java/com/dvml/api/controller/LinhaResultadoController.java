@@ -9,22 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/linharesultado")
 public class LinhaResultadoController {
 
     @Autowired
     private LinhaResultadoService service;
 
-    @PostMapping("linharesultado/add")
+    @PostMapping("/add")
     public ResponseEntity<LinhaResultado> criar(@RequestBody LinhaResultado linhaResultado) {
         return ResponseEntity.ok(service.salvar(linhaResultado));
     }
 
-    @GetMapping("linharesultado/all")
+    @GetMapping("/all")
     public ResponseEntity<List<LinhaResultado>> listarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-    @GetMapping("linharesultado/resultado/{resultadoId}")
+    @GetMapping("/resultado/{resultadoId}")
     public ResponseEntity<List<LinhaResultado>> listarPorResultadoId(@PathVariable Long resultadoId) {
         List<LinhaResultado> linhas = service.listarTodos().stream()
                 .filter(lr -> lr.getResultadoId() != null && lr.getResultadoId().equals(resultadoId))
@@ -32,14 +33,14 @@ public class LinhaResultadoController {
         return ResponseEntity.ok(linhas);
     }
 
-    @GetMapping("linharesultado/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LinhaResultado> buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("linharesultado/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<LinhaResultado> atualizar(@PathVariable Long id, @RequestBody LinhaResultado linhaResultado) {
         try {
             LinhaResultado atualizado = service.atualizar(id, linhaResultado);
@@ -49,7 +50,7 @@ public class LinhaResultadoController {
         }
     }
 
-    @DeleteMapping("linharesultado/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

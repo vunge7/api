@@ -23,20 +23,26 @@ public class ArmazemDTO {
 
     private Long filialId;
 
+    private Long empresaId;
+
+    // ✅ Converte DTO → Entity, incluindo empresaId
     public Armazem toEntity() {
         Armazem armazem = new Armazem();
         armazem.setId(this.id);
         armazem.setDesignacao(this.designacao);
         armazem.setFilialId(this.filialId);
+        armazem.setEmpresaId(this.empresaId); // <- adicionado
         return armazem;
     }
 
+    // ✅ Converte Entity → DTO, incluindo empresaId
     public static ArmazemDTO fromEntity(Armazem armazem, String filialNome) {
         ArmazemDTO dto = new ArmazemDTO();
         dto.setId(armazem.getId());
         dto.setDesignacao(armazem.getDesignacao());
         dto.setFilialId(armazem.getFilialId());
         dto.setFilialNome(filialNome != null ? filialNome : "Sem filial associada");
+        dto.setEmpresaId(armazem.getEmpresaId()); // <- adicionado
         return dto;
     }
 }

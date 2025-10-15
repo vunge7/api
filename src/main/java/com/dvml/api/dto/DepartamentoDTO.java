@@ -12,4 +12,7 @@ public class DepartamentoDTO {
 
     @NotEmpty(message = "Descrição é obrigatória.")
     private String descricao;
+
+    private Long empresaId; // ✅ novo campo
+
 }

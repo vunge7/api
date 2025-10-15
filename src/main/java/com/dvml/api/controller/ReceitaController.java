@@ -12,31 +12,32 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/receita")
 public class ReceitaController {
     @Autowired
     private ReceitaService service;
 
-    @GetMapping("receita/all")
+    @GetMapping("/all")
     public List<Receita> getAllReceita() {
         return service.listarTodasReceitas();
     }
-    @GetMapping("receita/{id}")
+    @GetMapping("/{id}")
     public Receita getAllReceitaById(@PathVariable long id) {
         return service.getReceitaById(id);
     }
 
-    @PostMapping("receita/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Receita adicionar(@RequestBody @Valid Receita receita){
         return service.criar(receita);
     }
 
-    @PutMapping("receita/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateReceita(@RequestBody @Valid Receita receita){
         service.update(receita);}
 
-    @DeleteMapping("receita/{id}")
+    @DeleteMapping("/{id}")
     public void deletereceita(@PathVariable long id) {
         if (service.getReceitaById(id) != null) {
             service.deleteReceita(id);

@@ -59,4 +59,7 @@ public class LinhaOperacaoStock {
     @NotNull(message = "Operação de stock é obrigatória")
     @JsonBackReference
     private OperacaoStock operacaoStock;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

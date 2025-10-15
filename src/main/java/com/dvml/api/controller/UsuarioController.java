@@ -10,36 +10,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("usuario")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/usuario/all")
+    // 🔹 Criar um novo usuário
+    @PostMapping("/add")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             UsuarioDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao cadastrar usuário: " + e.getMessage());
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao cadastrar usuário: " + e.getMessage());
+                    .body("Erro inesperado ao cadastrar usuário: " + e.getMessage());
         }
     }
-    /*@GetMapping("usuario/all")
-    public ResponseEntity<List<UsuarioDTO>> listarTodosUsuarios() {
-        return ResponseEntity.ok(usuarioService.listarTodosUsuarios());
-    }*/
 
-    /*@PostMapping("/add")
-    public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        usuarioService.cadastrarUsuario(usuarioDTO);
-        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
-    }*/
-
+    // 🔹 Listar todos os usuários
     @GetMapping("/all")
     public ResponseEntity<?> listarTodosUsuarios() {
         List<UsuarioDTO> lista = usuarioService.listarTodosUsuarios();
@@ -47,9 +39,9 @@ public class UsuarioController {
             return ResponseEntity.ok("Nenhum usuário encontrado.");
         }
         return ResponseEntity.ok(lista);
-
     }
 
+    // 🔹 Listar usuários ativos
     @GetMapping("/ativos")
     public ResponseEntity<?> listarUsuariosAtivos() {
         List<UsuarioDTO> lista = usuarioService.listarUsuariosAtivos();
@@ -59,6 +51,7 @@ public class UsuarioController {
         return ResponseEntity.ok(lista);
     }
 
+    // 🔹 Listar usuários inativos
     @GetMapping("/inativos")
     public ResponseEntity<?> listarUsuariosInativos() {
         List<UsuarioDTO> lista = usuarioService.listarUsuariosInativos();
@@ -68,39 +61,51 @@ public class UsuarioController {
         return ResponseEntity.ok(lista);
     }
 
+    // 🔹 Listar usuários por funcionário
     @GetMapping("/funcionario/{funcionarioId}")
     public ResponseEntity<?> listarUsuariosPorFuncionario(@PathVariable Long funcionarioId) {
-        List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncionario(funcionarioId);
-        if (lista.isEmpty()) {
-            return ResponseEntity.ok("Nenhum usuário encontrado para o funcionário com ID: " + funcionarioId);
+        try {
+            List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncionario(funcionarioId);
+            if (lista.isEmpty()) {
+                return ResponseEntity.ok("Nenhum usuário encontrado para o funcionário com ID: " + funcionarioId);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro: " + e.getMessage());
         }
-        return ResponseEntity.ok(lista);
     }
 
+    // 🔹 Listar usuários por função
     @GetMapping("/funcao/{funcaoId}")
     public ResponseEntity<?> listarUsuariosPorFuncao(@PathVariable Long funcaoId) {
-        List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncao(funcaoId);
-        if (lista.isEmpty()) {
-            return ResponseEntity.ok("Nenhum usuário encontrado com a função ID: " + funcaoId);
+        try {
+            List<UsuarioDTO> lista = usuarioService.listarUsuariosPorFuncao(funcaoId);
+            if (lista.isEmpty()) {
+                return ResponseEntity.ok("Nenhum usuário encontrado com a função ID: " + funcaoId);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro: " + e.getMessage());
         }
-        return ResponseEntity.ok(lista);
     }
 
-    @PutMapping("/editar/{id}")
+    // 🔹 Atualizar usuário
+    @PutMapping("/{id}")
     public ResponseEntity<?> editarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
-        usuarioService.editarUsuario(id, usuarioDTO);
-        return ResponseEntity.ok("Usuário com ID " + id + " atualizado com sucesso.");
+        return usuarioService.editarUsuario(id, usuarioDTO);
     }
 
-    @DeleteMapping("/deletar/{id}")
+    // 🔹 Deletar usuário
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
-        usuarioService.deleteUsuario(id);
-        return ResponseEntity.ok("Usuário com ID " + id + " deletado com sucesso.");
+        return usuarioService.deleteUsuario(id);
     }
 
-    @PutMapping("/inativar/{id}")
+    // 🔹 Inativar usuário
+    @PutMapping("/{id}/inativar")
     public ResponseEntity<?> inativarUsuario(@PathVariable Long id) {
-        usuarioService.inativarUsuario(id);
-        return ResponseEntity.ok("Usuário com ID " + id + " foi inativado com sucesso.");
+        return usuarioService.inativarUsuario(id);
     }
 }

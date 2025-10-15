@@ -29,4 +29,7 @@ public class LinhaTriagem {
 
     @Column(name = "triagem_id")
    private long triagemId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

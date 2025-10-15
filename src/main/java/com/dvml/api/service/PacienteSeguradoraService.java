@@ -1,9 +1,6 @@
 package com.dvml.api.service;
 
-
-
 import com.dvml.api.entity.PacienteSeguradora;
-import com.dvml.api.entity.SourceDocument;
 import com.dvml.api.repository.PacienteSeguradoraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,18 +11,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-
 @Service
-public class   PacienteSeguradoraService {
+public class PacienteSeguradoraService {
 
     @Autowired
     private PacienteSeguradoraRepository repo;
 
-
     public List<PacienteSeguradora> listarTodosPacientesSeguradoras() {
         return repo.findAll();
     }
-
 
     public PacienteSeguradora getPacienteSeguradoraById(long id) {
         return repo.findById(id).get();
@@ -33,7 +27,8 @@ public class   PacienteSeguradoraService {
 
     public ResponseEntity<String> criar(PacienteSeguradora pacienteSeguradora) {
 
-        Optional<PacienteSeguradora> seguradoraIdExistente = repo.findByPacienteIdAndSeguradoraId(pacienteSeguradora.getPacienteId(), pacienteSeguradora.getSeguradoraId());
+        Optional<PacienteSeguradora> seguradoraIdExistente =
+                repo.findByPacienteIdAndSeguradoraId(pacienteSeguradora.getPacienteId(), pacienteSeguradora.getSeguradoraId());
 
         if (seguradoraIdExistente.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -47,7 +42,6 @@ public class   PacienteSeguradoraService {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao criar o registro.");
-
     }
 
     public ResponseEntity<String> update(PacienteSeguradora pacienteSeguradora) {
@@ -59,29 +53,25 @@ public class   PacienteSeguradoraService {
         pacienteSeguradoraToUpdate.setDataActualizacao(pacienteSeguradora.getDataActualizacao());
         pacienteSeguradoraToUpdate.setUsuarioIdAtualizacao(pacienteSeguradora.getUsuarioIdAtualizacao());
         pacienteSeguradoraToUpdate.setUsuarioIdCricao(pacienteSeguradora.getUsuarioIdCricao());
+        pacienteSeguradoraToUpdate.setEmpresaId(pacienteSeguradora.getEmpresaId()); // ✅ adicionado
 
         if (Objects.nonNull(repo.save(pacienteSeguradoraToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("pacienteseguradora editado com sucesso!");
+                    .body("PacienteSeguradora editado com sucesso!");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao editar o PacienteSeguradora.");
     }
 
-
-
-    public List<PacienteSeguradora>  getAllSeguradorasByIdPaciente(long id){
+    public List<PacienteSeguradora> getAllSeguradorasByIdPaciente(long id) {
         return repo.findSeguradorasByIdPaciente(id);
     }
 
-        public void deletPacienteSeguradora(long id) {
-            if (repo.existsById(id)) {
-                repo.deleteById(id);
-            } else {
-                throw new IllegalArgumentException("PacienteSeguradora não encontrado com o ID: " + id);
-            }
-
+    public void deletPacienteSeguradora(long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("PacienteSeguradora não encontrado com o ID: " + id);
+        }
     }
-
 }
-

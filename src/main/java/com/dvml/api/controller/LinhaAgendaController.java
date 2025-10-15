@@ -10,19 +10,20 @@ import jakarta.validation.Valid; // substitui javax.validation se usas Spring Bo
 import java.util.List;
 
 @RestController
+@RequestMapping ("/linhaagenda")
 public class LinhaAgendaController {
 
     @Autowired
     private LinhaAgendaService service;
 
     // 🔹 Listar todas as linhas de agenda
-    @GetMapping("linhaagenda/all")
+    @GetMapping("/all")
     public List<LinhaAgenda> listarTodas() {
         return service.listarTodasLinhasAgenda();
     }
 
     // 🔹 Buscar uma linha específica
-    @GetMapping("linhaagenda/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LinhaAgenda> buscarPorId(@PathVariable long id) {
         LinhaAgenda linha = service.getLinhaAgendaById(id);
         if (linha != null) {
@@ -32,20 +33,20 @@ public class LinhaAgendaController {
     }
 
     // 🔹 Criar nova linha de agenda (com produtoId incluído no JSON)
-    @PostMapping("linhaagenda/add")
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public LinhaAgenda adicionar(@RequestBody @Valid LinhaAgenda linhaAgenda) {
         return service.criar(linhaAgenda);
     }
 
     // 🔹 Atualizar linha existente
-    @PutMapping("linhaagenda/edit")
+    @PutMapping("/edit")
     public ResponseEntity<String> atualizar(@RequestBody @Valid LinhaAgenda linhaAgenda) {
         return service.update(linhaAgenda);
     }
 
     // 🔹 Deletar uma linha de agenda
-    @DeleteMapping("linhaagenda/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deletar(@PathVariable long id) {
         if (service.getLinhaAgendaById(id) != null) {
             return service.deleteLinhaAgenda(id);

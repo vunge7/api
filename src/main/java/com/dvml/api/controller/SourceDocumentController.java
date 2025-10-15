@@ -12,20 +12,21 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/sourceDocument")
 public class SourceDocumentController {
     @Autowired
     private SourceDocumentService service;
-    @GetMapping("sourceDocument/all")
+    @GetMapping("/all")
     public List<SourceDocument> getAllSourceDocument(){
         return service.listarTodosSourceDocument();
     }
 
-    @GetMapping("sourceDocument/{id}")
+    @GetMapping("/{id}")
     public SourceDocument getAllSourceDocumentById(@PathVariable long id){
         return service.getSourceDocumentById(id);
     }
 
-    @PostMapping("sourceDocument/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody SourceDocument sourcedocument){
         System.out.println("InvoiceNo: " +sourcedocument.getInvoiceNo());
@@ -34,18 +35,18 @@ public class SourceDocumentController {
         return service.criar(sourcedocument);
     }
 
-    @PostMapping("sourceDocument/add/last")
+    @PostMapping("/add/last")
     @ResponseStatus(code = HttpStatus.CREATED)
     public SourceDocument adicionarUltimoDocumento(@RequestBody SourceDocument sourcedocument){
         return service.saveAndGetLast(sourcedocument);
     }
 
-    @PutMapping("/sourceDocument/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateSourceDocument(@RequestBody @Valid SourceDocument sourcedocument){
         service.update(sourcedocument);}
 
-    @DeleteMapping("/sourceDocument/{id}")
+    @DeleteMapping("/{id}")
     public void deleteSourceDocument(@PathVariable long id) {
         if (service.getSourceDocumentById(id) != null) {
             service.deleteSourceDocument(id);

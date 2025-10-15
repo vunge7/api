@@ -20,6 +20,7 @@ public class ConsultaSimpleDTO {
     private String receita;
     private String diagnosticoInicial;
     private String diagnosticoFinal;
+    private long empresaId;
     private List<String> examesComplementares;
     private EstadoConsulta estadoConsulta;
 

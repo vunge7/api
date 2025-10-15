@@ -57,6 +57,9 @@ public class Fornecedor {
     @Column(name = "data_criacao", nullable = false)
     private Date dataCriacao = new Date();
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     public enum RegimeTributario {
         GERAL, SIMPLIFICADO, EXCLUSAO
     }

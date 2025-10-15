@@ -1,6 +1,5 @@
 package com.dvml.api.service;
 
-
 import com.dvml.api.entity.Pessoa;
 import com.dvml.api.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class PessoaService {
@@ -23,14 +20,12 @@ public class PessoaService {
     private PessoaRepository pessoaRepository;
 
     public List<Pessoa> listarTodasPessoa() {
-
         return pessoaRepository.findAllOrderByNomeAsc();
     }
 
     public Pessoa getPessoaById(long id) {
         return repo.findById(id).get();
     }
-
 
     public Pessoa getPessoaByNif(String nif) {
         return repo.findByNif(nif);
@@ -42,6 +37,7 @@ public class PessoaService {
 
     public Pessoa update(Pessoa pessoa) {
         Pessoa pessoaToUpdate = repo.findById(pessoa.getId()).get();
+
         pessoaToUpdate.setId(pessoa.getId());
         pessoaToUpdate.setEmail(pessoa.getEmail());
         pessoaToUpdate.setNome(pessoa.getNome());
@@ -66,16 +62,12 @@ public class PessoaService {
         pessoaToUpdate.setHabilitacao(pessoa.getHabilitacao());
         pessoaToUpdate.setEstadoCivil(pessoa.getEstadoCivil());
         pessoaToUpdate.setProfissao(pessoa.getProfissao());
-
-
-
-
+        pessoaToUpdate.setEmpresaId(pessoa.getEmpresaId()); // ✅ Adicionado
 
         return repo.save(pessoaToUpdate);
     }
 
-
-    public Pessoa updatePhoto( String nomePhoto, long pessoId) {
+    public Pessoa updatePhoto(String nomePhoto, long pessoId) {
         Pessoa pessoaToUpdate = repo.findById(pessoId).get();
         pessoaToUpdate.setNomePhoto(nomePhoto);
         return repo.save(pessoaToUpdate);
@@ -85,12 +77,10 @@ public class PessoaService {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Pessoa  deletada com sucesso!");
+                    .body("Pessoa deletada com sucesso!");
         } else {
-            //throw new IllegalArgumentException("Pessoa não encontrado com o ID: " + id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Falha ao deletar Pessoa.");
         }
     }
 }
-

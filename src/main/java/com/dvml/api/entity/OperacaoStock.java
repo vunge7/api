@@ -45,6 +45,8 @@ public class OperacaoStock {
     @Column(name = "armazem_id", nullable = false)
     @NotNull(message = "Armazém é obrigatório")
     private Long armazemId;
+    @Column(name = "empresa_id")
+    private Long empresaId;
 
     @Column(name = "descricao")
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")

@@ -1,44 +1,67 @@
 package com.dvml.api.controller;
 
 import com.dvml.api.dto.ConsultaSimpleDTO;
-import com.dvml.api.dto.PacienteDTO;
 import com.dvml.api.entity.Consulta;
-import com.dvml.api.entity.Paciente;
 import com.dvml.api.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/consulta")
 public class ConsultaController {
+
     @Autowired
-    ConsultaService service;
-    @GetMapping("/consulta/{id}")
-    public ConsultaSimpleDTO getConsultaById(@PathVariable long id){
-        return service.getConsultaById(id);
+    private ConsultaService consultaService;
+
+    // Listar todas as consultas
+    @GetMapping("/all")
+    public ResponseEntity<List<ConsultaSimpleDTO>> listarTodasConsultas() {
+        List<ConsultaSimpleDTO> consultas = consultaService.listarTodos();
+        return ResponseEntity.ok(consultas);
     }
 
-    @GetMapping("/consulta/{idInscricao}/{estado}")
-    public ConsultaSimpleDTO getConsultaById(@PathVariable long idInscricao, @PathVariable String estado){
-        return service.getConsultaByEstadoAndIdInscricao(estado, idInscricao);
+    // Buscar consulta por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ConsultaSimpleDTO> getConsultaById(@PathVariable Long id) {
+        try {
+            ConsultaSimpleDTO consulta = consultaService.getConsultaById(id);
+            return ResponseEntity.ok(consulta);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @GetMapping("/consulta/all")
-    public List<ConsultaSimpleDTO> getConsultas(){
-        return service.listarTodos();
+    // Criar nova consulta
+    @PostMapping("/add")
+    public ResponseEntity<Consulta> criarConsulta(@RequestBody Consulta consulta) {
+        Consulta novaConsulta = consultaService.adicionar(consulta);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaConsulta);
     }
 
-    @PostMapping("/consulta/add")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public Consulta criarConsulta(@RequestBody Consulta consulta){
-        return service.adicionar(consulta);
+    // Atualizar consulta
+    @PutMapping("/{id}")
+    public ResponseEntity<Consulta> atualizarConsulta(@PathVariable Long id, @RequestBody Consulta consulta) {
+        try {
+            consulta.setId(id);
+            Consulta atualizada = consultaService.update(consulta);
+            return ResponseEntity.ok(atualizada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @PutMapping("/consulta/edit")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void updatePaciente(@RequestBody Consulta consulta){
-        service.update(consulta);
+    // Fechar consulta por inscrição
+    @PatchMapping("/fechar/{idInscricao}")
+    public ResponseEntity<Void> fecharConsulta(@PathVariable Long idInscricao) {
+        try {
+            consultaService.updateEstadoCondicaoConsulta(idInscricao);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

@@ -10,16 +10,15 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 import java.util.List;
-
 @Service
 @Transactional
 public class LinhaGastoService {
+
     @Autowired
     private LinhaGastoRepository repo;
 
     @Autowired
     private LinhaGastoRepository liRepository;
-
 
     public List<LinhaGasto> listarTodasLinhas() {
         return liRepository.findAllOrderByNomeAsc();
@@ -28,6 +27,7 @@ public class LinhaGastoService {
     public List<LinhaGasto> listarLinhasGastoByGastoId(long gastoId) {
         return liRepository.getAllLinhasGastoByIdGastos(gastoId);
     }
+
     public LinhaGasto getLineById(long id) {
         return repo.findById(id).get();
     }
@@ -38,8 +38,9 @@ public class LinhaGastoService {
                     .body("Linha criada com sucesso!");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Falha ao criar o Linha.");
+                .body("Falha ao criar a Linha.");
     }
+
     public ResponseEntity<String> update(LinhaGasto linha){
         LinhaGasto linhaGastoToUpdate = repo.findById(linha.getId()).get();
         linhaGastoToUpdate.setGastoId(linha.getGastoId());
@@ -50,6 +51,9 @@ public class LinhaGastoService {
         linhaGastoToUpdate.setServicoDescricao(linha.getServicoDescricao());
         linhaGastoToUpdate.setServicoId(linha.getServicoId());
 
+        // ⚡ Adicionado empresaId
+        linhaGastoToUpdate.setEmpresaId(linha.getEmpresaId());
+
         if(Objects.nonNull(repo.save(linhaGastoToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha gasto editada com sucesso!");
@@ -57,17 +61,16 @@ public class LinhaGastoService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao editar a Linha gasto.");
     }
-    public  ResponseEntity<String> deleteLinhaGasto(long id) {
+
+    public ResponseEntity<String> deleteLinhaGasto(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha gasto deletada com sucesso!");
         } else {
-            //throw new IllegalArgumentException("Linha não encontrado com o ID: " + id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Falha ao deletar a Linha gasto.");
         }
-
     }
 
     @Transactional
@@ -81,7 +84,4 @@ public class LinhaGastoService {
                     .body("Falha ao deletar: nenhuma linha encontrada com gastoId " + gastoId);
         }
     }
-
-
-
 }

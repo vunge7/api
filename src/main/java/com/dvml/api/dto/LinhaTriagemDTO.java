@@ -13,4 +13,5 @@ public class LinhaTriagemDTO {
     private String valor;
     private String unidade;
     private long triagemId;
+    private Long empresaId;
 }

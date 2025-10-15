@@ -49,8 +49,9 @@ public class ArmazemService {
                                 });
                     }
                     ArmazemDTO dto = ArmazemDTO.fromEntity(armazem, filialNome);
-                    logger.debug("Armazém mapeado para DTO: id={}, designacao={}, filialId={}, filialNome={}",
-                            dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome());
+                    dto.setEmpresaId(armazem.getEmpresaId()); // ✅ Incluído
+                    logger.debug("Armazém mapeado para DTO: id={}, designacao={}, filialId={}, filialNome={}, empresaId={}",
+                            dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome(), dto.getEmpresaId());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -79,8 +80,9 @@ public class ArmazemService {
                 })
                 : "Sem filial associada (filialId nulo)";
         ArmazemDTO dto = ArmazemDTO.fromEntity(armazem, filialNome);
-        logger.debug("Armazém retornado: id={}, designacao={}, filialId={}, filialNome={}",
-                dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome());
+        dto.setEmpresaId(armazem.getEmpresaId()); // ✅ Incluído
+        logger.debug("Armazém retornado: id={}, designacao={}, filialId={}, filialNome={}, empresaId={}",
+                dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome(), dto.getEmpresaId());
         return dto;
     }
 
@@ -95,8 +97,12 @@ public class ArmazemService {
                     logger.error("Filial com ID {} não encontrada", armazemDTO.getFilialId());
                     return new IllegalArgumentException("Filial não encontrada");
                 });
+
         Armazem armazem = armazemDTO.toEntity();
+        armazem.setEmpresaId(armazemDTO.getEmpresaId()); // ✅ Incluído
+
         Armazem saved = armazemRepository.save(armazem);
+
         String filialNome = filialRepository.findById(saved.getFilialId())
                 .map(filial -> {
                     logger.debug("Filial encontrada para armazém criado ID {}: filialId={}, nome={}",
@@ -108,7 +114,9 @@ public class ArmazemService {
                             saved.getId(), saved.getFilialId());
                     return "Filial não encontrada (ID: " + saved.getFilialId() + ")";
                 });
+
         ArmazemDTO dto = ArmazemDTO.fromEntity(saved, filialNome);
+        dto.setEmpresaId(saved.getEmpresaId()); // ✅ Incluído
         logger.debug("Armazém criado: {}", dto);
         return dto;
     }
@@ -129,9 +137,13 @@ public class ArmazemService {
                     logger.error("Filial com ID {} não encontrada", armazemDTO.getFilialId());
                     return new IllegalArgumentException("Filial não encontrada");
                 });
+
         armazem.setDesignacao(armazemDTO.getDesignacao());
         armazem.setFilialId(armazemDTO.getFilialId());
+        armazem.setEmpresaId(armazemDTO.getEmpresaId()); // ✅ Incluído
+
         Armazem updated = armazemRepository.save(armazem);
+
         String filialNome = filialRepository.findById(updated.getFilialId())
                 .map(filial -> {
                     logger.debug("Filial encontrada para armazém atualizado ID {}: filialId={}, nome={}",
@@ -143,7 +155,9 @@ public class ArmazemService {
                             updated.getId(), updated.getFilialId());
                     return "Filial não encontrada (ID: " + updated.getFilialId() + ")";
                 });
+
         ArmazemDTO dto = ArmazemDTO.fromEntity(updated, filialNome);
+        dto.setEmpresaId(updated.getEmpresaId()); // ✅ Incluído
         logger.debug("Armazém atualizado: {}", dto);
         return dto;
     }

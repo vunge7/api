@@ -26,6 +26,7 @@ public class LinhaTriagemService {
         dto.setValor(entity.getValor());
         dto.setUnidade(entity.getUnidade());
         dto.setTriagemId(entity.getTriagemId());
+        dto.setEmpresaId(entity.getEmpresaId()); // ✅ adicionado
         return dto;
     }
 
@@ -46,6 +47,7 @@ public class LinhaTriagemService {
         existente.setValor(novo.getValor());
         existente.setUnidade(novo.getUnidade());
         existente.setTriagemId(novo.getTriagemId());
+        existente.setEmpresaId(novo.getEmpresaId()); // ✅ adicionado
         return repo.save(existente);
     }
 
@@ -69,12 +71,11 @@ public class LinhaTriagemService {
         }).collect(Collectors.toList());
     }
 
-    // 🔹 Agrupar sinais vitais por tipo (campo)
     public Map<String, List<SinalVitalDTO>> agruparSinaisPorCampo(Long pacienteId) {
         List<Object[]> resultados = repo.buscarTodosSinaisComCampo(pacienteId);
 
         return resultados.stream().collect(Collectors.groupingBy(
-                obj -> obj[2].toString(), // campo (TEMPERATURA, PRESSAO, etc.)
+                obj -> obj[2].toString(),
                 Collectors.mapping(
                         obj -> new SinalVitalDTO((Date) obj[0], (String) obj[1]),
                         Collectors.toList()

@@ -80,4 +80,7 @@ public class Produto {
     @Size(max = 50, message = "O intervalo de referência deve ter no máximo 50 caracteres.")
     @Pattern(regexp = "^$|^\\d+(\\.\\d+)?-\\d+(\\.\\d+)?$", message = "O intervalo de referência deve estar no formato 'min-max' (ex.: 4.5-5.9) ou estar vazio.")
     private String IntervaloReferencia;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/linhaslotes")
 public class LinhasLotesController {
 
     private static final Logger logger = LoggerFactory.getLogger(LinhasLotesController.class);
@@ -22,7 +23,7 @@ public class LinhasLotesController {
     @Autowired
     private LinhasLotesService linhasLotesService;
 
-    @PostMapping("linhaslotes/add")
+    @PostMapping("/add")
     public ResponseEntity<?> criarLinhasLotes(@Valid @RequestBody LinhasLotesDTO linhasLotesDTO) {
         logger.info("Recebendo requisição para criar LinhasLotes com lotes_id: {} e produto_id: {}",
                 linhasLotesDTO.getLotes_id(), linhasLotesDTO.getProduto_id());
@@ -36,7 +37,7 @@ public class LinhasLotesController {
     }
 
     // CORREÇÃO: Remover @PathVariable e usar ID do DTO
-    @PutMapping("linhaslotes/edit")
+    @PutMapping("/edit")
     public ResponseEntity<?> atualizarLinhasLotes(@Valid @RequestBody LinhasLotesDTO linhasLotesDTO) {
         logger.info("Recebendo requisição para atualizar LinhasLotes com ID: {}", linhasLotesDTO.getId());
         try {
@@ -51,7 +52,7 @@ public class LinhasLotesController {
         }
     }
 
-    @DeleteMapping("linhaslotes/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarLinhasLotes(@PathVariable Long id) {
         logger.info("Recebendo requisição para excluir LinhasLotes com ID: {}", id);
         try {
@@ -63,14 +64,14 @@ public class LinhasLotesController {
         }
     }
 
-    @GetMapping("linhaslotes/all")
+    @GetMapping("/all")
     public ResponseEntity<List<LinhasLotesDTO>> listarTodos() {
         logger.info("Recebendo requisição para listar todas as LinhasLotes");
         List<LinhasLotesDTO> linhasLotes = linhasLotesService.listarTodos();
         return new ResponseEntity<>(linhasLotes, HttpStatus.OK);
     }
 
-    @GetMapping("linhaslotes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         logger.info("Recebendo requisição para buscar LinhasLotes com ID: {}", id);
         try {

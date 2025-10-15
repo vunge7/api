@@ -18,6 +18,9 @@ public class ProductGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "designacao_produto", length = 50, unique = true)
     @NotNull(message = "O grupo do produto é obrigatório.")
     @Size(min = 1, max = 50, message = "A designação do produto deve ter entre 3 e 50 caracteres.")

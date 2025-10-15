@@ -26,4 +26,5 @@ public class FornecedorDTO {
     private String endereco;
     private RegimeTributario regimeTributario;
     private EstadoFornecedor estadoFornecedor;
+    private Long empresaId;
 }

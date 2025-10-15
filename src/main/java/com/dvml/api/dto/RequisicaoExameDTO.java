@@ -17,4 +17,5 @@ public class RequisicaoExameDTO {
     private String medico;
     private String paciente;
     private Date data;
+    private Long empresaId;
 }

@@ -20,5 +20,6 @@ public class SourceDocumentDTO
     private String invoiceType;
     private String cashVatschemeIndicator;
     private String thirdPartiesBillingIndicator;
+    private Long empresaId;
 
 }

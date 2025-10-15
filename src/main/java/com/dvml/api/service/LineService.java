@@ -7,12 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Objects;
-
 import java.util.List;
 
 @Service
-
 public class LineService {
+
     @Autowired
     private LineRepository repo;
 
@@ -27,7 +26,7 @@ public class LineService {
         return repo.findById(id).get();
     }
 
-       public ResponseEntity<String> criar(Line line) {
+    public ResponseEntity<String> criar(Line line) {
         if (Objects.nonNull(repo.save(line))) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha criada com sucesso!");
@@ -35,12 +34,13 @@ public class LineService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao criar o Linha.");
     }
+
     public ResponseEntity<String> update(Line line){
         Line LineToUpdate = repo.findById(line.getId()).get();
         LineToUpdate.setProductCode(line.getProductCode());
         LineToUpdate.setLineNumber(line.getLineNumber());
         LineToUpdate.setTaxCode(line.getTaxCode());
-        LineToUpdate.setProductDescription((line.getProductDescription()));
+        LineToUpdate.setProductDescription(line.getProductDescription());
         LineToUpdate.setCreditAmount(line.getCreditAmount());
         LineToUpdate.setDebitAmount(line.getDebitAmount());
         LineToUpdate.setQuantity(line.getQuantity());
@@ -56,6 +56,9 @@ public class LineService {
         LineToUpdate.setUnitPrice(line.getUnitPrice());
         LineToUpdate.setSourceDocumentId(line.getSourceDocumentId());
 
+        // ⚡ Adicionado empresaId
+        LineToUpdate.setEmpresaId(line.getEmpresaId());
+
         if(Objects.nonNull(repo.save(LineToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha editada com sucesso!");
@@ -63,17 +66,15 @@ public class LineService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Falha ao editar a Linha.");
     }
-    public  ResponseEntity<String> deleteLine(long id) {
+
+    public ResponseEntity<String> deleteLine(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Linha deletada com sucesso!");
         } else {
-            //throw new IllegalArgumentException("Linha não encontrado com o ID: " + id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Falha ao deletar a Linha.");
         }
-
     }
-
 }

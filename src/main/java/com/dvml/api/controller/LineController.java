@@ -12,32 +12,33 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/line")
 public class LineController {
     @Autowired
     private LineService service;
 
-    @GetMapping("line/all")
+    @GetMapping("/all")
     public List<Line> getAllLine() {
         return service.listarTodasLinhas();
     }
 
-    @GetMapping("line/{id}")
+    @GetMapping("/{id}")
     public Line getAllLineById(@PathVariable long id) {
         return service.getLineById(id);
     }
 
-    @PostMapping("line/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid Line line){
         return service.criar(line);
     }
 
-    @PutMapping("/line/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateLine(@RequestBody @Valid Line line){
         service.update(line);}
 
-    @DeleteMapping("/line/{id}")
+    @DeleteMapping("/{id}")
     public void deleteLine(@PathVariable long id) {
         if (service.getLineById(id) != null) {
             service.deleteLine(id);

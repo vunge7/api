@@ -35,6 +35,7 @@ public class AgendaService {
         agendaToUpdate.setId(agenda.getId());
         agendaToUpdate.setDescricao(agenda.getDescricao());
         agendaToUpdate.setStatus(agenda.getStatus());
+        agendaToUpdate.setEmpresaId(agenda.getEmpresaId());
 
         if(Objects.nonNull(repo.save(agendaToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)

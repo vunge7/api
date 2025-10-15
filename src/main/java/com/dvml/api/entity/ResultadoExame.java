@@ -25,6 +25,9 @@ public class ResultadoExame {
     @Column(name = "usuario_id")
     private Long usuarioId;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "data_resultado", nullable = false)
     @NotNull(message = "A data de resultado é obrigatória.")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

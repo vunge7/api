@@ -24,4 +24,6 @@ public class UsuarioPainelDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataRegistro;
+
+    private Long empresaId; // ✅ Novo campo adicionado
 }

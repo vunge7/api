@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,5 +23,9 @@ public class EmpresaDTO {
     private String email;
     private String telefone;
     private String endereco;
-    private String seguradoraId; // Mantido
+    private boolean status = true; //
+    private long seguradoraId; // Mantido
+
+    // 🔹 Lista de filiais associadas à empresa matriz
+    private List<EmpresaDTO> filiais = new ArrayList<>();
 }

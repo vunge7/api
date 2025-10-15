@@ -38,9 +38,10 @@ public class TriagemService {
         triagemDTO.setId(triagem.getId());
         triagemDTO.setDataCriacao(triagem.getDataCriacao());
         triagemDTO.setIncricaoId(triagem.getInscricaoId());
-        System.out.println("InscricaoID" + triagem.getInscricaoId());
+        System.out.println("InscricaoID: " + triagem.getInscricaoId());
         triagemDTO.setPaciente(getNomePacienteByIdInscricao(triagem.getInscricaoId()));
         triagemDTO.setUserId(triagem.getUsuarioId());
+        triagemDTO.setEmpresaId(triagem.getEmpresaId()); // <--- empresaId adicionado
 
         /*
         if (Objects.nonNull(triagem.getTriagens())){
@@ -49,9 +50,8 @@ public class TriagemService {
                             linhaTriagemService::convertEntityToDto
                     ).collect(Collectors.toList()) );
         }
-*/
+        */
         return triagemDTO;
-
     }
 
     private String getNomePacienteByIdInscricao(long id) {
@@ -61,16 +61,14 @@ public class TriagemService {
         return pessoa.getNome() + " " + pessoa.getApelido();
     }
 
-
     public List<TriagemDTO> listarTodos() {
-        return repo.findAll().stream().map(
-                this::convertEntityToDto
-        ).collect(Collectors.toList());
+        return repo.findAll().stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
     }
 
     public Triagem salvar(Triagem entity) {
-        return repo.save(entity);
+        return repo.save(entity); // empresaId será salvo se preenchido
     }
-
 
 }

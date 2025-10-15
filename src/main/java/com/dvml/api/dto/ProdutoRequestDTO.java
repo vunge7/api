@@ -13,6 +13,7 @@ public class ProdutoRequestDTO {
     private String taxIva;
     private String finalPrice;
     private String status;
+    private Long empresaId; // ✅ Campo adicionado
 
     // Getters e setters
     public String getProductType() { return productType; }
@@ -50,4 +51,8 @@ public class ProdutoRequestDTO {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    // ✅ Getters e setters do novo campo
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
 }

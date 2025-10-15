@@ -69,4 +69,8 @@ public class Usuario {
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
+
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

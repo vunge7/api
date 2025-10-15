@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/linhasubsidio")
 public class LinhaSubsidioController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinhaSubsidioController.class);
@@ -21,7 +22,7 @@ public class LinhaSubsidioController {
     @Autowired
     private LinhaSubsidioService linhaSubsidioService;
 
-    @PostMapping("linhasubsidio/add")
+    @PostMapping("/add")
     public ResponseEntity<Void> create(@Valid @RequestBody List<LinhaSubsidioDTO> dtos) {
         LOGGER.info("Criando {} linhas de subsídio", dtos.size());
         if (!dtos.isEmpty()) {
@@ -32,28 +33,28 @@ public class LinhaSubsidioController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("linhasubsidio/all")
+    @GetMapping("/all")
     public ResponseEntity<List<LinhaSubsidioDTO>> findAll() {
         LOGGER.info("Buscando todas as linhas de subsídio");
         List<LinhaSubsidioDTO> subsidios = linhaSubsidioService.findAll();
         return ResponseEntity.ok(subsidios);
     }
 
-    @GetMapping("linhasubsidio/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LinhaSubsidioDTO> findById(@PathVariable("id") Long id) {
         LOGGER.info("Buscando subsídio ID: {}", id);
         LinhaSubsidioDTO dto = linhaSubsidioService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("linhasubsidio/funcionario/{funcionarioId}")
+    @GetMapping("/funcionario/{funcionarioId}")
     public ResponseEntity<List<LinhaSubsidioDTO>> findByFuncionarioId(@PathVariable("funcionarioId") Long funcionarioId) {
         LOGGER.info("Buscando subsídios para funcionário ID: {}", funcionarioId);
         List<LinhaSubsidioDTO> subsidios = linhaSubsidioService.findByFuncionarioId(funcionarioId);
         return ResponseEntity.ok(subsidios);
     }
 
-    @PutMapping("linhasubsidio/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<LinhaSubsidioDTO> update(@PathVariable("id") Long id, @Valid @RequestBody LinhaSubsidioDTO dto) {
         LOGGER.info("Atualizando subsídio ID: {}", id);
         dto.setId(id);
@@ -61,7 +62,7 @@ public class LinhaSubsidioController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("linhasubsidio/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         LOGGER.info("Deletando subsídio ID: {}", id);
         try {

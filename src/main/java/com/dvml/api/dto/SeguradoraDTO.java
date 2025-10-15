@@ -14,4 +14,5 @@ public class SeguradoraDTO {
     private String nome;
     private String telefone;
     private String nif;
+    private Long empresaId;
 }

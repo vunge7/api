@@ -42,4 +42,7 @@ public class PainelPermissao {
 
     @Column(name = "filial_id", nullable = false)
     private Long filialId;
+
+    @Column(name = "empresa_id")
+    private Long empresaId;
 }

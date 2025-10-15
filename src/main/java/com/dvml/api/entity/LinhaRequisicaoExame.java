@@ -30,6 +30,9 @@ public class LinhaRequisicaoExame {
     @Column(name = "requisicao_exame_id")
     private long requisicaoExameId;
 
+    @Column(name = "empresa_id")
+    private Long empresaId;
+
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 

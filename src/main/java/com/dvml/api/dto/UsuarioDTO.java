@@ -37,76 +37,36 @@ public class UsuarioDTO {
     @Size(max = 100, message = "O IP deve ter no máximo 100 caracteres")
     private String ip;
 
+    private Long empresaId;
+
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    public String getUserName() {
-        return userName;
-    }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public String getNumeroOrdem() { return numeroOrdem; }
+    public void setNumeroOrdem(String numeroOrdem) { this.numeroOrdem = numeroOrdem; }
 
-    public String getSenha() {
-        return senha;
-    }
+    public EstadoUsuario getEstadoUsuario() { return estadoUsuario; }
+    public void setEstadoUsuario(EstadoUsuario estadoUsuario) { this.estadoUsuario = estadoUsuario; }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public TipoUsuario getTipoUsuario() { return tipoUsuario; }
+    public void setTipoUsuario(TipoUsuario tipoUsuario) { this.tipoUsuario = tipoUsuario; }
 
-    public String getNumeroOrdem() {
-        return numeroOrdem;
-    }
+    public Long getFuncionarioId() { return funcionarioId; }
+    public void setFuncionarioId(Long funcionarioId) { this.funcionarioId = funcionarioId; }
 
-    public void setNumeroOrdem(String numeroOrdem) {
-        this.numeroOrdem = numeroOrdem;
-    }
+    public Long getFuncaoId() { return funcaoId; }
+    public void setFuncaoId(Long funcaoId) { this.funcaoId = funcaoId; }
 
-    public EstadoUsuario getEstadoUsuario() {
-        return estadoUsuario;
-    }
+    public String getIp() { return ip; }
+    public void setIp(String ip) { this.ip = ip; }
 
-    public void setEstadoUsuario(EstadoUsuario estadoUsuario) {
-        this.estadoUsuario = estadoUsuario;
-    }
-
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(TipoUsuario tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
-
-    public Long getFuncionarioId() {
-        return funcionarioId;
-    }
-
-    public void setFuncionarioId(Long funcionarioId) {
-        this.funcionarioId = funcionarioId;
-    }
-
-    public Long getFuncaoId() {
-        return funcaoId;
-    }
-
-    public void setFuncaoId(Long funcaoId) {
-        this.funcaoId = funcaoId;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
 }

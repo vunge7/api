@@ -23,6 +23,8 @@ public class LotesDTO {
 
     private LocalDateTime dataEntrada;
 
+    private Long empresaId; // ✅ agora o campo é usado corretamente
+
     @NotNull(message = "Status é obrigatório")
     private Boolean status;
 
@@ -36,6 +38,7 @@ public class LotesDTO {
         entity.setDataVencimento(this.dataVencimento);
         entity.setDataEntrada(this.dataEntrada);
         entity.setStatus(this.status);
+        entity.setEmpresaId(this.empresaId); // ✅ incluído
         return entity;
     }
 
@@ -49,22 +52,32 @@ public class LotesDTO {
         dto.setDataVencimento(entity.getDataVencimento());
         dto.setDataEntrada(entity.getDataEntrada());
         dto.setStatus(entity.getStatus());
+        dto.setEmpresaId(entity.getEmpresaId()); // ✅ incluído
         return dto;
     }
 
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Long getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+
     public String getDesignacao() { return designacao; }
     public void setDesignacao(String designacao) { this.designacao = designacao; }
+
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+
     public LocalDateTime getDataVencimento() { return dataVencimento; }
     public void setDataVencimento(LocalDateTime dataVencimento) { this.dataVencimento = dataVencimento; }
+
     public LocalDateTime getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDateTime dataEntrada) { this.dataEntrada = dataEntrada; }
+
     public Boolean getStatus() { return status; }
     public void setStatus(Boolean status) { this.status = status; }
+
+    public Long getEmpresaId() { return empresaId; }  // ✅ adicionado
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }  // ✅ adicionado
 }

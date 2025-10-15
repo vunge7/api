@@ -5,7 +5,7 @@ import com.dvml.api.entity.LinhasLotes;
 import com.dvml.api.repository.LinhasLotesRepository;
 import com.dvml.api.repository.LotesRepository;
 import com.dvml.api.repository.ProdutoRepository;
-import com.dvml.api.repository.ArmazemRepository;  // ← ADICIONAR ESTE IMPORT
+import com.dvml.api.repository.ArmazemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class LinhasLotesService {
     private ProdutoRepository produtoRepository;
 
     @Autowired
-    private ArmazemRepository armazemRepository;  // ← ADICIONAR ESTE REPOSITORY
+    private ArmazemRepository armazemRepository;
 
     public LinhasLotes criarLinhasLotes(LinhasLotesDTO dto) {
         if (!lotesRepository.existsById(dto.getLotes_id())) {
@@ -42,8 +42,9 @@ public class LinhasLotesService {
         LinhasLotes linhasLotes = new LinhasLotes();
         linhasLotes.setLotes_id(dto.getLotes_id());
         linhasLotes.setProduto_id(dto.getProduto_id());
-        linhasLotes.setArmazem_id(dto.getArmazem_id());  // ← ADICIONAR ESTE CAMPO
+        linhasLotes.setArmazem_id(dto.getArmazem_id());
         linhasLotes.setQuantidade(dto.getQuantidade());
+        linhasLotes.setEmpresaId(dto.getEmpresaId()); // ✅ adicionado
         return linhasLotesRepository.save(linhasLotes);
     }
 
@@ -62,8 +63,9 @@ public class LinhasLotesService {
 
         linhasLotes.setLotes_id(dto.getLotes_id());
         linhasLotes.setProduto_id(dto.getProduto_id());
-        linhasLotes.setArmazem_id(dto.getArmazem_id());  // ← ADICIONAR ESTE CAMPO
+        linhasLotes.setArmazem_id(dto.getArmazem_id());
         linhasLotes.setQuantidade(dto.getQuantidade());
+        linhasLotes.setEmpresaId(dto.getEmpresaId()); // ✅ adicionado
         return linhasLotesRepository.save(linhasLotes);
     }
 
@@ -80,8 +82,9 @@ public class LinhasLotesService {
             dto.setId(linhas.getId());
             dto.setLotes_id(linhas.getLotes_id());
             dto.setProduto_id(linhas.getProduto_id());
-            dto.setArmazem_id(linhas.getArmazem_id());  // ← ADICIONAR ESTE CAMPO
+            dto.setArmazem_id(linhas.getArmazem_id());
             dto.setQuantidade(linhas.getQuantidade());
+            dto.setEmpresaId(linhas.getEmpresaId()); // ✅ adicionado
             return dto;
         }).collect(Collectors.toList());
     }
@@ -92,8 +95,9 @@ public class LinhasLotesService {
             dto.setId(linhas.getId());
             dto.setLotes_id(linhas.getLotes_id());
             dto.setProduto_id(linhas.getProduto_id());
-            dto.setArmazem_id(linhas.getArmazem_id());  // ← ADICIONAR ESTE CAMPO
+            dto.setArmazem_id(linhas.getArmazem_id());
             dto.setQuantidade(linhas.getQuantidade());
+            dto.setEmpresaId(linhas.getEmpresaId()); // ✅ adicionado
             return dto;
         }).collect(Collectors.toList());
     }
@@ -105,8 +109,9 @@ public class LinhasLotesService {
         dto.setId(linhasLotes.getId());
         dto.setLotes_id(linhasLotes.getLotes_id());
         dto.setProduto_id(linhasLotes.getProduto_id());
-        dto.setArmazem_id(linhasLotes.getArmazem_id());  // ← ADICIONAR ESTE CAMPO
+        dto.setArmazem_id(linhasLotes.getArmazem_id());
         dto.setQuantidade(linhasLotes.getQuantidade());
+        dto.setEmpresaId(linhasLotes.getEmpresaId()); // ✅ adicionado
         return dto;
     }
 }

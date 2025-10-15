@@ -22,6 +22,7 @@ public class DepartamentoService {
     @Autowired
     private DepartamentoRepository departamentoRepository;
 
+    // ✅ Criar departamento
     public DepartamentoDTO create(DepartamentoDTO departamentoDTO) {
         LOGGER.info("Criando departamento com descrição: {}", departamentoDTO.getDescricao());
         validateDepartamentoDTO(departamentoDTO);
@@ -38,6 +39,7 @@ public class DepartamentoService {
         return toDTO(departamento);
     }
 
+    // ✅ Atualizar departamento
     public DepartamentoDTO update(Long id, DepartamentoDTO departamentoDTO) {
         LOGGER.info("Atualizando departamento com ID: {}", id);
         validateDepartamentoDTO(departamentoDTO);
@@ -61,6 +63,7 @@ public class DepartamentoService {
         return toDTO(departamento);
     }
 
+    // ✅ Buscar departamento por ID
     public DepartamentoDTO findById(Long id) {
         LOGGER.info("Buscando departamento com ID: {}", id);
         Departamento departamento = departamentoRepository.findById(id)
@@ -72,6 +75,7 @@ public class DepartamentoService {
         return toDTO(departamento);
     }
 
+    // ✅ Listar todos os departamentos
     public List<DepartamentoDTO> findAll() {
         LOGGER.info("Buscando todos os departamentos");
         List<DepartamentoDTO> result = departamentoRepository.findAll().stream()
@@ -81,6 +85,7 @@ public class DepartamentoService {
         return result;
     }
 
+    // ✅ Deletar departamento
     public void delete(Long id) {
         LOGGER.info("Deletando departamento com ID: {}", id);
         if (!departamentoRepository.existsById(id)) {
@@ -91,6 +96,9 @@ public class DepartamentoService {
         LOGGER.info("Departamento deletado com sucesso: ID {}", id);
     }
 
+    // ---------------------
+    // Métodos privados
+    // ---------------------
     private void validateDepartamentoDTO(DepartamentoDTO dto) {
         if (dto == null) {
             LOGGER.error("DepartamentoDTO não pode ser nulo");
@@ -106,6 +114,7 @@ public class DepartamentoService {
         Departamento departamento = new Departamento();
         departamento.setId(dto.getId());
         departamento.setDescricao(dto.getDescricao());
+        departamento.setEmpresaId(dto.getEmpresaId()); // ✅ set empresaId
         return departamento;
     }
 
@@ -113,10 +122,12 @@ public class DepartamentoService {
         DepartamentoDTO dto = new DepartamentoDTO();
         dto.setId(departamento.getId());
         dto.setDescricao(departamento.getDescricao());
+        dto.setEmpresaId(departamento.getEmpresaId()); // ✅ map empresaId
         return dto;
     }
 
     private void updateEntity(Departamento departamento, DepartamentoDTO dto) {
         departamento.setDescricao(dto.getDescricao());
+        departamento.setEmpresaId(dto.getEmpresaId()); // ✅ atualizar empresaId
     }
 }

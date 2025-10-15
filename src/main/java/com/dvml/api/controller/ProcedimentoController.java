@@ -13,17 +13,18 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping ("/procedimento")
 public class ProcedimentoController {
 
     @Autowired
     private ProcedimentoService service;
 
-    @GetMapping("procedimento/all")
+    @GetMapping("/all")
     public List<Procedimento> getAllPessoas() {
         return service.listarTodosProcedimentos();
     }
 
-  /*  @GetMapping("procedimento/{id}")
+  /*  @GetMapping("/{id}")
     public Procedimento getAllProcedimentoById(@PathVariable long id) {
         return service.getProcedimentoById(id);
     }
@@ -35,12 +36,12 @@ public class ProcedimentoController {
         return service.criar(procedimento);
     }*/
 
-    @PutMapping("procedimento/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void updateProcedimento(@RequestBody @Valid Procedimento procedimento){
         service.update(procedimento);}
 
-   /* @DeleteMapping("procedimento/{id}")
+   /* @DeleteMapping("/{id}")
     public void deleteProcedimento(@PathVariable long id) {
        if (service.getProcedimentoById(id) != null) {
             service.deleteProcedimento(id);

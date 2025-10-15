@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class MedicoDTO {
-    private Long id; // Adicionado para identificar o médico
+    private Long id; // ID do médico (usuario)
     private String nome;
     private String numeroOrdem;
     private String userName;
@@ -30,10 +30,14 @@ public class MedicoDTO {
     private String endereco;
     @Enumerated(EnumType.STRING)
     private Genero genero;
-    private Long usuarioId; // Referência por ID
-    private Long funcionarioId; // Referência por ID
+    private Long usuarioId;
+    private Long funcionarioId;
+    private Long empresaId; // ✅ Adicionado
 
-    public MedicoDTO(Long id, String nome, String numeroOrdem, String userName, String telefone, String email, Date dataNascimento, Date dataAdmissao, String tipoDeContrato, BigDecimal salario, BigDecimal subsidios, String descricao, String fechoDeContas, String endereco, Genero genero, Long usuarioId, Long funcionarioId) {
+    public MedicoDTO(Long id, String nome, String numeroOrdem, String userName, String telefone, String email,
+                     Date dataNascimento, Date dataAdmissao, String tipoDeContrato, BigDecimal salario,
+                     BigDecimal subsidios, String descricao, String fechoDeContas, String endereco,
+                     Genero genero, Long usuarioId, Long funcionarioId, Long empresaId) { // ✅ novo parâmetro
         this.id = id;
         this.nome = nome;
         this.numeroOrdem = numeroOrdem;
@@ -51,5 +55,6 @@ public class MedicoDTO {
         this.genero = genero;
         this.usuarioId = usuarioId;
         this.funcionarioId = funcionarioId;
+        this.empresaId = empresaId;
     }
 }

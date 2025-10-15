@@ -38,6 +38,8 @@ public class ExameDTO {
 
     private String nomeArmazem;
 
+    private Long empresaId;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Data de realização é obrigatória")
     private Date dataRealizacao;
