@@ -24,7 +24,7 @@ COPY . .
 RUN mvn clean install
 
 # === STAGE 2: RUNTIME ===
-FROM openjdk:17.0.9-jdk-slim
+FROM openjdk:17-jdk-slim
 
 EXPOSE 8080
 
