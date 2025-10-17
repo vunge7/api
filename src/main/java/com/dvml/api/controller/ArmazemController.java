@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/armazen")
+@RequestMapping("/armazem")
 public class ArmazemController {
 
     private static final Logger logger = LoggerFactory.getLogger(ArmazemController.class);
