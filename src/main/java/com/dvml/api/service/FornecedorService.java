@@ -71,7 +71,7 @@ public class FornecedorService {
         fornecedor.setNif(fornecedorDTO.getNif());
         fornecedor.setEndereco(fornecedorDTO.getEndereco());
         fornecedor.setRegimeTributario(fornecedorDTO.getRegimeTributario());
-        fornecedor.setEstadoFornecedor(fornecedorDTO.getEstadoFornecedor());
+        fornecedor.setEstadoFornecedor(fornecedorDTO.getEstadoFornecedor() != null ? fornecedorDTO.getEstadoFornecedor() : EstadoFornecedor.ATIVO);
         fornecedor.setEmpresaId(fornecedorDTO.getEmpresaId());
 
         Fornecedor updatedFornecedor = fornecedorRepository.save(fornecedor);

@@ -15,17 +15,17 @@ import java.util.Date;
 public class RequisicaoExame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "data_requisicao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataRequisicao;
 
     @Column(name = "usuario_id")
-    private long usuarioId;
+    private Long usuarioId;
 
     @Column(name = "inscricao_id")
-    private long inscricaoId;
+    private Long inscricaoId;
 
     @Column(name = "empresa_id")
     private Long empresaId;
