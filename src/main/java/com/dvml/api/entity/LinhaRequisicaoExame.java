@@ -52,7 +52,6 @@ public class LinhaRequisicaoExame {
     private long requisicaoExameId;
 
     @Column(name = "empresa_id")
-    @NotNull(message = "Empresa ID é obrigatório")
     private Long empresaId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
