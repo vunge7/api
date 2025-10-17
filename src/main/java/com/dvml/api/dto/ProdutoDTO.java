@@ -57,8 +57,6 @@ public class ProdutoDTO {
     @NotNull(message = "Product Type Id é obrigatório.")
     @JsonProperty("productTypeId")
     private Long productTypeId;
-
-    @NotNull(message = "empresa_id Id é obrigatório.")
     @JsonProperty("empresaId")
     private Long empresaId;
 
