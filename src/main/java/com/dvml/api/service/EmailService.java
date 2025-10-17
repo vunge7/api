@@ -63,7 +63,7 @@ public class EmailService {
         String pdfFileName = "agendamento_" + medicoId + "_" + System.currentTimeMillis(); // nome único para o PDF
         HashMap<String, Object> hash = new HashMap<>();
         hash.put("id", medicoId); // ou o nome do parâmetro que seu relatório espera
-        new TransformReportToPDF(jasperTemplate, hash, pdfFileName);
+        //new TransformReportToPDF(jasperTemplate, hash, pdfFileName);
 
         // Caminho do PDF gerado
         String filePath = "reports/pdf/" + pdfFileName + ".pdf";

@@ -34,48 +34,63 @@ public class RequisicaoExameService {
     @Autowired
     private PacienteRepository pacienteRepo;
 
+    // ✅ Buscar requisição por ID
     public RequisicaoExame getRequisicaoById(long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
     }
 
+    // ✅ Listar todas as requisições
     public List<RequisicaoExame> listarTodasRequisicoes() {
         return repo.findAllOrderByNomeAsc();
     }
 
+    // ✅ Listar todas as requisições com informações compostas (médico + paciente)
     public List<RequisicaoExameDTO> listarTodasRequisicoesComposto() {
-        List<RequisicaoExame> listaRequisicao = repo.findAllOrderByNomeAsc();
-        List<RequisicaoExameDTO> listaRequisicaoDTO = new ArrayList<>();
+        try {
+            List<RequisicaoExame> listaRequisicao = repo.findAllOrderByNomeAsc();
+            List<RequisicaoExameDTO> listaRequisicaoDTO = new ArrayList<>();
 
-        for (RequisicaoExame l : listaRequisicao) {
-            RequisicaoExameDTO linha = new RequisicaoExameDTO();
-            linha.setId(l.getId());
-            linha.setMedico(getPessoaBydUsuario(l.getUsuarioId()).getNome() + " " + getPessoaBydUsuario(l.getUsuarioId()).getApelido());
-            linha.setPaciente(getPessoaBydInscricao(l.getInscricaoId()).getNome() + " " + getPessoaBydInscricao(l.getInscricaoId()).getApelido());
-            linha.setData(l.getDataRequisicao());
-            listaRequisicaoDTO.add(linha);
+            for (RequisicaoExame l : listaRequisicao) {
+                RequisicaoExameDTO linha = new RequisicaoExameDTO();
+                linha.setId(l.getId());
+                linha.setMedico(getPessoaByUsuario(l.getUsuarioId()).getNome() + " " + getPessoaByUsuario(l.getUsuarioId()).getApelido());
+                linha.setPaciente(getPessoaByInscricao(l.getInscricaoId()).getNome() + " " + getPessoaByInscricao(l.getInscricaoId()).getApelido());
+                linha.setData(l.getDataRequisicao());
+                linha.setEmpresaId(l.getEmpresaId()); // ✅ Incluído o campo empresaId
+                listaRequisicaoDTO.add(linha);
+            }
+
+            return listaRequisicaoDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao listar todas as requisições compostas: " + e.getMessage());
+            return new ArrayList<>();
         }
-
-        return listaRequisicaoDTO;
     }
 
-    private Pessoa getPessoaBydInscricao(long idInscricao) {
-        Inscricao inscricao = inscricaoRepo.findById(idInscricao).get();
-        Paciente paciente = pacienteRepo.findById(inscricao.getPacienteId()).get();
-        return pessoaRepo.findById(paciente.getPessoaId()).get();
+    // ✅ Obter pessoa através da inscrição
+    private Pessoa getPessoaByInscricao(long idInscricao) {
+        Inscricao inscricao = inscricaoRepo.findById(idInscricao).orElseThrow(() -> new RuntimeException("Inscrição não encontrada"));
+        Paciente paciente = pacienteRepo.findById(inscricao.getPacienteId()).orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+        return pessoaRepo.findById(paciente.getPessoaId()).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
     }
 
-    private Pessoa getPessoaBydUsuario(long idUser) {
-        Usuario usuario = userRepo.findById(idUser).get();
-        long idPessoa = funcionarioRepo.findById(usuario.getFuncionarioId()).get().getPessoaId();
-        return pessoaRepo.findById(idPessoa).get();
+    // ✅ Obter pessoa através do usuário
+    private Pessoa getPessoaByUsuario(long idUser) {
+        Usuario usuario = userRepo.findById(idUser).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Funcionario funcionario = funcionarioRepo.findById(usuario.getFuncionarioId()).orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        return pessoaRepo.findById(funcionario.getPessoaId()).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
     }
 
+    // ✅ Criar requisição
     public RequisicaoExame criar(RequisicaoExame requisicaoExame) {
         requisicaoExame.setDataRequisicao(new Date());
         // ✅ Considera empresaId que vem do objeto
         return repo.save(requisicaoExame);
     }
 
+    // ✅ Atualizar requisição
     public ResponseEntity<String> update(RequisicaoExame requisicaoExame) {
         RequisicaoExame requisicaoToUpdate = repo.findById(requisicaoExame.getId())
                 .orElseThrow(() -> new RuntimeException("Requisição não encontrada"));
@@ -84,9 +99,7 @@ public class RequisicaoExameService {
         requisicaoToUpdate.setStatus(requisicaoExame.getStatus());
         requisicaoToUpdate.setUsuarioId(requisicaoExame.getUsuarioId());
         requisicaoToUpdate.setInscricaoId(requisicaoExame.getInscricaoId());
-
-        // ✅ Atualizando empresaId
-        requisicaoToUpdate.setEmpresaId(requisicaoExame.getEmpresaId());
+        requisicaoToUpdate.setEmpresaId(requisicaoExame.getEmpresaId()); // ✅ campo empresaId
 
         if (Objects.nonNull(repo.save(requisicaoToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -96,6 +109,7 @@ public class RequisicaoExameService {
                 .body("Falha ao editar a Requisição.");
     }
 
+    // ✅ Deletar requisição
     public ResponseEntity<String> deleteRequisicao(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);

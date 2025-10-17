@@ -30,10 +30,28 @@ public class ProdutoController {
         return produtoService.update(id, produtoDTO);
     }
 
-    // 🔹 Ativar ou desativar um produto (status lógico)
+    // 🔹 Ativar ou desativar um produto (status lógico, mantido para compatibilidade)
     @PatchMapping("/{id}/status")
     public ResponseEntity<String> delete(@PathVariable Long id, @RequestParam boolean status) {
         return produtoService.deleteProduct(id, status);
+    }
+
+    // 🔹 Ativar um produto
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<String> activate(@PathVariable Long id) {
+        return produtoService.activateProduct(id);
+    }
+
+    // 🔹 Desativar um produto
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<String> deactivate(@PathVariable Long id) {
+        return produtoService.deactivateProduct(id);
+    }
+
+    // 🔹 Excluir permanentemente um produto
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePermanently(@PathVariable Long id) {
+        return produtoService.deletePermanently(id);
     }
 
     // 🔹 Listar todos os produtos
@@ -53,12 +71,12 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> findByGrupo(@PathVariable Long grupoId) {
         return ResponseEntity.ok(produtoService.listarProdutosPorGrupo(grupoId));
     }
-    // 🔹 Listar produtos por Tipo
+
+    // 🔹 Listar produtos por tipo
     @GetMapping("/tipo/{tipoId}")
     public ResponseEntity<List<Produto>> findByTipo(@PathVariable Long tipoId) {
         return ResponseEntity.ok(produtoService.listarProdutosPorTipo(tipoId));
     }
-
 
     // 🔹 Buscar a árvore de produtos (produto pai e seus filhos)
     @GetMapping("/{id}/arvore")

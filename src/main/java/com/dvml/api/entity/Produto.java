@@ -64,7 +64,7 @@ public class Produto {
 
     @Column(name = "product_type_id")
     @NotNull(message = "Product Type Id é obrigatório.")
-    private long productTypeId;
+    private Long productTypeId; // Alterado de long para Long
 
     @Column(name = "produto_pai_id")
     private Long produtoPaiId;
@@ -76,10 +76,10 @@ public class Produto {
     @Column(name = "imagem", length = 255)
     private String imagem;
 
-    @Column(name = "Intervalo_referencia", length = 50)
+    @Column(name = "intervalo_referencia", length = 50)
     @Size(max = 50, message = "O intervalo de referência deve ter no máximo 50 caracteres.")
     @Pattern(regexp = "^$|^\\d+(\\.\\d+)?-\\d+(\\.\\d+)?$", message = "O intervalo de referência deve estar no formato 'min-max' (ex.: 4.5-5.9) ou estar vazio.")
-    private String IntervaloReferencia;
+    private String intervaloReferencia;
 
     @Column(name = "empresa_id")
     private Long empresaId;
