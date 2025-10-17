@@ -14,7 +14,7 @@ public class AgendaAppController {
     private AgendaAppService agendaAppService;
 
     // Criar agendamento via app
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> criarAgendaViaApp(@RequestBody AgendaAppDTO dto) {
         try {
             return agendaAppService.criarAgendaViaApp(dto);
