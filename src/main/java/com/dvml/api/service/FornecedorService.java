@@ -5,7 +5,6 @@ import com.dvml.api.entity.Fornecedor;
 import com.dvml.api.repository.FornecedorRepository;
 import com.dvml.api.util.EstadoFornecedor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +20,9 @@ public class FornecedorService {
     /**
      * Cadastra um novo fornecedor, incluindo empresaId
      */
-    public ResponseEntity<?> cadastrarFornecedor(FornecedorDTO fornecedorDTO) {
+    public FornecedorDTO cadastrarFornecedor(FornecedorDTO fornecedorDTO) {
         if (fornecedorRepository.existsByNif(fornecedorDTO.getNif())) {
-            return ResponseEntity.badRequest().body("NIF já registrado.");
+            throw new IllegalArgumentException("NIF já registrado.");
         }
 
         Fornecedor fornecedor = new Fornecedor();
@@ -33,10 +32,10 @@ public class FornecedorService {
         fornecedor.setEndereco(fornecedorDTO.getEndereco());
         fornecedor.setRegimeTributario(fornecedorDTO.getRegimeTributario());
         fornecedor.setEstadoFornecedor(EstadoFornecedor.ATIVO);
-        fornecedor.setEmpresaId(fornecedorDTO.getEmpresaId()); // ADICIONADO
+        fornecedor.setEmpresaId(fornecedorDTO.getEmpresaId());
 
-        fornecedorRepository.save(fornecedor);
-        return ResponseEntity.ok(fornecedor);
+        Fornecedor savedFornecedor = fornecedorRepository.save(fornecedor);
+        return toDTO(savedFornecedor);
     }
 
     /**
@@ -58,13 +57,13 @@ public class FornecedorService {
     /**
      * Edita um fornecedor existente, incluindo empresaId
      */
-    public ResponseEntity<String> editarFornecedor(Long id, FornecedorDTO fornecedorDTO) {
+    public FornecedorDTO editarFornecedor(Long id, FornecedorDTO fornecedorDTO) {
         Fornecedor fornecedor = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fornecedor com ID " + id + " não encontrado"));
 
         if (!fornecedor.getNif().equals(fornecedorDTO.getNif()) &&
                 fornecedorRepository.existsByNif(fornecedorDTO.getNif())) {
-            return ResponseEntity.badRequest().body("NIF já registrado por outro fornecedor.");
+            throw new IllegalArgumentException("NIF já registrado por outro fornecedor.");
         }
 
         fornecedor.setNome(fornecedorDTO.getNome());
@@ -72,20 +71,20 @@ public class FornecedorService {
         fornecedor.setNif(fornecedorDTO.getNif());
         fornecedor.setEndereco(fornecedorDTO.getEndereco());
         fornecedor.setRegimeTributario(fornecedorDTO.getRegimeTributario());
-        fornecedor.setEmpresaId(fornecedorDTO.getEmpresaId()); // ADICIONADO
+        fornecedor.setEstadoFornecedor(fornecedorDTO.getEstadoFornecedor());
+        fornecedor.setEmpresaId(fornecedorDTO.getEmpresaId());
 
-        fornecedorRepository.save(fornecedor);
-        return ResponseEntity.ok("Fornecedor atualizado com sucesso!");
+        Fornecedor updatedFornecedor = fornecedorRepository.save(fornecedor);
+        return toDTO(updatedFornecedor);
     }
 
     /**
      * Deleta um fornecedor
      */
-    public ResponseEntity<String> deleteFornecedor(Long id) {
+    public void deleteFornecedor(Long id) {
         Fornecedor fornecedor = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fornecedor com ID " + id + " não encontrado"));
         fornecedorRepository.delete(fornecedor);
-        return ResponseEntity.ok("Fornecedor excluído com sucesso!");
     }
 
     /**
@@ -100,7 +99,7 @@ public class FornecedorService {
         dto.setEndereco(fornecedor.getEndereco());
         dto.setRegimeTributario(fornecedor.getRegimeTributario());
         dto.setEstadoFornecedor(fornecedor.getEstadoFornecedor());
-        dto.setEmpresaId(fornecedor.getEmpresaId()); // ADICIONADO
+        dto.setEmpresaId(fornecedor.getEmpresaId());
         return dto;
     }
 }
