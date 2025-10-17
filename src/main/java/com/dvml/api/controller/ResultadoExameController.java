@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resultados")
+@RequestMapping("/resultado")
 public class ResultadoExameController {
 
     @Autowired
     private ResultadoExameService service;
 
     // 🔹 Criar um novo resultado de exame
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<ResultadoExame> criar(@RequestBody ResultadoExame resultadoExame) {
         ResultadoExame salvo = service.salvar(resultadoExame);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     // 🔹 Listar todos os resultados de exames
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResultadoExame>> listarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }

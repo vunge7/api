@@ -3,6 +3,7 @@ package com.dvml.api.controller;
 import com.dvml.api.dto.ConsultaSimpleDTO;
 import com.dvml.api.entity.Consulta;
 import com.dvml.api.service.ConsultaService;
+import com.dvml.api.util.EstadoConsulta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,14 @@ public class ConsultaController {
     @Autowired
     private ConsultaService consultaService;
 
-    // Listar todas as consultas
+    // ✅ Listar todas as consultas
     @GetMapping("/all")
     public ResponseEntity<List<ConsultaSimpleDTO>> listarTodasConsultas() {
         List<ConsultaSimpleDTO> consultas = consultaService.listarTodos();
         return ResponseEntity.ok(consultas);
     }
 
-    // Buscar consulta por ID
+    // ✅ Buscar consulta por ID
     @GetMapping("/{id}")
     public ResponseEntity<ConsultaSimpleDTO> getConsultaById(@PathVariable Long id) {
         try {
@@ -35,14 +36,14 @@ public class ConsultaController {
         }
     }
 
-    // Criar nova consulta
+    // ✅ Criar nova consulta
     @PostMapping("/add")
     public ResponseEntity<Consulta> criarConsulta(@RequestBody Consulta consulta) {
         Consulta novaConsulta = consultaService.adicionar(consulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaConsulta);
     }
 
-    // Atualizar consulta
+    // ✅ Atualizar consulta
     @PutMapping("/{id}")
     public ResponseEntity<Consulta> atualizarConsulta(@PathVariable Long id, @RequestBody Consulta consulta) {
         try {
@@ -54,7 +55,7 @@ public class ConsultaController {
         }
     }
 
-    // Fechar consulta por inscrição
+    // ✅ Fechar consulta por inscrição
     @PatchMapping("/fechar/{idInscricao}")
     public ResponseEntity<Void> fecharConsulta(@PathVariable Long idInscricao) {
         try {
@@ -62,6 +63,18 @@ public class ConsultaController {
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    // ✅ Buscar consulta por estado e inscrição
+    @GetMapping("/{idInscricao}/{estado}")
+    public ResponseEntity<ConsultaSimpleDTO> getConsultaByEstadoAndInscricao(
+            @PathVariable Long idInscricao,
+            @PathVariable String estado) {
+        try {
+            ConsultaSimpleDTO consulta = consultaService.getConsultaByEstadoAndIdInscricao(estado, idInscricao);
+            return ResponseEntity.ok(consulta);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }

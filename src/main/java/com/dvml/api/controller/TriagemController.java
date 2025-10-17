@@ -21,7 +21,7 @@ public class TriagemController {
        return  service.listarTodos();
     }
 
-    @PostMapping("/triagem/add")
+    @PostMapping("/add")
     @ResponseStatus(code = HttpStatus.CREATED)
     public TriagemDTO  criarTriagem(@RequestBody Triagem triagem){
        Triagem  t = service.salvar(triagem);

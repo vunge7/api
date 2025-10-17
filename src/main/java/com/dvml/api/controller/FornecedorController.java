@@ -39,8 +39,10 @@ public class FornecedorController {
         try {
             FornecedorDTO savedFornecedor = fornecedorService.cadastrarFornecedor(fornecedorDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFornecedor);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar fornecedor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar fornecedor: " + e.getMessage());
         }
     }
 
@@ -51,9 +53,9 @@ public class FornecedorController {
             FornecedorDTO updatedFornecedor = fornecedorService.editarFornecedor(id, fornecedorDTO);
             return ResponseEntity.ok(updatedFornecedor);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fornecedor não encontrado: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar fornecedor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -64,7 +66,7 @@ public class FornecedorController {
             fornecedorService.deleteFornecedor(id);
             return ResponseEntity.ok("Fornecedor excluído com sucesso!");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fornecedor não encontrado: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

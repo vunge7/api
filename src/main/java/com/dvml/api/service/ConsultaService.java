@@ -30,7 +30,7 @@ public class ConsultaService {
         dto.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
         dto.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
         dto.setReceita(consulta.getReceita());
-        dto.setExamesComplementares(null); // pode ser ajustado se houver lista real
+        dto.setExamesComplementares(null); // Pode ser ajustado futuramente
         dto.setEstadoConsulta(consulta.getEstadoConsulta());
         return dto;
     }
@@ -63,7 +63,7 @@ public class ConsultaService {
         c.setReceita(consulta.getReceita());
         c.setDiagnosticoInicial(consulta.getDiagnosticoInicial());
         c.setDiagnosticoFinal(consulta.getDiagnosticoFinal());
-        c.setEmpresaId(consulta.getEmpresaId()); // ✅ atualizando empresaId
+        c.setEmpresaId(consulta.getEmpresaId());
 
         return repo.save(c);
     }
@@ -82,16 +82,26 @@ public class ConsultaService {
         return convertEntityToDto(c);
     }
 
-    // Buscar consulta por estado e inscrição
+    // Buscar consulta por estado e inscrição (DTO)
     public ConsultaSimpleDTO getConsultaByEstadoAndIdInscricao(String estado, long idInscricao) {
-        Consulta c = repo.getConsultaByEstadoInscricaoAndIdIscricao(estado, idInscricao);
-        if (c == null) throw new IllegalArgumentException("Consulta não encontrada");
-        return convertEntityToDto(c);
+        try {
+            EstadoConsulta estadoEnum = EstadoConsulta.valueOf(estado.toUpperCase());
+            Consulta c = repo.findByInscricaoIdAndEstadoConsulta(idInscricao, estadoEnum.name());
+            if (c == null) throw new IllegalArgumentException("Consulta não encontrada");
+            return convertEntityToDto(c);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Estado inválido ou consulta não encontrada");
+        }
     }
 
-    // Fechar consulta (alterar estado)
+    // Buscar consulta por estado e inscrição (entidade direta)
+    public Consulta getByInscricaoIdAndEstado(Long idInscricao, EstadoConsulta estado) {
+        return repo.findByInscricaoIdAndEstadoConsulta(idInscricao, estado.name());
+    }
+
+    // Atualizar estado da consulta de ABERTO para FECHADO
     public void updateEstadoCondicaoConsulta(long idInscricao) {
-        Consulta c = repo.getConsultaByEstadoInscricaoAndIdIscricao("ABERTO", idInscricao);
+        Consulta c = repo.findByInscricaoIdAndEstadoConsulta(idInscricao, EstadoConsulta.ABERTO.name());
         if (c != null) {
             c.setEstadoConsulta(EstadoConsulta.FECHADO);
             repo.save(c);

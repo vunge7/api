@@ -34,7 +34,14 @@ public class InscricaoService {
     private ConsultaService consultaService;
 
     public InscricaoFullDTO convertEntityToDto2(Inscricao inscricao) {
-        PacienteDTO pacienteDTO = pacienteService.getPacienteById(inscricao.getPacienteId());
+        PacienteDTO pacienteDTO;
+        try {
+            pacienteDTO = pacienteService.getPacienteById(inscricao.getPacienteId());
+        } catch (Exception e) {
+            System.err.println("Paciente não encontrado com ID: " + inscricao.getPacienteId());
+            return null; // Ignora inscrições com paciente inválido
+        }
+
 
         InscricaoFullDTO inscricaoDTO = new InscricaoFullDTO();
         inscricaoDTO.setInscricaoId(inscricao.getId());
@@ -104,8 +111,10 @@ public class InscricaoService {
         return repo.getAllInscricaoEncaminhadoConsulta()
                 .stream()
                 .map(this::convertEntityToDto2)
+                .filter(dto -> dto != null)
                 .collect(Collectors.toList());
     }
+
 
     public Inscricao salvar(Inscricao inscricao) {
         return repo.save(inscricao);
