@@ -1,6 +1,8 @@
 package com.dvml.api.service;
 
 import com.dvml.api.dto.AgendaAppDTO;
+import com.dvml.api.dto.ConsultaAppDTO;
+import com.dvml.api.dto.ProdutoDTO;
 import com.dvml.api.entity.*;
 import com.dvml.api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgendaAppService {
@@ -47,7 +53,7 @@ public class AgendaAppService {
             pessoa.setGenero(dto.getGenero());
 
             // ✅ Novo campo
-            pessoa.setEmpresaId(dto.getEmpresaId());
+            pessoa.setEmpresaId(1l);
 
             // 🔹 Campos opcionais com "N/A"
             pessoa.setLocalNascimento("N/A");
@@ -84,7 +90,7 @@ public class AgendaAppService {
             paciente.setDataCadastro(new Date());
             paciente.setDataActualizacao(new Date());
             // ✅ Novo campo
-            paciente.setEmpresaId(dto.getEmpresaId());
+            paciente.setEmpresaId(1l);
             pacienteRepository.save(paciente);
         }
 
@@ -100,7 +106,7 @@ public class AgendaAppService {
         agenda.setDescricao(produto.getProductDescription()); // Usa o nome do produto como descrição
         agenda.setStatus(true);
         // ✅ Novo campo
-        agenda.setEmpresaId(dto.getEmpresaId());
+        agenda.setEmpresaId(1l);
         agendaRepository.save(agenda);
 
         // 🔹 6. Cria a linha da agenda
@@ -113,11 +119,31 @@ public class AgendaAppService {
         linha.setDataRealizacao(dto.getDataConsulta());
         linha.setConfirmacao(false);
         // ✅ Novo campo
-        linha.setEmpresaId(dto.getEmpresaId());
+        linha.setEmpresaId(1l);
         linhaAgendaRepository.save(linha);
 
         // 🔹 7. Retorna sucesso
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("✅ Agendamento criado com sucesso para o serviço: " + produto.getProductDescription());
     }
+
+    public List<ConsultaAppDTO> listarTodasConsultas() {
+        List<Produto> produtos = produtoRepository.findAllProdutosPorGrupoId(1);
+
+        if (produtos == null || produtos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return produtos.stream()
+                .map(produto -> {
+                    ConsultaAppDTO dto = new ConsultaAppDTO();
+                    dto.setId(produto.getId());
+                    dto.setDesignacao(produto.getProductDescription());
+                    dto.setTipo(produto.getProductType());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }

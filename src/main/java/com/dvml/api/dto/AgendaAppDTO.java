@@ -29,5 +29,5 @@ public class AgendaAppDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataConsulta;
 
-    private Long empresaId;
+
 }
