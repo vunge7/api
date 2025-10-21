@@ -1,10 +1,14 @@
 package com.dvml.api.controller;
 
 import com.dvml.api.dto.AgendaAppDTO;
+import com.dvml.api.dto.ConsultaAppDTO;
+import com.dvml.api.entity.Produto;
 import com.dvml.api.service.AgendaAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/agenda-app")
@@ -22,4 +26,14 @@ public class AgendaAppController {
             return ResponseEntity.status(500).body("Erro interno ao criar agendamento: " + e.getMessage());
         }
     }
+    @GetMapping("/consultas")
+    public ResponseEntity<List<ConsultaAppDTO>> listarTodasConsultas() {
+        try {
+            List<ConsultaAppDTO> consultas = agendaAppService.listarTodasConsultas();
+            return ResponseEntity.ok(consultas);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
 }
