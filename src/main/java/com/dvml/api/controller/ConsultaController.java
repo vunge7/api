@@ -77,4 +77,10 @@ public class ConsultaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @PutMapping("/edit")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void updatePaciente(@RequestBody Consulta consulta){
+        consultaService.update(consulta);
+    }
 }

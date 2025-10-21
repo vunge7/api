@@ -44,5 +44,5 @@ public class Empresa {
     private String endereco;
 
     @Column(name = "seguradora_id", length = 50)
-    private long seguradoraId; // Mantido conforme seu projeto
+    private Long seguradoraId; // Mantido conforme seu projeto
 }
