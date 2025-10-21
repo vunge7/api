@@ -63,9 +63,6 @@ public class Usuario {
     @NotBlank(message = "O IP não pode ser vazio ou nulo")
     private String ip;
 
-    @Column(name = "usuario_id", nullable = false, length = 100)
-    @NotNull(message = "O ID do usuário não pode ser nulo")
-    private long usuarioId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
