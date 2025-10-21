@@ -32,6 +32,22 @@ public class EmpresaController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    // ✅ NOVO ENDPOINT - Buscar filial específica
+    @GetMapping("/filial/{id}")
+    public ResponseEntity<EmpresaDTO> getFilialById(@PathVariable Long id) {
+        return empresaService.findFilialById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // ✅ Listar todas as filiais
+    @GetMapping("/filial/all")
+    public ResponseEntity<List<EmpresaDTO>> listarTodasFiliais() {
+        List<EmpresaDTO> filiais = empresaService.listarTodasFiliais();
+        return ResponseEntity.ok(filiais);
+    }
+
+
     // Criar nova empresa
     @PostMapping("/add")
     public ResponseEntity<Empresa> criarEmpresa(@RequestBody Empresa empresa) {

@@ -62,6 +62,13 @@ public class EmpresaService {
                 .map(this::mapToDTOWithFiliais);
     }
 
+    // ✅ Buscar filial específica
+    public Optional<EmpresaDTO> findFilialById(Long id) {
+        return repository.findById(id)
+                .filter(empresa -> empresa.getTipo() != null && empresa.getTipo().name().equalsIgnoreCase("FILIAL"))
+                .map(this::mapToDTOWithFiliais);
+    }
+
     // ✅ Montar árvore completa (todas as matrizes → filiais → subfiliais)
     public List<EmpresaDTO> listarArvoreCompleta() {
         List<Empresa> matrizes = repository.findAll().stream()
@@ -116,7 +123,19 @@ public class EmpresaService {
             }
         }
 
+
+
         repository.deleteById(id);
+    }
+    // ✅ Buscar todas as filiais do sistema
+    public List<EmpresaDTO> listarTodasFiliais() {
+        List<Empresa> filiais = repository.findAll().stream()
+                .filter(e -> e.getTipo() != null && e.getTipo().name().equalsIgnoreCase("FILIAL"))
+                .collect(Collectors.toList());
+
+        return filiais.stream()
+                .map(this::mapToDTOWithFiliais)
+                .collect(Collectors.toList());
     }
 
     // ✅ Deletar matriz e todas as filiais (recursivo)
