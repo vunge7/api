@@ -114,7 +114,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+
     public List<UsuarioDTO> listarUsuariosAtivos() {
         log.info("Listando usuários ativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
@@ -122,7 +122,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+
     public List<UsuarioDTO> listarUsuariosInativos() {
         log.info("Listando usuários inativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
@@ -130,7 +130,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+
     public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
         log.info("Listando usuários por funcionário ID: {}", funcionarioId);
         if (!funcionarioRepository.existsById(funcionarioId)) {
@@ -141,7 +141,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+
     public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
         log.info("Listando usuários por função ID: {}", funcaoId);
         if (!funcaoRepository.existsById(funcaoId)) {
@@ -152,7 +152,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+
     public ResponseEntity<String> deleteUsuario(Long id) {
         log.info("Deletando usuário com ID: {}", id);
         if (!usuarioRepository.existsById(id)) {
@@ -170,7 +170,7 @@ public class UsuarioService {
         }
     }
 
-    @Transactional
+
     public ResponseEntity<String> inativarUsuario(Long id) {
         log.info("Inativando usuário com ID: {}", id);
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
@@ -186,7 +186,7 @@ public class UsuarioService {
                 .body("Usuário inativado com sucesso!");
     }
 
-    @Transactional(readOnly = true)
+
     public Optional<Usuario> findByUserName(String username) {
         log.info("Buscando usuário por username: {}", username);
         return usuarioRepository.findByUserName(username);

@@ -1,5 +1,6 @@
 package com.dvml.api.service;
 
+import com.dvml.api.dto.FilialDTO;
 import com.dvml.api.dto.PainelPermissaoDTO;
 import com.dvml.api.entity.PainelPermissao;
 import com.dvml.api.repository.PainelPermissaoRepository;
@@ -16,6 +17,9 @@ public class PainelPermissaoService {
 
     @Autowired
     private PainelPermissaoRepository painelPermissaoRepository;
+
+    @Autowired
+    private FilialService filialService;
 
     private PainelPermissaoDTO convertToDTO(PainelPermissao painelPermissao) {
         PainelPermissaoDTO dto = new PainelPermissaoDTO();
@@ -124,5 +128,21 @@ public class PainelPermissaoService {
             throw new RuntimeException("PainelPermissao not found with id: " + id);
         }
         painelPermissaoRepository.deleteById(id);
+    }
+
+
+
+
+    public List<FilialDTO> getFiliaisDTOByUsuarioId(Long usuarioId) {
+        System.out.println("Fetching filial IDs for usuarioId: " + usuarioId);
+        List<Long> filialIds = painelPermissaoRepository.findIdsFiliaisByUsuarioIdAndEmpresaId(usuarioId);
+        System.out.println("Filial IDs: " + filialIds);
+        return filialIds.stream()
+                .map((id) -> {
+                    FilialDTO dto = filialService.getFilialById(id);
+                    // Aqui você pode adicionar mais campos se necessário
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
