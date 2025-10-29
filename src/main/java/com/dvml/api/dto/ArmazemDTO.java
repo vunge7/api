@@ -18,31 +18,23 @@ public class ArmazemDTO {
     @Size(min = 3, max = 100, message = "Designação deve ter entre 3 e 100 caracteres")
     private String designacao;
 
-    @Size(max = 100, message = "Nome da filial deve ter até 100 caracteres")
-    private String filialNome;
+    private Long empresaId; // Apenas este campo
 
-    private Long filialId;
-
-    private Long empresaId;
-
-    // ✅ Converte DTO → Entity, incluindo empresaId
+    // Converte DTO → Entity
     public Armazem toEntity() {
         Armazem armazem = new Armazem();
         armazem.setId(this.id);
         armazem.setDesignacao(this.designacao);
-        armazem.setFilialId(this.filialId);
-        armazem.setEmpresaId(this.empresaId); // <- adicionado
+        armazem.setEmpresaId(this.empresaId);
         return armazem;
     }
 
-    // ✅ Converte Entity → DTO, incluindo empresaId
-    public static ArmazemDTO fromEntity(Armazem armazem, String filialNome) {
+    // Entity → DTO
+    public static ArmazemDTO fromEntity(Armazem armazem) {
         ArmazemDTO dto = new ArmazemDTO();
         dto.setId(armazem.getId());
         dto.setDesignacao(armazem.getDesignacao());
-        dto.setFilialId(armazem.getFilialId());
-        dto.setFilialNome(filialNome != null ? filialNome : "Sem filial associada");
-        dto.setEmpresaId(armazem.getEmpresaId()); // <- adicionado
+        dto.setEmpresaId(armazem.getEmpresaId());
         return dto;
     }
 }

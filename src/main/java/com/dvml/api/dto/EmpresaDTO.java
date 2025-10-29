@@ -18,14 +18,12 @@ public class EmpresaDTO {
     private Long id;
     private String nome;
     private TipoEmpresa tipo;
-    private Long empresaMatrizId; // null ou 0 = matriz
+    private Long empresaMatrizId; // null = matriz
     private String nif;
     private String email;
     private String telefone;
     private String endereco;
-    private boolean status = true; //
-    private long seguradoraId; // Mantido
+    private Long seguradoraId; // Long (nullable)
 
-    // 🔹 Lista de filiais associadas à empresa matriz
-    private List<EmpresaDTO> filiais = new ArrayList<>();
+    private List<EmpresaDTO> empresas = new ArrayList<>();
 }

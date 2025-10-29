@@ -3,14 +3,12 @@ package com.dvml.api.service;
 import com.dvml.api.dto.ArmazemDTO;
 import com.dvml.api.entity.Armazem;
 import com.dvml.api.repository.ArmazemRepository;
-import com.dvml.api.repository.FilialRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ArmazemService {
@@ -20,43 +18,13 @@ public class ArmazemService {
     @Autowired
     private ArmazemRepository armazemRepository;
 
-    @Autowired
-    private FilialRepository filialRepository;
-
     public List<ArmazemDTO> listarTodasArmazem() {
         logger.info("Listando todos os armazéns");
-        List<Armazem> armazens = armazemRepository.findAll();
-        logger.debug("Total de armazéns encontrados: {}", armazens.size());
-
-        List<ArmazemDTO> dtos = armazens.stream()
-                .map(armazem -> {
-                    String filialNome;
-                    Long filialId = armazem.getFilialId();
-                    if (filialId == null) {
-                        filialNome = "Sem filial associada (filialId nulo)";
-                        logger.warn("Armazém ID {} tem filialId nulo", armazem.getId());
-                    } else {
-                        filialNome = filialRepository.findById(filialId)
-                                .map(filial -> {
-                                    logger.debug("Filial encontrada para armazém ID {}: filialId={}, nome={}",
-                                            armazem.getId(), filialId, filial.getNome());
-                                    return filial.getNome();
-                                })
-                                .orElseGet(() -> {
-                                    logger.warn("Filial não encontrada para armazém ID {}: filialId={}",
-                                            armazem.getId(), filialId);
-                                    return "Filial não encontrada (ID: " + filialId + ")";
-                                });
-                    }
-                    ArmazemDTO dto = ArmazemDTO.fromEntity(armazem, filialNome);
-                    dto.setEmpresaId(armazem.getEmpresaId()); // ✅ Incluído
-                    logger.debug("Armazém mapeado para DTO: id={}, designacao={}, filialId={}, filialNome={}, empresaId={}",
-                            dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome(), dto.getEmpresaId());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        logger.info("Total de armazéns retornados: {}", dtos.size());
-        return dtos;
+        return armazemRepository.findAll().stream()
+                .map(ArmazemDTO::fromEntity)
+                .peek(dto -> logger.debug("Armazém listado: id={}, designacao={}, empresaId={}",
+                        dto.getId(), dto.getDesignacao(), dto.getEmpresaId()))
+                .toList();
     }
 
     public ArmazemDTO getArmazemById(Long id) {
@@ -64,112 +32,78 @@ public class ArmazemService {
         Armazem armazem = armazemRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error("Armazém com ID {} não encontrado", id);
-                    return new IllegalArgumentException("Armazém não encontrado");
+                    return new IllegalArgumentException("Armazém não encontrado com ID: " + id);
                 });
-        String filialNome = armazem.getFilialId() != null
-                ? filialRepository.findById(armazem.getFilialId())
-                .map(filial -> {
-                    logger.debug("Filial encontrada para armazém ID {}: filialId={}, nome={}",
-                            id, armazem.getFilialId(), filial.getNome());
-                    return filial.getNome();
-                })
-                .orElseGet(() -> {
-                    logger.warn("Filial não encontrada para armazém ID {}: filialId={}",
-                            id, armazem.getFilialId());
-                    return "Filial não encontrada (ID: " + armazem.getFilialId() + ")";
-                })
-                : "Sem filial associada (filialId nulo)";
-        ArmazemDTO dto = ArmazemDTO.fromEntity(armazem, filialNome);
-        dto.setEmpresaId(armazem.getEmpresaId()); // ✅ Incluído
-        logger.debug("Armazém retornado: id={}, designacao={}, filialId={}, filialNome={}, empresaId={}",
-                dto.getId(), dto.getDesignacao(), dto.getFilialId(), dto.getFilialNome(), dto.getEmpresaId());
+
+        ArmazemDTO dto = ArmazemDTO.fromEntity(armazem);
+        logger.debug("Armazém retornado: id={}, designacao={}, empresaId={}",
+                dto.getId(), dto.getDesignacao(), dto.getEmpresaId());
         return dto;
     }
 
     public ArmazemDTO criar(ArmazemDTO armazemDTO) {
-        logger.info("Criando armazém: {}", armazemDTO.getDesignacao());
-        if (armazemDTO.getFilialId() == null) {
-            logger.error("FilialId é obrigatório para criar armazém: {}", armazemDTO.getDesignacao());
-            throw new IllegalArgumentException("FilialId é obrigatório");
-        }
-        filialRepository.findById(armazemDTO.getFilialId())
-                .orElseThrow(() -> {
-                    logger.error("Filial com ID {} não encontrada", armazemDTO.getFilialId());
-                    return new IllegalArgumentException("Filial não encontrada");
-                });
+        logger.info("Criando novo armazém: {}", armazemDTO.getDesignacao());
+
+        validarDesignacao(armazemDTO.getDesignacao());
 
         Armazem armazem = armazemDTO.toEntity();
-        armazem.setEmpresaId(armazemDTO.getEmpresaId()); // ✅ Incluído
-
         Armazem saved = armazemRepository.save(armazem);
 
-        String filialNome = filialRepository.findById(saved.getFilialId())
-                .map(filial -> {
-                    logger.debug("Filial encontrada para armazém criado ID {}: filialId={}, nome={}",
-                            saved.getId(), saved.getFilialId(), filial.getNome());
-                    return filial.getNome();
-                })
-                .orElseGet(() -> {
-                    logger.warn("Filial não encontrada para armazém criado ID {}: filialId={}",
-                            saved.getId(), saved.getFilialId());
-                    return "Filial não encontrada (ID: " + saved.getFilialId() + ")";
-                });
-
-        ArmazemDTO dto = ArmazemDTO.fromEntity(saved, filialNome);
-        dto.setEmpresaId(saved.getEmpresaId()); // ✅ Incluído
-        logger.debug("Armazém criado: {}", dto);
+        ArmazemDTO dto = ArmazemDTO.fromEntity(saved);
+        logger.info("Armazém criado com sucesso: ID {}", saved.getId());
         return dto;
     }
 
     public ArmazemDTO update(ArmazemDTO armazemDTO) {
-        logger.info("Atualizando armazém com ID: {}", armazemDTO.getId());
-        Armazem armazem = armazemRepository.findById(armazemDTO.getId())
-                .orElseThrow(() -> {
-                    logger.error("Armazém com ID {} não encontrado", armazemDTO.getId());
-                    return new IllegalArgumentException("Armazém não encontrado");
-                });
-        if (armazemDTO.getFilialId() == null) {
-            logger.error("FilialId é obrigatório para atualizar armazém ID: {}", armazemDTO.getId());
-            throw new IllegalArgumentException("FilialId é obrigatório");
+        Long id = armazemDTO.getId();
+        if (id == null) {
+            logger.error("Tentativa de atualização sem ID");
+            throw new IllegalArgumentException("ID do armazém é obrigatório para atualização");
         }
-        filialRepository.findById(armazemDTO.getFilialId())
+
+        logger.info("Atualizando armazém com ID: {}", id);
+
+        Armazem armazem = armazemRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.error("Filial com ID {} não encontrada", armazemDTO.getFilialId());
-                    return new IllegalArgumentException("Filial não encontrada");
+                    logger.error("Armazém com ID {} não encontrado para atualização", id);
+                    return new IllegalArgumentException("Armazém não encontrado com ID: " + id);
                 });
 
-        armazem.setDesignacao(armazemDTO.getDesignacao());
-        armazem.setFilialId(armazemDTO.getFilialId());
-        armazem.setEmpresaId(armazemDTO.getEmpresaId()); // ✅ Incluído
+        String novaDesignacao = armazemDTO.getDesignacao();
+        validarDesignacao(novaDesignacao);
+
+        armazem.setDesignacao(novaDesignacao.trim());
+        armazem.setEmpresaId(armazemDTO.getEmpresaId());
+
+        if (armazemDTO.getEmpresaId() == null) {
+            logger.warn("Armazém ID {} atualizado sem empresaId (pode ser intencional)", id);
+        }
 
         Armazem updated = armazemRepository.save(armazem);
+        ArmazemDTO dto = ArmazemDTO.fromEntity(updated);
 
-        String filialNome = filialRepository.findById(updated.getFilialId())
-                .map(filial -> {
-                    logger.debug("Filial encontrada para armazém atualizado ID {}: filialId={}, nome={}",
-                            updated.getId(), updated.getFilialId(), filial.getNome());
-                    return filial.getNome();
-                })
-                .orElseGet(() -> {
-                    logger.warn("Filial não encontrada para armazém atualizado ID {}: filialId={}",
-                            updated.getId(), updated.getFilialId());
-                    return "Filial não encontrada (ID: " + updated.getFilialId() + ")";
-                });
-
-        ArmazemDTO dto = ArmazemDTO.fromEntity(updated, filialNome);
-        dto.setEmpresaId(updated.getEmpresaId()); // ✅ Incluído
-        logger.debug("Armazém atualizado: {}", dto);
+        logger.info("Armazém atualizado com sucesso: ID {}", updated.getId());
         return dto;
     }
 
     public void deleteArmazem(Long id) {
         logger.info("Deletando armazém com ID: {}", id);
-        Armazem armazem = armazemRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.error("Armazém com ID {} não encontrado", id);
-                    return new IllegalArgumentException("Armazém não encontrado");
-                });
-        armazemRepository.delete(armazem);
-        logger.debug("Armazém com ID {} deletado", id);
+        if (!armazemRepository.existsById(id)) {
+            logger.error("Tentativa de deletar armazém inexistente: ID {}", id);
+            throw new IllegalArgumentException("Armazém não encontrado com ID: " + id);
+        }
+        armazemRepository.deleteById(id);
+        logger.info("Armazém deletado com sucesso: ID {}", id);
+    }
+
+    // Validação centralizada
+    private void validarDesignacao(String designacao) {
+        if (designacao == null || designacao.trim().isEmpty()) {
+            throw new IllegalArgumentException("Designação é obrigatória");
+        }
+        String trimmed = designacao.trim();
+        if (trimmed.length() < 3 || trimmed.length() > 100) {
+            throw new IllegalArgumentException("Designação deve ter entre 3 e 100 caracteres");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.dvml.api.service;
 
 import com.dvml.api.dto.ExameDTO;
+import com.dvml.api.entity.Armazem;
 import com.dvml.api.entity.Exame;
 import com.dvml.api.entity.TipoExame;
 import com.dvml.api.repository.*;
@@ -42,13 +43,16 @@ public class ExameService {
     @Autowired
     private ArmazemRepository armazemRepository;
 
-    @Autowired
-    private FilialRepository filialRepository;
+    /* --------------------------------------------------------------
+       REMOVIDO: FilialRepository – não existe mais a coluna filial_id
+       -------------------------------------------------------------- */
 
     public List<ExameDTO> listarTodos() {
         logger.info("Listando todos os exames");
         List<Exame> exames = exameRepository.findAll();
-        return exames.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return exames.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public ExameDTO getById(Long id) {
@@ -68,7 +72,9 @@ public class ExameService {
             throw new IllegalArgumentException("Paciente não encontrado");
         }
         List<Exame> exames = exameRepository.findByPacienteId(pacienteId);
-        return exames.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return exames.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -77,7 +83,7 @@ public class ExameService {
         validateExameDTO(dto);
 
         Exame exame = dto.toEntity();
-        exame.setEmpresaId(dto.getEmpresaId()); // ✅ adiciona empresaId
+        exame.setEmpresaId(dto.getEmpresaId()); // adiciona empresaId
 
         Exame saved = exameRepository.save(exame);
         logger.debug("Exame criado: ID {}", saved.getId());
@@ -104,7 +110,7 @@ public class ExameService {
         exame.setResultadoQuantitativo(dto.getResultadoQuantitativo());
         exame.setStatusAmostra(dto.getStatusAmostra());
         exame.setObservacoes(dto.getObservacoes());
-        exame.setEmpresaId(dto.getEmpresaId()); // ✅ atualiza empresaId
+        exame.setEmpresaId(dto.getEmpresaId()); // atualiza empresaId
 
         Exame updated = exameRepository.save(exame);
         logger.debug("Exame atualizado: ID {}", updated.getId());
@@ -122,6 +128,9 @@ public class ExameService {
         logger.debug("Exame com ID {} deletado", id);
     }
 
+    /* ==============================================================
+       VALIDAÇÕES – sem filial
+       ============================================================== */
     private void validateExameDTO(ExameDTO dto) {
         if (dto.getRequisicaoExameId() == null || !requisicaoExameRepository.existsById(dto.getRequisicaoExameId())) {
             logger.error("Requisição de exame com ID {} não encontrada", dto.getRequisicaoExameId());
@@ -149,33 +158,38 @@ public class ExameService {
         }
     }
 
+    /* ==============================================================
+       CONVERSÃO DTO – **SEM FILIAL**
+       ============================================================== */
     private ExameDTO convertToDTO(Exame exame) {
+        /* ---------- Nome do Paciente ---------- */
         String nomePaciente = pacienteRepository.findById(exame.getPacienteId())
                 .map(paciente -> pessoaRepository.findById(paciente.getPessoaId())
-                        .map(pessoa -> pessoa.getNome() + " " + pessoa.getApelido())
+                        .map(p -> p.getNome() + " " + p.getApelido())
                         .orElse("Paciente desconhecido"))
                 .orElse("Paciente não encontrado");
 
+        /* ---------- Nome do Médico ---------- */
         String nomeMedico = usuarioRepository.findById(exame.getMedicoId())
                 .map(usuario -> funcionarioRepository.findById(usuario.getFuncionarioId())
-                        .map(funcionario -> pessoaRepository.findById(funcionario.getPessoaId())
-                                .map(pessoa -> pessoa.getNome() + " " + pessoa.getApelido())
+                        .map(func -> pessoaRepository.findById(func.getPessoaId())
+                                .map(p -> p.getNome() + " " + p.getApelido())
                                 .orElse("Médico desconhecido"))
                         .orElse("Médico não encontrado"))
                 .orElse("Médico não encontrado");
 
+        /* ---------- Nome do Tipo de Exame ---------- */
         String nomeTipoExame = tipoExameRepository.findById(exame.getTipoExameId())
                 .map(TipoExame::getNome)
                 .orElse("Tipo de exame não encontrado");
 
+        /* ---------- Nome do Armazém (apenas designação) ---------- */
         String nomeArmazem = armazemRepository.findById(exame.getArmazemId())
-                .map(armazem -> filialRepository.findById(armazem.getFilialId())
-                        .map(filial -> armazem.getDesignacao() + " (" + filial.getNome() + ")")
-                        .orElse(armazem.getDesignacao()))
+                .map(Armazem::getDesignacao)               // <-- **APENAS DESIGNACAO**
                 .orElse("Armazém não encontrado");
 
         ExameDTO dto = ExameDTO.fromEntity(exame, nomePaciente, nomeMedico, nomeTipoExame, nomeArmazem);
-        dto.setEmpresaId(exame.getEmpresaId()); // ✅ garante que empresaId vá no DTO
+        dto.setEmpresaId(exame.getEmpresaId()); // garante que empresaId vá no DTO
         return dto;
     }
 }

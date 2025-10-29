@@ -36,9 +36,13 @@ public class PacienteSeguradoraController {
         return service.getPacienteSeguradoraById(id);
     }
     @PostMapping("/add")
-    @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<String> adicionar(@RequestBody @Valid PacienteSeguradora pacienteSeguradora) {
-        return service.criar(pacienteSeguradora);
+        try {
+            service.criar(pacienteSeguradora);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Convênio criado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: " + e.getMessage());
+        }
     }
 
     @PutMapping("/pacienteSeguradora/edit")

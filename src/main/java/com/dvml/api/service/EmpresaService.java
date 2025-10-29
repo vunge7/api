@@ -18,23 +18,19 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository repository;
 
-    // ✅ Criar nova empresa (matriz ou filial)
     public Empresa save(Empresa empresa) {
-        // Se for MATRIZ, força empresaMatrizId = 0
         if (empresa.getTipo() != null && empresa.getTipo().name().equalsIgnoreCase("MATRIZ")) {
-            empresa.setEmpresaMatrizId(0L);
+            empresa.setEmpresaMatrizId(null);
         }
 
-        // Valida NIF duplicado
         List<Empresa> existentes = repository.findByNif(empresa.getNif());
-        if (!existentes.isEmpty()) {
+        if (!existentes.isEmpty() && (empresa.getId() == null || !existentes.get(0).getId().equals(empresa.getId()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma empresa com este NIF.");
         }
 
         return repository.save(empresa);
     }
 
-    // ✅ Atualizar empresa
     public Empresa update(Long id, Empresa dadosAtualizados) {
         Empresa empresa = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
@@ -51,28 +47,23 @@ public class EmpresaService {
         return repository.save(empresa);
     }
 
-    // ✅ Buscar todas as empresas ativas
     public List<Empresa> findAll() {
         return repository.findAllByStatusTrueOrderByNomeAsc();
     }
 
-    // ✅ Buscar uma empresa com filiais
     public Optional<EmpresaDTO> findById(Long id) {
-        return repository.findById(id)
-                .map(this::mapToDTOWithFiliais);
+        return repository.findById(id).map(this::mapToDTOWithFiliais);
     }
 
-    // ✅ Buscar filial específica
     public Optional<EmpresaDTO> findFilialById(Long id) {
         return repository.findById(id)
-                .filter(empresa -> empresa.getTipo() != null && empresa.getTipo().name().equalsIgnoreCase("FILIAL"))
+                .filter(e -> e.getTipo() != null && e.getTipo().name().equalsIgnoreCase("FILIAL"))
                 .map(this::mapToDTOWithFiliais);
     }
 
-    // ✅ Montar árvore completa (todas as matrizes → filiais → subfiliais)
     public List<EmpresaDTO> listarArvoreCompleta() {
         List<Empresa> matrizes = repository.findAll().stream()
-                .filter(e -> e.getEmpresaMatrizId() == null || e.getEmpresaMatrizId() == 0)
+                .filter(e -> e.getEmpresaMatrizId() == null)
                 .collect(Collectors.toList());
 
         return matrizes.stream()
@@ -80,15 +71,11 @@ public class EmpresaService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ Buscar filiais diretas de uma empresa
     public List<EmpresaDTO> getFiliaisByEmpresaId(Long empresaId) {
         List<Empresa> filiais = repository.findByEmpresaMatrizId(empresaId);
-        return filiais.stream()
-                .map(this::mapToDTOWithFiliais)
-                .collect(Collectors.toList());
+        return filiais.stream().map(this::mapToDTOWithFiliais).collect(Collectors.toList());
     }
 
-    // ✅ Converter recursivamente Empresa → EmpresaDTO (com filiais e subfiliais)
     private EmpresaDTO mapToDTOWithFiliais(Empresa empresa) {
         EmpresaDTO dto = new EmpresaDTO();
         dto.setId(empresa.getId());
@@ -102,20 +89,16 @@ public class EmpresaService {
         dto.setSeguradoraId(empresa.getSeguradoraId());
 
         List<Empresa> filiais = repository.findByEmpresaMatrizId(empresa.getId());
-        List<EmpresaDTO> filiaisDTO = filiais.stream()
-                .map(this::mapToDTOWithFiliais)
-                .collect(Collectors.toList());
-        dto.setFiliais(filiaisDTO);
+        dto.setEmpresas(filiais.stream().map(this::mapToDTOWithFiliais).collect(Collectors.toList()));
 
         return dto;
     }
 
-    // ✅ Deletar empresa (bloqueia exclusão de matriz com filiais)
     public void delete(Long id) {
         Empresa empresa = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
 
-        if (empresa.getEmpresaMatrizId() == null || empresa.getEmpresaMatrizId() == 0) {
+        if (empresa.getEmpresaMatrizId() == null) {
             List<Empresa> filiais = repository.findByEmpresaMatrizId(empresa.getId());
             if (!filiais.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -123,22 +106,9 @@ public class EmpresaService {
             }
         }
 
-
-
         repository.deleteById(id);
     }
-    // ✅ Buscar todas as filiais do sistema
-    public List<EmpresaDTO> listarTodasFiliais() {
-        List<Empresa> filiais = repository.findAll().stream()
-                .filter(e -> e.getTipo() != null && e.getTipo().name().equalsIgnoreCase("FILIAL"))
-                .collect(Collectors.toList());
 
-        return filiais.stream()
-                .map(this::mapToDTOWithFiliais)
-                .collect(Collectors.toList());
-    }
-
-    // ✅ Deletar matriz e todas as filiais (recursivo)
     public void deleteCascade(Long id) {
         Empresa empresa = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada com o ID: " + id));
@@ -149,5 +119,13 @@ public class EmpresaService {
         }
 
         repository.deleteById(id);
+    }
+
+    public List<EmpresaDTO> listarTodasFiliais() {
+        List<Empresa> filiais = repository.findAll().stream()
+                .filter(e -> e.getTipo() != null && e.getTipo().name().equalsIgnoreCase("FILIAL"))
+                .collect(Collectors.toList());
+
+        return filiais.stream().map(this::mapToDTOWithFiliais).collect(Collectors.toList());
     }
 }

@@ -64,11 +64,10 @@ public class SeguradoraService {
     public ResponseEntity<String> deletar(long id) {
         if (repo.existsById(id)) {
             repo.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Seguradora deletada com sucesso!");
+            return ResponseEntity.ok("Seguradora deletada com sucesso!");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao deletar a seguradora.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Seguradora não encontrada com ID: " + id);
         }
     }
 }
