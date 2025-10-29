@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +42,7 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    // 🔹 Cadastrar novo usuário
     @Transactional
     public UsuarioDTO cadastrarUsuario(UsuarioDTO usuarioDTO) {
         log.info("Iniciando cadastro de usuário: {}", usuarioDTO.getUserName());
@@ -49,15 +51,11 @@ public class UsuarioService {
             throw new IllegalArgumentException("Username já associado a outro usuário");
         }
 
-        Optional<Funcionario> funcionarioOpt = funcionarioRepository.findById(usuarioDTO.getFuncionarioId());
-        if (!funcionarioOpt.isPresent()) {
-            throw new IllegalArgumentException("Funcionário não encontrado com ID: " + usuarioDTO.getFuncionarioId());
-        }
+        Funcionario funcionario = funcionarioRepository.findById(usuarioDTO.getFuncionarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado com ID: " + usuarioDTO.getFuncionarioId()));
 
-        Optional<Funcao> funcaoOpt = funcaoRepository.findById(usuarioDTO.getFuncaoId());
-        if (!funcaoOpt.isPresent()) {
-            throw new IllegalArgumentException("Função não encontrada com ID: " + usuarioDTO.getFuncaoId());
-        }
+        Funcao funcao = funcaoRepository.findById(usuarioDTO.getFuncaoId())
+                .orElseThrow(() -> new IllegalArgumentException("Função não encontrada com ID: " + usuarioDTO.getFuncaoId()));
 
         Usuario usuario = new Usuario();
         usuario.setUserName(usuarioDTO.getUserName());
@@ -74,38 +72,36 @@ public class UsuarioService {
         usuario.setStatus(true);
 
         validarUsuario(usuario);
-
         usuario = usuarioRepository.save(usuario);
+
         return convertToDTO(usuario);
     }
 
+    // 🔹 Editar usuário existente
     @Transactional
     public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
         log.info("Atualizando usuário com ID: {}", id);
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (!usuarioOpt.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Usuário não encontrado com ID: " + id);
-        }
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
 
-        Usuario usuarioExistente = usuarioOpt.get();
-        usuarioExistente.setUserName(usuarioDTO.getUserName());
-        usuarioExistente.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
-        usuarioExistente.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
-        usuarioExistente.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
-        usuarioExistente.setTipoUsuario(usuarioDTO.getTipoUsuario());
-        usuarioExistente.setFuncionarioId(usuarioDTO.getFuncionarioId());
-        usuarioExistente.setFuncaoId(usuarioDTO.getFuncaoId());
-        usuarioExistente.setIp(usuarioDTO.getIp());
-        usuarioExistente.setEmpresaId(usuarioDTO.getEmpresaId());
-        usuarioExistente.setDataAtualizacao(new Date());
+        usuario.setUserName(usuarioDTO.getUserName());
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        usuario.setNumeroOrdem(usuarioDTO.getNumeroOrdem());
+        usuario.setEstadoUsuario(usuarioDTO.getEstadoUsuario());
+        usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
+        usuario.setFuncionarioId(usuarioDTO.getFuncionarioId());
+        usuario.setFuncaoId(usuarioDTO.getFuncaoId());
+        usuario.setIp(usuarioDTO.getIp());
+        usuario.setEmpresaId(usuarioDTO.getEmpresaId());
+        usuario.setDataAtualizacao(new Date());
 
-        validarUsuario(usuarioExistente);
-        usuarioExistente = usuarioRepository.save(usuarioExistente);
+        validarUsuario(usuario);
+        usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok(convertToDTO(usuarioExistente));
+        return ResponseEntity.ok(convertToDTO(usuario));
     }
 
+    // 🔹 Listar todos os usuários
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarTodosUsuarios() {
         log.info("Listando todos os usuários");
@@ -114,7 +110,12 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
 
+=======
+    // 🔹 Listar usuários ativos
+    @Transactional(readOnly = true)
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosAtivos() {
         log.info("Listando usuários ativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
@@ -122,15 +123,25 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
 
+=======
+    // 🔹 Listar usuários inativos
+    @Transactional(readOnly = true)
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosInativos() {
         log.info("Listando usuários inativos");
-        return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
+        return usuarioRepository.findByEstadoUsuario(EstadoUsuario.DESACTIVO).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
 
+=======
+    // 🔹 Listar usuários por funcionário
+    @Transactional(readOnly = true)
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
         log.info("Listando usuários por funcionário ID: {}", funcionarioId);
         if (!funcionarioRepository.existsById(funcionarioId)) {
@@ -141,7 +152,12 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
 
+=======
+    // 🔹 Listar usuários por função
+    @Transactional(readOnly = true)
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
         log.info("Listando usuários por função ID: {}", funcaoId);
         if (!funcaoRepository.existsById(funcaoId)) {
@@ -152,7 +168,51 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
 
+=======
+    // 🔹 Listar usuários por filial (empresa)
+    @Transactional(readOnly = true)
+    public List<UsuarioDTO> listarUsuariosPorFilial(Long empresaId) {
+        log.info("Listando usuários da filial (empresaId): {}", empresaId);
+        List<Usuario> usuarios = usuarioRepository.listarUsuariosPorFilial(empresaId);
+
+        if (usuarios.isEmpty()) {
+            log.warn("Nenhum usuário encontrado para a filial ID: {}", empresaId);
+        }
+
+        return usuarios.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 🔹 Listar filiais associadas a um usuário
+    @Transactional(readOnly = true)
+    public Set<Long> listarFiliaisPorUsuario(Long usuarioId) {
+        log.info("Listando filiais associadas ao usuário ID: {}", usuarioId);
+        if (!usuarioRepository.existsById(usuarioId)) {
+            throw new IllegalArgumentException("Usuário não encontrado com ID: " + usuarioId);
+        }
+        return usuarioRepository.findEmpresasByUsuarioId(usuarioId);
+    }
+
+    // 🔹 Inativar usuário
+    @Transactional
+    public ResponseEntity<String> inativarUsuario(Long id) {
+        log.info("Inativando usuário com ID: {}", id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
+
+        usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
+        usuario.setDataAtualizacao(new Date());
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok("Usuário inativado com sucesso!");
+    }
+
+    // 🔹 Deletar usuário
+    @Transactional
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public ResponseEntity<String> deleteUsuario(Long id) {
         log.info("Deletando usuário com ID: {}", id);
         if (!usuarioRepository.existsById(id)) {
@@ -161,8 +221,7 @@ public class UsuarioService {
         }
         try {
             usuarioRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Usuário deletado com sucesso!");
+            return ResponseEntity.ok("Usuário deletado com sucesso!");
         } catch (DataAccessException e) {
             log.error("Erro ao deletar usuário com ID: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -170,6 +229,7 @@ public class UsuarioService {
         }
     }
 
+<<<<<<< HEAD
 
     public ResponseEntity<String> inativarUsuario(Long id) {
         log.info("Inativando usuário com ID: {}", id);
@@ -187,11 +247,16 @@ public class UsuarioService {
     }
 
 
+=======
+    // 🔹 Buscar usuário por username
+    @Transactional(readOnly = true)
+>>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public Optional<Usuario> findByUserName(String username) {
         log.info("Buscando usuário por username: {}", username);
         return usuarioRepository.findByUserName(username);
     }
 
+    // 🔹 Métodos auxiliares
     private UsuarioDTO convertToDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId(usuario.getId());
