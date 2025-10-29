@@ -78,7 +78,7 @@ public class UsuarioService {
     }
 
     // 🔹 Editar usuário existente
-    @Transactional
+
     public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
         log.info("Atualizando usuário com ID: {}", id);
         Usuario usuario = usuarioRepository.findById(id)
@@ -110,12 +110,8 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
 
-=======
-    // 🔹 Listar usuários ativos
-    @Transactional(readOnly = true)
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
+
     public List<UsuarioDTO> listarUsuariosAtivos() {
         log.info("Listando usuários ativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
@@ -123,12 +119,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-
-=======
-    // 🔹 Listar usuários inativos
-    @Transactional(readOnly = true)
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosInativos() {
         log.info("Listando usuários inativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.DESACTIVO).stream()
@@ -136,12 +126,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-
-=======
-    // 🔹 Listar usuários por funcionário
-    @Transactional(readOnly = true)
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
         log.info("Listando usuários por funcionário ID: {}", funcionarioId);
         if (!funcionarioRepository.existsById(funcionarioId)) {
@@ -152,12 +136,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-
-=======
-    // 🔹 Listar usuários por função
-    @Transactional(readOnly = true)
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
         log.info("Listando usuários por função ID: {}", funcaoId);
         if (!funcaoRepository.existsById(funcaoId)) {
@@ -168,10 +146,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
-
-=======
-    // 🔹 Listar usuários por filial (empresa)
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFilial(Long empresaId) {
         log.info("Listando usuários da filial (empresaId): {}", empresaId);
@@ -196,23 +170,9 @@ public class UsuarioService {
         return usuarioRepository.findEmpresasByUsuarioId(usuarioId);
     }
 
-    // 🔹 Inativar usuário
-    @Transactional
-    public ResponseEntity<String> inativarUsuario(Long id) {
-        log.info("Inativando usuário com ID: {}", id);
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
 
-        usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
-        usuario.setDataAtualizacao(new Date());
-        usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok("Usuário inativado com sucesso!");
-    }
 
-    // 🔹 Deletar usuário
-    @Transactional
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
     public ResponseEntity<String> deleteUsuario(Long id) {
         log.info("Deletando usuário com ID: {}", id);
         if (!usuarioRepository.existsById(id)) {
@@ -229,7 +189,6 @@ public class UsuarioService {
         }
     }
 
-<<<<<<< HEAD
 
     public ResponseEntity<String> inativarUsuario(Long id) {
         log.info("Inativando usuário com ID: {}", id);
@@ -247,10 +206,7 @@ public class UsuarioService {
     }
 
 
-=======
-    // 🔹 Buscar usuário por username
-    @Transactional(readOnly = true)
->>>>>>> 77c6bacb9ad0732da73efd090fe400864a41c981
+
     public Optional<Usuario> findByUserName(String username) {
         log.info("Buscando usuário por username: {}", username);
         return usuarioRepository.findByUserName(username);
