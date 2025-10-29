@@ -1,5 +1,6 @@
 package com.dvml.api.service;
 import com.dvml.api.config.JwtUtil;
+import com.dvml.api.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,18 @@ public class AuthService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
     }
 
+
+
+    public UserDetails loadUserByUsername(Usuario usuario) throws UsernameNotFoundException {
+        UserDetails userDetails = new User(
+                usuario.getUserName(),
+                usuario.getSenha(),
+                Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + usuario.getTipoUsuario().name()))
+        );
+
+       return userDetails;
+    }
+
     public String authenticate(String username, String password) {
         UserDetails userDetails = loadUserByUsername(username);
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
@@ -40,4 +53,13 @@ public class AuthService implements UserDetailsService {
         }
         throw new RuntimeException("Credenciais inválidas");
     }
+
+    public String authenticate(Usuario usuario,String password) {
+        UserDetails userDetails = loadUserByUsername(usuario);
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            return jwtUtil.generateToken(userDetails);
+        }
+        throw new RuntimeException("Credenciais inválidas");
+    }
+
 }

@@ -78,7 +78,7 @@ public class UsuarioService {
     }
 
     // 🔹 Editar usuário existente
-    @Transactional
+
     public ResponseEntity<?> editarUsuario(Long id, UsuarioDTO usuarioDTO) {
         log.info("Atualizando usuário com ID: {}", id);
         Usuario usuario = usuarioRepository.findById(id)
@@ -110,8 +110,8 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Listar usuários ativos
-    @Transactional(readOnly = true)
+
+
     public List<UsuarioDTO> listarUsuariosAtivos() {
         log.info("Listando usuários ativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.ACTIVO).stream()
@@ -119,8 +119,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Listar usuários inativos
-    @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosInativos() {
         log.info("Listando usuários inativos");
         return usuarioRepository.findByEstadoUsuario(EstadoUsuario.DESACTIVO).stream()
@@ -128,8 +126,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Listar usuários por funcionário
-    @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFuncionario(Long funcionarioId) {
         log.info("Listando usuários por funcionário ID: {}", funcionarioId);
         if (!funcionarioRepository.existsById(funcionarioId)) {
@@ -140,8 +136,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Listar usuários por função
-    @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFuncao(Long funcaoId) {
         log.info("Listando usuários por função ID: {}", funcaoId);
         if (!funcaoRepository.existsById(funcaoId)) {
@@ -152,7 +146,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // 🔹 Listar usuários por filial (empresa)
     @Transactional(readOnly = true)
     public List<UsuarioDTO> listarUsuariosPorFilial(Long empresaId) {
         log.info("Listando usuários da filial (empresaId): {}", empresaId);
@@ -177,22 +170,9 @@ public class UsuarioService {
         return usuarioRepository.findEmpresasByUsuarioId(usuarioId);
     }
 
-    // 🔹 Inativar usuário
-    @Transactional
-    public ResponseEntity<String> inativarUsuario(Long id) {
-        log.info("Inativando usuário com ID: {}", id);
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com ID: " + id));
 
-        usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
-        usuario.setDataAtualizacao(new Date());
-        usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok("Usuário inativado com sucesso!");
-    }
 
-    // 🔹 Deletar usuário
-    @Transactional
     public ResponseEntity<String> deleteUsuario(Long id) {
         log.info("Deletando usuário com ID: {}", id);
         if (!usuarioRepository.existsById(id)) {
@@ -209,8 +189,24 @@ public class UsuarioService {
         }
     }
 
-    // 🔹 Buscar usuário por username
-    @Transactional(readOnly = true)
+
+    public ResponseEntity<String> inativarUsuario(Long id) {
+        log.info("Inativando usuário com ID: {}", id);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (!usuarioOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Usuário não encontrado com ID: " + id);
+        }
+        Usuario usuario = usuarioOpt.get();
+        usuario.setEstadoUsuario(EstadoUsuario.DESACTIVO);
+        usuario.setDataAtualizacao(new Date());
+        usuarioRepository.save(usuario);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Usuário inativado com sucesso!");
+    }
+
+
+
     public Optional<Usuario> findByUserName(String username) {
         log.info("Buscando usuário por username: {}", username);
         return usuarioRepository.findByUserName(username);

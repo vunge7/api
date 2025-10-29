@@ -42,6 +42,7 @@ public class Empresa {
     @Column(name = "endereco", length = 200)
     private String endereco;
 
+
     @Column(name = "seguradora_id")
     private Long seguradoraId; // Long (nullable)
 }
