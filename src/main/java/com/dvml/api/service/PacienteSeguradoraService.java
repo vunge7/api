@@ -54,6 +54,8 @@ public class PacienteSeguradoraService {
         pacienteSeguradoraToUpdate.setUsuarioIdAtualizacao(pacienteSeguradora.getUsuarioIdAtualizacao());
         pacienteSeguradoraToUpdate.setUsuarioIdCricao(pacienteSeguradora.getUsuarioIdCricao());
         pacienteSeguradoraToUpdate.setEmpresaId(pacienteSeguradora.getEmpresaId()); // ✅ adicionado
+        pacienteSeguradoraToUpdate.setNumeroCartao(pacienteSeguradora.getNumeroCartao());
+        pacienteSeguradoraToUpdate.setDataValidade(pacienteSeguradora.getDataValidade());
 
         if (Objects.nonNull(repo.save(pacienteSeguradoraToUpdate))) {
             return ResponseEntity.status(HttpStatus.CREATED)

@@ -44,7 +44,7 @@ public class ConsultaController {
     }
 
     // ✅ Atualizar consulta
-    @PutMapping("/{id}")
+    @PutMapping("/edit")
     public ResponseEntity<Consulta> atualizarConsulta(@PathVariable Long id, @RequestBody Consulta consulta) {
         try {
             consulta.setId(id);
