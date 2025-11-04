@@ -38,6 +38,5 @@ public class PacienteSeguradora {
     private Date dataValidade;
 
     @Column(name = "empresa_id")
-    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

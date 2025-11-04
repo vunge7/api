@@ -13,7 +13,6 @@ public class PainelDTO {
     private String descricao;
 
 
-
     // Construtor padrão
     public PainelDTO() {
     }
