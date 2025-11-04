@@ -34,6 +34,8 @@ public class OperacaoStockDTO {
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
     private String descricao;
 
+    @NotNull(message = "empresa é obrigatória")
+
     private Long empresaId; // ✅ campo adicionado
 
     private List<LinhaOperacaoStockDTO> linhas = new ArrayList<>();

@@ -49,7 +49,7 @@ public class FuncionarioDTO {
 
     @NotNull(message = "Estado do funcionário é obrigatório.")
     private EstadoFuncionario estadoFuncionario;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     private List<LinhaSubsidioDTO> subsidios;

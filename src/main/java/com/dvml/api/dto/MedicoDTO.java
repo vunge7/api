@@ -4,6 +4,7 @@ import com.dvml.api.util.Genero;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +33,7 @@ public class MedicoDTO {
     private Genero genero;
     private Long usuarioId;
     private Long funcionarioId;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 
     public MedicoDTO(Long id, String nome, String numeroOrdem, String userName, String telefone, String email,

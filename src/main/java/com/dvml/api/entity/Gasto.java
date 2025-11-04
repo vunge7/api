@@ -4,6 +4,7 @@ package com.dvml.api.entity;
 import com.dvml.api.util.EstadoConvertido;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class Gasto {
     private Date dataCriacao;
 
     @Column(name = "inscricao_id")
-    private long inscricaoId;
+    private Long inscricaoId;
     @Column(name = "doc_ref")
     private String docRef;
 
@@ -37,6 +38,7 @@ public class Gasto {
     private EstadoConvertido convertido;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
 

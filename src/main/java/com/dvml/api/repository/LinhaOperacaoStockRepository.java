@@ -10,15 +10,23 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LinhaOperacaoStockRepository extends JpaRepository<LinhaOperacaoStock, Long> {
+
     List<LinhaOperacaoStock> findByLoteIdOrigem(Long loteId);
 
-    @Query("SELECT COALESCE(SUM(l.qtdActual), 0) FROM LinhaOperacaoStock l " +
-            "WHERE l.armazemIdOrigem = :armazemId AND l.loteIdOrigem = :loteId AND l.produtoId = :produtoId")
+    @Query(value = "SELECT COALESCE(SUM(qtd_actual), 0) " +
+            "FROM linha_operacao_stock " +
+            "WHERE armazem_id_origem = :armazemId " +
+            "AND lote_id_origem = :loteId " +
+            "AND produto_id = :produtoId",
+            nativeQuery = true)
     Optional<BigDecimal> sumQtdActualByArmazemLoteAndProduto(
             @Param("armazemId") Long armazemId,
             @Param("loteId") Long loteId,
             @Param("produtoId") Long produtoId);
 
-    @Query("SELECT COALESCE(SUM(l.qtdActual), 0) FROM LinhaOperacaoStock l WHERE l.loteIdOrigem = :loteId")
+    @Query(value = "SELECT COALESCE(SUM(qtd_actual), 0) " +
+            "FROM linha_operacao_stock " +
+            "WHERE lote_id_origem = :loteId",
+            nativeQuery = true)
     BigDecimal sumQtdActualByLoteId(@Param("loteId") Long loteId);
 }

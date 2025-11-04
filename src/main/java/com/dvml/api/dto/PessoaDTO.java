@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ public class PessoaDTO {
     private String email;
     private String endereco;
     private String genero;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 
     // Getters e Setters

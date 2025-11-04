@@ -24,10 +24,18 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findByEmpresaId(Long empresaId);
 
     // 🔹 Buscar empresas associadas a um usuário
-    @Query("SELECT DISTINCT u.empresaId FROM Usuario u WHERE u.id = :usuarioId")
+    @Query(value = """
+        SELECT DISTINCT u.empresa_id
+        FROM usuario u
+        WHERE u.id = :usuarioId
+    """, nativeQuery = true)
     Set<Long> findEmpresasByUsuarioId(@Param("usuarioId") Long usuarioId);
 
     // 🔹 Buscar todos os usuários de uma filial (empresa) específica
-    @Query("SELECT u FROM Usuario u WHERE u.empresaId = :empresaId")
+    @Query(value = """
+        SELECT *
+        FROM usuario
+        WHERE empresa_id = :empresaId
+    """, nativeQuery = true)
     List<Usuario> listarUsuariosPorFilial(@Param("empresaId") Long empresaId);
 }

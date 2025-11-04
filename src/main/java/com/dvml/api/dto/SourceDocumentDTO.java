@@ -1,5 +1,6 @@
 package com.dvml.api.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class SourceDocumentDTO
     private String invoiceType;
     private String cashVatschemeIndicator;
     private String thirdPartiesBillingIndicator;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
 }

@@ -2,6 +2,7 @@ package com.dvml.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,7 @@ public class SourceDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "invoice_no", length = 60)
     private String invoiceNo;
     @Column(name = "invoice_status", length = 1)
@@ -65,6 +66,7 @@ public class SourceDocument {
     private int customerId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
 

@@ -12,6 +12,11 @@ import java.util.List;
 @Repository
 public interface UsuarioPainelRepository extends JpaRepository<UsuarioPainel, Long> {
 
-    @Query("SELECT p FROM UsuarioPainel up JOIN Painel p ON up.painelId = p.id WHERE up.usuarioId = :usuarioId")
+    @Query(value = """
+        SELECT p.*
+        FROM usuario_painel up
+        JOIN painel p ON up.painel_id = p.id
+        WHERE up.usuario_id = :usuarioId
+    """, nativeQuery = true)
     List<Painel> findPainelByUsuarioId(@Param("usuarioId") Long usuarioId);
 }

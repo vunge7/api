@@ -2,6 +2,7 @@ package com.dvml.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class RequisicaoExame {
     private Long inscricaoId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "status",  nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

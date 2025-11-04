@@ -70,5 +70,6 @@ public class Funcionario {
     private EstadoFuncionario estadoFuncionario;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

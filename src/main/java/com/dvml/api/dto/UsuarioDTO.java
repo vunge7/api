@@ -36,7 +36,7 @@ public class UsuarioDTO {
 
     @Size(max = 100, message = "O IP deve ter no máximo 100 caracteres")
     private String ip;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     // Getters e Setters

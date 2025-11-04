@@ -61,5 +61,6 @@ public class LinhaOperacaoStock {
     private OperacaoStock operacaoStock;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

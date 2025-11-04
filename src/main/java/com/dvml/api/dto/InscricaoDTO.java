@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 
@@ -22,5 +23,6 @@ public class InscricaoDTO {
     private PacienteDTO paciente;
 
     // ⚡ Adicionado
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

@@ -19,7 +19,7 @@ public class LinhaGasto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "data_insercao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataInsercao;
@@ -47,5 +47,6 @@ public class LinhaGasto {
     private Boolean status = true;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

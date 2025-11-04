@@ -47,6 +47,7 @@ public class LinhaOperacaoStockDTO {
     private Long operacaoStockId;
 
     // 🔹 Nova coluna
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     public LinhaOperacaoStock toEntity(OperacaoStock operacaoStock) {

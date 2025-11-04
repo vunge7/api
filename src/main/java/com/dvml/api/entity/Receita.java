@@ -2,6 +2,7 @@ package com.dvml.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 public class Receita{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "data")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -24,9 +25,9 @@ public class Receita{
 
 
     @Column(name = "inscricao_id")
-    private long inscricaoId;
+    private Long inscricaoId;
     @Column(name = "usuario_id")
-    private long usuarioId;
+    private Long usuarioId;
 
     @Column(name = "inicio_tratamento")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -37,6 +38,7 @@ public class Receita{
     private Date fimTratamento;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

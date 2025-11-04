@@ -1,6 +1,7 @@
 package com.dvml.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class UnidadeMedidas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "descricao", length = 100, nullable = false)
     private String descricao;
@@ -21,5 +22,6 @@ public class UnidadeMedidas {
     private String abrevicao;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

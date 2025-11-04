@@ -1,5 +1,7 @@
 package com.dvml.api.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class ProdutoRequestDTO {
     private String productType;
     private long productTypeId;
@@ -13,6 +15,7 @@ public class ProdutoRequestDTO {
     private String taxIva;
     private String finalPrice;
     private String status;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Campo adicionado
 
     // Getters e setters

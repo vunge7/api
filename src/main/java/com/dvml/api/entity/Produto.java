@@ -16,7 +16,7 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "product_type", length = 200)
     @NotNull(message = "O tipo de produto é obrigatório.")
@@ -82,5 +82,6 @@ public class Produto {
     private String intervaloReferencia;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

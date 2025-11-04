@@ -2,6 +2,7 @@ package com.dvml.api.dto;
 
 import com.dvml.api.entity.TipoExame;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class TipoExameDTO {
     @Size(max = 50, message = "Tipo de amostra deve ter no máximo 50 caracteres")
     private String tipoAmostra;
 
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // <--- campo empresaId adicionado
 
     public TipoExame toEntity() {

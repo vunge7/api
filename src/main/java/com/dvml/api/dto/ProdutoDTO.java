@@ -1,81 +1,85 @@
 package com.dvml.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class ProdutoDTO {
 
-    @JsonProperty("id")
     private Long id;
 
     @NotNull(message = "O tipo de produto é obrigatório.")
     @Size(min = 1, max = 200, message = "O tipo de produto deve ter entre 1 e 200 caracteres.")
-    @JsonProperty("productType")
+    @Column(name = "product_type")
     private String productType;
 
     @NotNull(message = "O código do produto é obrigatório.")
     @Size(min = 1, max = 60, message = "O código do produto deve ter entre 1 e 60 caracteres.")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "O código do produto deve ser alfanumérico.")
-    @JsonProperty("productCode")
+    @Column(name = "product_code")
     private String productCode;
 
     @NotNull(message = "O grupo do produto é obrigatório.")
     @Size(min = 1, max = 200, message = "O grupo do produto deve ter entre 1 e 200 caracteres.")
-    @JsonProperty("productGroup")
+    @Column(name = "product_group")
     private String productGroup;
 
     @NotNull(message = "A descrição do produto é obrigatória.")
     @Size(min = 3, max = 200, message = "A descrição do produto deve ter entre 3 e 200 caracteres.")
-    @JsonProperty("productDescription")
+    @Column(name = "product_description")
     private String productDescription;
 
     @NotNull(message = "A unidade do produto é obrigatória.")
     @Size(min = 1, max = 200, message = "A unidade de medida deve ter entre 1 e 200 caracteres.")
-    @JsonProperty("unidadeMedida")
+    @Column(name = "unidade_medida")
     private String unidadeMedida;
 
     @NotNull(message = "O preço do produto é obrigatório.")
     @DecimalMin(value = "0.01", inclusive = true, message = "O preço deve ser maior que zero.")
-    @JsonProperty("preco")
+    @Column(name = "preco")
     private BigDecimal preco;
 
     @NotNull(message = "A taxa do produto é obrigatória.")
     @DecimalMin(value = "0.00", inclusive = true, message = "A taxa deve ser maior ou igual a zero.")
-    @JsonProperty("taxIva")
+    @Column(name = "tax_iva")
     private BigDecimal taxIva;
 
     @NotNull(message = "O preço final é obrigatório.")
     @DecimalMin(value = "0.00", inclusive = true, message = "O preço final deve ser maior ou igual a zero.")
-    @JsonProperty("finalPrice")
+    @Column(name = "final_price")
     private BigDecimal finalPrice;
 
     @NotNull(message = "Product Group Id é obrigatório.")
-    @JsonProperty("productGroupId")
+    @Column(name = "product_group_id")
     private Long productGroupId;
 
     @NotNull(message = "Product Type Id é obrigatório.")
-    @JsonProperty("productTypeId")
+    @Column(name = "product_type_id")
     private Long productTypeId;
-    @JsonProperty("empresaId")
+
+    @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
-    @JsonProperty("produtoPaiId")
+    @Column(name = "produto_pai_id")
     private Long produtoPaiId;
 
     @NotNull(message = "Unidade de Medida Id é obrigatório.")
-    @JsonProperty("unidadeMedidaId")
+    @Column(name = "unidade_medida_id")
     private Long unidadeMedidaId;
 
-    @JsonProperty("status")
+    @Column(name = "status")
     private Boolean status = true;
 
-    @JsonProperty("imagem")
+    @Column(name = "imagem")
     private String imagem;
 
     @Size(max = 50, message = "O intervalo de referência deve ter no máximo 50 caracteres.")
-    @Pattern(regexp = "^$|^\\d+(\\.\\d+)?-\\d+(\\.\\d+)?$", message = "O intervalo de referência deve estar no formato 'min-max' (ex.: 4.5-5.9) ou vazio.")
-    @JsonProperty("intervaloReferencia")
+    @Pattern(
+            regexp = "^$|^\\d+(\\.\\d+)?-\\d+(\\.\\d+)?$",
+            message = "O intervalo de referência deve estar no formato 'min-max' (ex.: 4.5-5.9) ou vazio."
+    )
+    @Column(name = "intervalo_referencia")
     private String intervaloReferencia;
 
     // Getters e Setters

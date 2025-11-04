@@ -3,6 +3,7 @@ package com.dvml.api.entity;
 import com.dvml.api.util.Campo;
 import com.dvml.api.util.TipoUsuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class LinhaTriagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "campo")
@@ -28,8 +29,9 @@ public class LinhaTriagem {
     private String unidade;
 
     @Column(name = "triagem_id")
-   private long triagemId;
+   private Long triagemId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

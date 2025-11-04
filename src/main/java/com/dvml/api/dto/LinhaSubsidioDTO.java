@@ -21,5 +21,6 @@ public class LinhaSubsidioDTO {
     private Double valor;
 
     private Long usuarioId;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

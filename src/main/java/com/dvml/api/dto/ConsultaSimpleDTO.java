@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.dvml.api.util.EstadoConsulta;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class ConsultaSimpleDTO {
     private String receita;
     private String diagnosticoInicial;
     private String diagnosticoFinal;
+    @NotNull(message = "empresa é obrigatória")
     private long empresaId;
     private List<String> examesComplementares;
     private EstadoConsulta estadoConsulta;

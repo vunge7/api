@@ -46,6 +46,7 @@ public class OperacaoStock {
     @NotNull(message = "Armazém é obrigatório")
     private Long armazemId;
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "descricao")
