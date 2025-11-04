@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class LinhaAgendaDTO {
     private Long consultaId;
     private Long funcionarioId;
     private Long pacienteId;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

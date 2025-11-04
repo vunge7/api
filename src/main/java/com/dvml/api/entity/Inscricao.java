@@ -5,6 +5,7 @@ import com.dvml.api.util.EncaminhamentoInscricao;
 import com.dvml.api.util.EstadoInscricao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,13 +20,13 @@ import java.util.Date;
 public class Inscricao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "cor_triagem_manchester")
     private String corTriagemManchester;
 
     @Column(name = "minuto_espera_triagem_manchester")
-    private long minutoEsperaTriagemManchester;
+    private Long minutoEsperaTriagemManchester;
 
     @Column(name = "obs_triagem_manchester")
     private String obsTriagemManchester;
@@ -51,8 +52,9 @@ public class Inscricao {
     private EncaminhamentoInscricao encaminhamento;
 
     @Column(name = "paciente_id")
-    private long pacienteId;
+    private Long pacienteId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

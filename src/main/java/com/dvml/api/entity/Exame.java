@@ -57,6 +57,7 @@ public class Exame {
     private String observacoes;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     public enum ResultadoQualitativo {

@@ -4,6 +4,7 @@ import com.dvml.api.util.EstadoConsulta;
 import com.dvml.api.util.EstadoInscricao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class Consulta{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "data_consulta")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataConsulta;
@@ -59,12 +60,13 @@ public class Consulta{
     @Column(name = "estado_consulta")
     private EstadoConsulta estadoConsulta;
     @Column(name = "usuario_id")
-    private long usuarioId;
+    private Long usuarioId;
 
     @Column(name = "inscricao_id")
-    private long inscricaoId;
+    private Long inscricaoId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
 }

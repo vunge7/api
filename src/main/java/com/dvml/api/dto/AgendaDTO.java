@@ -1,5 +1,6 @@
 package com.dvml.api.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.List;
 public class AgendaDTO {
     private Long id;
     private String descricao;
+
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ novo campo
     private List<LinhaAgendaDTO> linhas;
 

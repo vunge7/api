@@ -1,6 +1,7 @@
 package com.dvml.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class LinhaResultado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "exame_id")
     private Long exameId;
@@ -33,5 +34,6 @@ public class LinhaResultado {
     private String observacao;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

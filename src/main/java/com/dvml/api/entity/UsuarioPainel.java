@@ -1,6 +1,8 @@
 package com.dvml.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
 @Entity
@@ -15,6 +17,7 @@ public class UsuarioPainel {
     private Date dataRegistro;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     // Getters e Setters

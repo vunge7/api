@@ -3,6 +3,7 @@ package com.dvml.api.dto;
 import com.dvml.api.entity.Fornecedor.RegimeTributario;
 import com.dvml.api.util.EstadoFornecedor;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -35,5 +36,7 @@ public class FornecedorDTO {
 
     private RegimeTributario regimeTributario;
     private EstadoFornecedor estadoFornecedor;
+
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

@@ -15,18 +15,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "linhatriagem")
-
+@RequestMapping("/linhatriagem")
 public class LinhaTriagemController {
 
     @Autowired
     private LinhaTriagemService service;
 
+    // 🔹 Listar todas as linhas de triagem
     @GetMapping("/all")
     public List<LinhaTriagemDTO> getAllLinhas() {
         return service.listarTodos();
     }
 
+    // 🔹 Criar uma linha de triagem
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public LinhaTriagemDTO criarTriagem(@RequestBody LinhaTriagem linha) {
@@ -34,6 +35,7 @@ public class LinhaTriagemController {
         return service.convertEntityToDto(t);
     }
 
+    // 🔹 Criar várias linhas de triagem
     @PostMapping("/add/all")
     @ResponseStatus(HttpStatus.CREATED)
     public List<LinhaTriagemDTO> criarVariasTriagens(@RequestBody List<LinhaTriagem> lista) {
@@ -43,6 +45,7 @@ public class LinhaTriagemController {
                 .collect(Collectors.toList());
     }
 
+    // 🔹 Obter sinais vitais de um paciente por campo
     @GetMapping("/{pacienteId}/{campo}")
     public List<SinalVitalDTO> getSinaisVitaisPorPaciente(
             @PathVariable Long pacienteId,
@@ -50,17 +53,23 @@ public class LinhaTriagemController {
         return service.obterSinalVitalPorPaciente(pacienteId, campo);
     }
 
+    // 🔹 Obter todos os sinais vitais de um paciente (sem agrupar)
     @GetMapping("/native/{pacienteId}/sinais")
-    public List<SinalVitalDTO> getSinaisVitais(@PathVariable Long pacienteId) {
-        return service.obterTodosSinaisPorPacienteNativo(pacienteId);
+    public List<SinalVitalDTO> getTodosSinais(@PathVariable Long pacienteId) {
+        return service.agruparSinaisPorCampo(pacienteId)
+                .values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
-    // 🔹 NOVO: Endpoint agrupado por tipo de sinal vital (campo)
+    // 🔹 Obter sinais vitais agrupados por campo
     @GetMapping("/grouped/{pacienteId}")
-    public Map<String, List<SinalVitalDTO>> getSinaisAgrupados(@PathVariable Long pacienteId) {
+    public Map<Campo, List<SinalVitalDTO>> getSinaisAgrupados(@PathVariable Long pacienteId) {
         return service.agruparSinaisPorCampo(pacienteId);
     }
 
+    // 🔹 Atualizar linha de triagem
     @PutMapping("/{id}")
     public ResponseEntity<LinhaTriagem> atualizar(
             @PathVariable Long id,
@@ -68,6 +77,7 @@ public class LinhaTriagemController {
         return ResponseEntity.ok(service.atualizar(id, linha));
     }
 
+    // 🔹 Deletar linha de triagem
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);

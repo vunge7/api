@@ -13,5 +13,7 @@ public class SubsidioDTO {
     @NotNull(message = "A descrição do subsídio é obrigatória.")
     private String descricao;
 
+
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

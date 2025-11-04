@@ -20,7 +20,7 @@ import java.util.List;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "data_cadastro")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -53,11 +53,11 @@ public class Usuario {
     private TipoUsuario tipoUsuario;
 
     @Column(name = "funcao_id")
-    private long funcaoId;
+    private Long funcaoId;
 
     @Column(name = "funcionario_id", nullable = false, length = 100)
     @NotNull(message = "O ID do funcionário não pode ser nulo")
-    private long funcionarioId;
+    private Long funcionarioId;
 
     @Column(name = "ip", nullable = false, length = 100)
     @NotBlank(message = "O IP não pode ser vazio ou nulo")
@@ -69,5 +69,6 @@ public class Usuario {
 
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

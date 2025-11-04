@@ -28,7 +28,7 @@ public class LinhaRequisicaoExame {
 
     @Column(name = "produto_id")
     @NotNull(message = "Produto ID é obrigatório")
-    private long produtoId;
+    private Long produtoId;
 
     @Column(name = "exame", length = 200)
     @NotBlank(message = "Exame é obrigatório")
@@ -49,9 +49,10 @@ public class LinhaRequisicaoExame {
 
     @Column(name = "requisicao_exame_id")
     @NotNull(message = "Requisição Exame ID é obrigatório")
-    private long requisicaoExameId;
+    private Long requisicaoExameId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

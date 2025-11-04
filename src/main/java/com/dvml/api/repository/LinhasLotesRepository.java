@@ -10,9 +10,10 @@ import java.util.List;
 
 @Repository
 public interface LinhasLotesRepository extends JpaRepository<LinhasLotes, Long> {
-    @Query("SELECT ll FROM LinhasLotes ll WHERE ll.lotes_id = :lotesId")
+
+    @Query(value = "SELECT * FROM linhas_lotes WHERE lotes_id = :lotesId", nativeQuery = true)
     List<LinhasLotes> findByLotesId(@Param("lotesId") Long lotesId);
 
-    @Query("SELECT COALESCE(SUM(ll.quantidade), 0) FROM LinhasLotes ll WHERE ll.lotes_id = :lotesId")
+    @Query(value = "SELECT COALESCE(SUM(quantidade), 0) FROM linhas_lotes WHERE lotes_id = :lotesId", nativeQuery = true)
     Integer findTotalQuantidadeByLoteId(@Param("lotesId") Long lotesId);
 }

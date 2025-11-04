@@ -2,6 +2,7 @@ package com.dvml.api.dto;
 
 import com.dvml.api.util.EstadoInscricao;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
@@ -24,5 +25,7 @@ public class InscricaoFullDTO {
     private String nomeCompleto;
     private String corTriagemManchester;
     private String condicaoInscricao;
+
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

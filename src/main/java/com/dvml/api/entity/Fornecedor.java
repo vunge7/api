@@ -4,6 +4,7 @@ import com.dvml.api.util.EstadoFornecedor;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -58,6 +59,7 @@ public class Fornecedor {
     private Date dataCriacao = new Date();
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     public enum RegimeTributario {

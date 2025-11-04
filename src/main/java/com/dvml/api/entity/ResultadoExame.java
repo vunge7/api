@@ -17,7 +17,7 @@ public class ResultadoExame {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "paciente_id")
     private Long pacienteId;
@@ -26,6 +26,7 @@ public class ResultadoExame {
     private Long usuarioId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "data_resultado", nullable = false)

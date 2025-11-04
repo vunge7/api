@@ -16,9 +16,10 @@ public class ProductGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "designacao_produto", length = 50, unique = true)

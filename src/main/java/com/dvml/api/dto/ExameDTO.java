@@ -37,7 +37,7 @@ public class ExameDTO {
     private Long armazemId;
 
     private String nomeArmazem;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

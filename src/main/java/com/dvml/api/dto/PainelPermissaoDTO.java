@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ public class PainelPermissaoDTO {
     private Long painelId;
     private Long usuarioId;
     private Long filialId;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 
     // Getters

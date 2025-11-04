@@ -23,6 +23,7 @@ public class LotesDTO {
 
     private LocalDateTime dataEntrada;
 
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ agora o campo é usado corretamente
 
     @NotNull(message = "Status é obrigatório")

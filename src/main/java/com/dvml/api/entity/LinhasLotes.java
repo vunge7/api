@@ -15,7 +15,7 @@ public class LinhasLotes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "lotes_id", nullable = false)
     @NotNull(message = "lotes_id é obrigatório")
@@ -34,5 +34,6 @@ public class LinhasLotes {
     private Integer quantidade;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

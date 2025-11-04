@@ -24,5 +24,6 @@ public class LinhaSubsidioItemDTO {
     private BigDecimal valor;
 
     private Long usuarioId;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +45,7 @@ public class PacienteDTO {
     private String endereco;
     private String nomePhoto;
     private long pessoaId;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
 }

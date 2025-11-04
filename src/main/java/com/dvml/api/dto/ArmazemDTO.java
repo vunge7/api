@@ -2,6 +2,7 @@ package com.dvml.api.dto;
 
 import com.dvml.api.entity.Armazem;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class ArmazemDTO {
     @NotBlank(message = "Designação é obrigatória")
     @Size(min = 3, max = 100, message = "Designação deve ter entre 3 e 100 caracteres")
     private String designacao;
-
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // Apenas este campo
 
     // Converte DTO → Entity

@@ -1,6 +1,7 @@
 package com.dvml.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Painel {
@@ -11,6 +12,7 @@ public class Painel {
     private String descricao;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 
     // Getters e Setters

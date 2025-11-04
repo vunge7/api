@@ -1,5 +1,6 @@
 package com.dvml.api.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,6 @@ public class SeguradoraDTO {
     private String nome;
     private String telefone;
     private String nif;
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

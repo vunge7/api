@@ -24,7 +24,7 @@ public class LinhaReceita{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "medicamento", length = 200)
     @NotNull(message = "obrigatório.")
@@ -46,9 +46,10 @@ public class LinhaReceita{
     @Column(name = "frequencia", length = 200)
     private String frequencia;
     @Column(name = "receita_id")
-    private long receitaId;
+    private Long receitaId;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

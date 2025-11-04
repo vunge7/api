@@ -1,6 +1,7 @@
 package com.dvml.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,7 +15,8 @@ public class TriagemDTO {
     private long incricaoId;
     private String paciente;
     private long userId;
-    private String nomeUsuario;
+
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
     private List<LinhaTriagemDTO> triagens;
 }

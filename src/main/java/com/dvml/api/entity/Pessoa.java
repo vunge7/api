@@ -3,6 +3,7 @@ package com.dvml.api.entity;
 import com.dvml.api.util.Genero;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
@@ -94,5 +95,6 @@ public class Pessoa {
     private String nomePhoto;
 
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 }

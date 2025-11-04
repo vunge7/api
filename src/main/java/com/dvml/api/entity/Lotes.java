@@ -1,6 +1,8 @@
 package com.dvml.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,6 +31,7 @@ public class Lotes {
     @Column(name = "status", nullable = false)
     private Boolean status;
     @Column(name = "empresa_id")
+    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 
     // Getters e Setters
