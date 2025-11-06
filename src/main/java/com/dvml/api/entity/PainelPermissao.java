@@ -29,20 +29,17 @@ public class PainelPermissao {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataActualizacao;
 
-    @Column(name = "usuario_id_criacao", nullable = false)
+    @Column(name = "usuario_id_criacao")
     private Long usuarioIdCriacao;
 
     @Column(name = "usuario_id_actualizacao")
     private Long usuarioIdActualizacao;
 
-    @Column(name = "painel_id", nullable = false)
+    @Column(name = "painel_id")
     private Long painelId;
 
-    @Column(name = "usuario_id", nullable = false)
+    @Column(name = "usuario_id")
     private Long usuarioId;
-
-    @Column(name = "filial_id", nullable = false)
-    private Long filialId;
 
     @Column(name = "empresa_id")
     @NotNull(message = "empresa é obrigatória")

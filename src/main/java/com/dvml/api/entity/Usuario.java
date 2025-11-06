@@ -53,11 +53,11 @@ public class Usuario {
     private TipoUsuario tipoUsuario;
 
     @Column(name = "funcao_id")
-    private Long funcaoId;
+    private long funcaoId;
 
     @Column(name = "funcionario_id", nullable = false, length = 100)
     @NotNull(message = "O ID do funcionário não pode ser nulo")
-    private Long funcionarioId;
+    private long funcionarioId;
 
     @Column(name = "ip", nullable = false, length = 100)
     @NotBlank(message = "O IP não pode ser vazio ou nulo")
@@ -66,7 +66,6 @@ public class Usuario {
 
     @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
-
 
     @Column(name = "empresa_id")
     @NotNull(message = "empresa é obrigatória")

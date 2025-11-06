@@ -8,17 +8,16 @@ import java.time.LocalDateTime;
 public class PainelPermissaoDTO {
     private Long id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataCriacao;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataActualizacao;
 
     private Long usuarioIdCriacao;
     private Long usuarioIdActualizacao;
     private Long painelId;
     private Long usuarioId;
-    private Long filialId;
     @NotNull(message = "empresa é obrigatória")
     private Long empresaId; // ✅ Adicionado
 
@@ -30,7 +29,6 @@ public class PainelPermissaoDTO {
     public Long getUsuarioIdActualizacao() { return usuarioIdActualizacao; }
     public Long getPainelId() { return painelId; }
     public Long getUsuarioId() { return usuarioId; }
-    public Long getFilialId() { return filialId; }
     public Long getEmpresaId() { return empresaId; } // ✅ Adicionado
 
     // Setters
@@ -41,6 +39,5 @@ public class PainelPermissaoDTO {
     public void setUsuarioIdActualizacao(Long usuarioIdActualizacao) { this.usuarioIdActualizacao = usuarioIdActualizacao; }
     public void setPainelId(Long painelId) { this.painelId = painelId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
-    public void setFilialId(Long filialId) { this.filialId = filialId; }
     public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; } // ✅ Adicionado
 }

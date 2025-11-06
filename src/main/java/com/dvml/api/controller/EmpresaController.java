@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/empresa")
-@CrossOrigin(origins = "http://localhost:3000")
 public class EmpresaController {
 
     private final EmpresaService empresaService;

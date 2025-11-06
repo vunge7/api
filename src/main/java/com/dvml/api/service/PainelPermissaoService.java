@@ -17,6 +17,7 @@ public class PainelPermissaoService {
     @Autowired
     private PainelPermissaoRepository painelPermissaoRepository;
 
+    // ---------------- Conversão Entity ↔ DTO ----------------
     private PainelPermissaoDTO convertToDTO(PainelPermissao painelPermissao) {
         PainelPermissaoDTO dto = new PainelPermissaoDTO();
         dto.setId(painelPermissao.getId());
@@ -26,8 +27,7 @@ public class PainelPermissaoService {
         dto.setUsuarioIdActualizacao(painelPermissao.getUsuarioIdActualizacao());
         dto.setPainelId(painelPermissao.getPainelId());
         dto.setUsuarioId(painelPermissao.getUsuarioId());
-        dto.setFilialId(painelPermissao.getFilialId());
-        dto.setEmpresaId(painelPermissao.getEmpresaId()); // ✅ Adicionado
+        dto.setEmpresaId(painelPermissao.getEmpresaId());
         return dto;
     }
 
@@ -40,19 +40,20 @@ public class PainelPermissaoService {
         painelPermissao.setUsuarioIdActualizacao(dto.getUsuarioIdActualizacao());
         painelPermissao.setPainelId(dto.getPainelId());
         painelPermissao.setUsuarioId(dto.getUsuarioId());
-        painelPermissao.setFilialId(dto.getFilialId());
-        painelPermissao.setEmpresaId(dto.getEmpresaId()); // ✅ Adicionado
+        painelPermissao.setEmpresaId(dto.getEmpresaId());
         return painelPermissao;
     }
 
+    // ---------------- CRUD ----------------
+
     @Transactional
     public PainelPermissaoDTO create(PainelPermissaoDTO dto, Long usuarioIdCriacao) {
-        boolean exists = painelPermissaoRepository.existsByUsuarioIdAndPainelIdAndFilialId(
-                dto.getUsuarioId(), dto.getPainelId(), dto.getFilialId()
+        boolean exists = painelPermissaoRepository.existsByUsuarioIdAndPainelIdAndEmpresaId(
+                dto.getUsuarioId(), dto.getPainelId(), dto.getEmpresaId()
         );
 
         if (exists) {
-            throw new RuntimeException("Permissão já existe para este usuário, painel e filial.");
+            throw new RuntimeException("Permissão já existe para este usuário, painel e empresa.");
         }
 
         PainelPermissao painelPermissao = convertToEntity(dto);
@@ -86,18 +87,18 @@ public class PainelPermissaoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PainelPermissaoDTO> findByUsuarioIdAndFilialId(Long usuarioId, Long filialId) {
-        return painelPermissaoRepository.findByUsuarioIdAndFilialId(usuarioId, filialId)
+    public List<PainelPermissaoDTO> findByUsuarioIdAndEmpresaId(Long usuarioId, Long empresaId) {
+        return painelPermissaoRepository.findByUsuarioIdAndEmpresaId(usuarioId, empresaId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Long> findFiliaisByUsuarioId(Long usuarioId) {
+    public List<Long> findEmpresasByUsuarioId(Long usuarioId) {
         return painelPermissaoRepository.findByUsuarioId(usuarioId)
                 .stream()
-                .map(PainelPermissao::getFilialId)
+                .map(PainelPermissao::getEmpresaId)
                 .distinct()
                 .collect(Collectors.toList());
     }
