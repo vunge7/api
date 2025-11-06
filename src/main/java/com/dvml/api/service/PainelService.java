@@ -18,6 +18,10 @@ public class PainelService {
     public PainelDTO create(PainelDTO dto) {
         Painel entity = new Painel();
         entity.setDescricao(dto.getDescricao());
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ea99d0ed9a47cde5a2161e81ce430d803c8d50e
         return toDTO(repository.save(entity));
     }
 
@@ -37,6 +41,10 @@ public class PainelService {
         Painel entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Painel não encontrado"));
         entity.setDescricao(dto.getDescricao());
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ea99d0ed9a47cde5a2161e81ce430d803c8d50e
         return toDTO(repository.save(entity));
     }
 
@@ -51,6 +59,10 @@ public class PainelService {
         PainelDTO dto = new PainelDTO();
         dto.setId(entity.getId());
         dto.setDescricao(entity.getDescricao());
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ea99d0ed9a47cde5a2161e81ce430d803c8d50e
         return dto;
     }
 }

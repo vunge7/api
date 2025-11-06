@@ -31,7 +31,12 @@ public class PacienteSeguradora {
     @Column(name = "paciente_id")
     private Long pacienteId;
 
+    @Column(name = "numero_cartao")
+    private String numeroCartao;
+
+    @Column(name = "data_validade")
+    private Date dataValidade;
+
     @Column(name = "empresa_id")
-    @NotNull(message = "empresa é obrigatória")
     private Long empresaId;
 }

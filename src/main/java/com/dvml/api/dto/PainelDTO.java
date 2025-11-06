@@ -12,6 +12,10 @@ public class PainelDTO {
     @NotNull(message = "A descrição do painel é obrigatória.")
     private String descricao;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ea99d0ed9a47cde5a2161e81ce430d803c8d50e
     // Construtor padrão
     public PainelDTO() {
     }

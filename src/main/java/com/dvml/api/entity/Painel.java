@@ -19,4 +19,8 @@ public class Painel {
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ea99d0ed9a47cde5a2161e81ce430d803c8d50e
 }
