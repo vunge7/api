@@ -50,8 +50,8 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/usuarios/cadastrar")
-    public ResponseEntity<?> cadastrar(@RequestBody UsuarioDTO usuarioDTO) {
+    @PostMapping("/usuarios/cadastra")
+    public ResponseEntity<?> cadastrarr(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             UsuarioDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
             return ResponseEntity.ok(responseDTO);

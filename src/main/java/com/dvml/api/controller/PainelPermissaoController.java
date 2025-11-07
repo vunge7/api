@@ -3,6 +3,7 @@ package com.dvml.api.controller;
 import com.dvml.api.dto.PainelPermissaoDTO;
 import com.dvml.api.service.PainelPermissaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,38 +16,38 @@ public class PainelPermissaoController {
     @Autowired
     private PainelPermissaoService painelPermissaoService;
 
-    // ✅ Criar uma nova permissão
+    // -------------------- CRIAR --------------------
+
     @PostMapping("/add")
-    public ResponseEntity<PainelPermissaoDTO> create(
-            @RequestBody PainelPermissaoDTO dto,
-            @RequestParam Long usuarioIdCriacao
-    ) {
-        PainelPermissaoDTO created = painelPermissaoService.create(dto, usuarioIdCriacao);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<PainelPermissaoDTO> create(@RequestBody PainelPermissaoDTO dto) {
+        PainelPermissaoDTO created = painelPermissaoService.create(dto, dto.getUsuarioIdCriacao());
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // ✅ Buscar uma permissão por ID
+    // -------------------- LEITURA --------------------
+
+    // Buscar uma permissão por ID
     @GetMapping("/{id}")
     public ResponseEntity<PainelPermissaoDTO> findById(@PathVariable Long id) {
         PainelPermissaoDTO dto = painelPermissaoService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
-    // ✅ Buscar todas as permissões
+    // Buscar todas as permissões
     @GetMapping("/all")
     public ResponseEntity<List<PainelPermissaoDTO>> findAll() {
         List<PainelPermissaoDTO> list = painelPermissaoService.findAll();
         return ResponseEntity.ok(list);
     }
 
-    // ✅ Buscar permissões por usuário
+    // Buscar permissões por usuário
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<PainelPermissaoDTO>> findByUsuarioId(@PathVariable Long usuarioId) {
         List<PainelPermissaoDTO> list = painelPermissaoService.findByUsuarioId(usuarioId);
         return ResponseEntity.ok(list);
     }
 
-    // ✅ Buscar permissões por usuário e empresa
+    // Buscar permissões por usuário e empresa
     @GetMapping("/usuario/{usuarioId}/empresa/{empresaId}")
     public ResponseEntity<List<PainelPermissaoDTO>> findByUsuarioIdAndEmpresaId(
             @PathVariable Long usuarioId,
@@ -56,25 +57,27 @@ public class PainelPermissaoController {
         return ResponseEntity.ok(list);
     }
 
-    // ✅ Buscar lista de empresas com permissão de um usuário
+    // Buscar lista de empresas onde o usuário tem permissão
     @GetMapping("/usuario/{usuarioId}/empresas")
     public ResponseEntity<List<Long>> findEmpresasByUsuarioId(@PathVariable Long usuarioId) {
         List<Long> empresas = painelPermissaoService.findEmpresasByUsuarioId(usuarioId);
         return ResponseEntity.ok(empresas);
     }
 
-    // ✅ Atualizar uma permissão existente
+    // -------------------- ATUALIZAÇÃO --------------------
+
     @PutMapping("/{id}")
     public ResponseEntity<PainelPermissaoDTO> update(
             @PathVariable Long id,
-            @RequestBody PainelPermissaoDTO dto,
-            @RequestParam Long usuarioIdActualizacao
+            @RequestBody PainelPermissaoDTO dto
     ) {
-        PainelPermissaoDTO updated = painelPermissaoService.update(id, dto, usuarioIdActualizacao);
+        // pega o usuarioIdActualizacao direto do DTO
+        PainelPermissaoDTO updated = painelPermissaoService.update(id, dto, dto.getUsuarioIdActualizacao());
         return ResponseEntity.ok(updated);
     }
 
-    // ✅ Deletar uma permissão
+    // -------------------- DELEÇÃO --------------------
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         painelPermissaoService.delete(id);

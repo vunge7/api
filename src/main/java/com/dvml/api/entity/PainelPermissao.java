@@ -24,7 +24,6 @@ public class PainelPermissao {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataCriacao;
 
-
     @Column(name = "data_actualizacao")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataActualizacao;

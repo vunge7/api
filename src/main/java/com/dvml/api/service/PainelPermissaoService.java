@@ -17,7 +17,8 @@ public class PainelPermissaoService {
     @Autowired
     private PainelPermissaoRepository painelPermissaoRepository;
 
-    // ---------------- Conversão Entity ↔ DTO ----------------
+    // -------------------- CONVERSÕES --------------------
+
     private PainelPermissaoDTO convertToDTO(PainelPermissao painelPermissao) {
         PainelPermissaoDTO dto = new PainelPermissaoDTO();
         dto.setId(painelPermissao.getId());
@@ -44,7 +45,7 @@ public class PainelPermissaoService {
         return painelPermissao;
     }
 
-    // ---------------- CRUD ----------------
+    // -------------------- CRUD --------------------
 
     @Transactional
     public PainelPermissaoDTO create(PainelPermissaoDTO dto, Long usuarioIdCriacao) {
@@ -59,6 +60,7 @@ public class PainelPermissaoService {
         PainelPermissao painelPermissao = convertToEntity(dto);
         painelPermissao.setDataCriacao(LocalDateTime.now());
         painelPermissao.setUsuarioIdCriacao(usuarioIdCriacao);
+
         PainelPermissao saved = painelPermissaoRepository.save(painelPermissao);
         return convertToDTO(saved);
     }
@@ -67,7 +69,7 @@ public class PainelPermissaoService {
     public PainelPermissaoDTO findById(Long id) {
         return painelPermissaoRepository.findById(id)
                 .map(this::convertToDTO)
-                .orElseThrow(() -> new RuntimeException("PainelPermissao not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("PainelPermissao não encontrado com ID: " + id));
     }
 
     @Transactional(readOnly = true)
@@ -94,19 +96,19 @@ public class PainelPermissaoService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retorna a lista de IDs de empresas distintas associadas a um determinado usuário
+     * usando query nativa diretamente do banco.
+     */
     @Transactional(readOnly = true)
     public List<Long> findEmpresasByUsuarioId(Long usuarioId) {
-        return painelPermissaoRepository.findByUsuarioId(usuarioId)
-                .stream()
-                .map(PainelPermissao::getEmpresaId)
-                .distinct()
-                .collect(Collectors.toList());
+        return painelPermissaoRepository.findDistinctEmpresaIdsByUsuarioId(usuarioId);
     }
 
     @Transactional
     public PainelPermissaoDTO update(Long id, PainelPermissaoDTO dto, Long usuarioIdActualizacao) {
         PainelPermissao existing = painelPermissaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PainelPermissao not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("PainelPermissao não encontrado com ID: " + id));
 
         PainelPermissao updated = convertToEntity(dto);
         updated.setId(id);
@@ -122,7 +124,7 @@ public class PainelPermissaoService {
     @Transactional
     public void delete(Long id) {
         if (!painelPermissaoRepository.existsById(id)) {
-            throw new RuntimeException("PainelPermissao not found with id: " + id);
+            throw new RuntimeException("PainelPermissao não encontrado com ID: " + id);
         }
         painelPermissaoRepository.deleteById(id);
     }
