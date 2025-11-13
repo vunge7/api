@@ -62,7 +62,8 @@ public class PessoaService {
         pessoaToUpdate.setHabilitacao(pessoa.getHabilitacao());
         pessoaToUpdate.setEstadoCivil(pessoa.getEstadoCivil());
         pessoaToUpdate.setProfissao(pessoa.getProfissao());
-        pessoaToUpdate.setEmpresaId(pessoa.getEmpresaId()); // ✅ Adicionado
+        pessoaToUpdate.setEmpresaId(pessoa.getEmpresaId());
+
 
         return repo.save(pessoaToUpdate);
     }

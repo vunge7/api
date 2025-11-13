@@ -55,9 +55,13 @@ public class Usuario {
     @Column(name = "funcao_id")
     private long funcaoId;
 
-    @Column(name = "funcionario_id", nullable = false, length = 100)
+    @Column(name = "funcionario_id", nullable = false)
     @NotNull(message = "O ID do funcionário não pode ser nulo")
     private long funcionarioId;
+
+    @Column(name = "usuario_id", nullable = false)
+    @NotNull(message = "O ID do usuario não pode ser nulo")
+    private long usuarioId;
 
     @Column(name = "ip", nullable = false, length = 100)
     @NotBlank(message = "O IP não pode ser vazio ou nulo")

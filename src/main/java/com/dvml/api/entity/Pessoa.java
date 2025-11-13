@@ -30,7 +30,7 @@ public class Pessoa {
     private String nif;
 
     @Column(name = "data_nascimento")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataNascimento;
 
     @Column(name = "local_nascimento")

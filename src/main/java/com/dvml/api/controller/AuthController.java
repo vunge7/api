@@ -31,6 +31,7 @@ public class AuthController {
     @Autowired
     private UsuarioService usuarioService;
 
+    // AuthController.login
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -41,16 +42,22 @@ public class AuthController {
         Usuario usuario = usuarioService.findByUserName(authRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
+        Long funcionarioId = null;
+        try {
+            funcionarioId = usuario.getFuncionarioId();
+        } catch (Exception ignored) {}
+
         AuthResponseDTO response = new AuthResponseDTO();
         response.setToken(token);
         response.setId(usuario.getId());
         response.setUsername(usuario.getUserName());
         response.setTipo(usuario.getTipoUsuario().name());
+        response.setFuncionarioId(funcionarioId);
 
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/usuarios/cadastra")
+    @PostMapping("/usuarios/cadastrar/add")
     public ResponseEntity<?> cadastrarr(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             UsuarioDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
