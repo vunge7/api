@@ -49,7 +49,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarios);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("id") Long id, @Valid @RequestBody FuncionarioDTO funcionarioDTO) {
         LOGGER.info("Atualizando funcionário ID: {}", id);
         FuncionarioDTO updated = funcionarioService.update(id, funcionarioDTO);

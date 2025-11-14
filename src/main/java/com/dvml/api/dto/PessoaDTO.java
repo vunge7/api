@@ -8,6 +8,7 @@ import java.util.Date;
 public class PessoaDTO {
     private Long id;
     private String nome;
+    private String apelido;
     private String nif;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataNascimento;
@@ -21,6 +22,8 @@ public class PessoaDTO {
 
     // Getters e Setters
     public Long getId() { return id; }
+    public void setApelido(String apelido) { this.apelido =apelido; }
+    public String getApelido() { return apelido; }
     public void setId(Long id) { this.id = id; }
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }

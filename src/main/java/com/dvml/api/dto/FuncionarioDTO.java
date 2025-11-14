@@ -22,7 +22,7 @@ public class FuncionarioDTO {
     private Long pessoaId;
 
     @NotEmpty(message = "Tipo de contrato é obrigatório.")
-    private String tipoDeContrato;
+    private String tipoContrato;
 
     @NotNull(message = "Salário é obrigatório.")
     @DecimalMin(value = "0.0", inclusive = true, message = "Salário deve ser maior ou igual a zero.")
@@ -42,7 +42,7 @@ public class FuncionarioDTO {
     private Long departamentoId;
 
     @NotEmpty(message = "Fecho de período é obrigatório.")
-    private String fechoContas;
+    private String fechoPeriodo;
 
     @NotEmpty(message = "Segurança social é obrigatória.")
     private String segurancaSocial;

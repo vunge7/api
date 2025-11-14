@@ -54,21 +54,28 @@ public class PessoaController {
             @Valid @ModelAttribute Pessoa pessoa,
             @RequestParam(value = "file", required = false) MultipartFile file
     ) {
-        // Vincula nomePhoto mesmo sem salvar arquivo (opcional)
         if (file != null && !file.isEmpty()) {
-            final Path uploadDir = Paths.get("uploads/pessoa/fotos"); // ajuste caminho
+            final Path uploadDir = Paths.get("uploads/pessoa/fotos");
             try {
                 Files.createDirectories(uploadDir);
-                final String original = StringUtils.cleanPath(file.getOriginalFilename());
-                final String filename = System.currentTimeMillis() + "_" + original;
-                final Path destino = uploadDir.resolve(filename);
 
-                // Sobrescreve se existir; se não quiser, remova REPLACE_EXISTING
+                // Extrai extensão
+                String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+                String extensao = "";
+                int dotIndex = originalFilename.lastIndexOf('.');
+                if (dotIndex > 0 && dotIndex < originalFilename.length() - 1) {
+                    extensao = originalFilename.substring(dotIndex); // inclui o ponto
+                }
+
+                // Gera nome limpo + timestamp
+                String nomeLimpo = service.limparNomeArquivo(originalFilename);
+                String filename = System.currentTimeMillis() + "_" + nomeLimpo + extensao;
+                Path destino = uploadDir.resolve(filename);
+
                 Files.copy(file.getInputStream(), destino, StandardCopyOption.REPLACE_EXISTING);
-
                 pessoa.setNomePhoto(filename);
+
             } catch (IOException e) {
-                // Trate IOException de forma controlada
                 throw new ResponseStatusException(
                         HttpStatus.INTERNAL_SERVER_ERROR,
                         "Erro de I/O ao salvar arquivo de foto",
@@ -77,10 +84,9 @@ public class PessoaController {
             }
         }
 
-        // Salva a pessoa normalmente
         return service.criar(pessoa);
     }
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Pessoa updatePessoa(@RequestBody @Valid Pessoa pessoa) {
         return service.update(pessoa);
