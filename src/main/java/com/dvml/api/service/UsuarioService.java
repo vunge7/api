@@ -70,7 +70,7 @@ public class UsuarioService {
         usuario.setUsuarioId(usuarioDTO.getUsuarioId());
         usuario.setDataCadastro(new Date());
         usuario.setDataAtualizacao(new Date());
-        usuario.setStatus(true);
+
 
         validarUsuario(usuario);
         usuario = usuarioRepository.save(usuario);

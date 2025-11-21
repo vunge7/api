@@ -38,8 +38,7 @@ public class Usuario {
     @NotBlank(message = "A senha não pode ser vazia ou nula")
     private String senha;
 
-    @Column(name = "numero_ordem", nullable = false, length = 100)
-    @NotBlank(message = "O número de ordem não pode ser vazio ou nulo")
+    @Column(name = "numero_ordem")
     private String numeroOrdem;
 
     @Enumerated(EnumType.STRING)
@@ -68,8 +67,6 @@ public class Usuario {
     private String ip;
 
 
-    @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean status = true;
 
     @Column(name = "empresa_id")
     @NotNull(message = "empresa é obrigatória")
