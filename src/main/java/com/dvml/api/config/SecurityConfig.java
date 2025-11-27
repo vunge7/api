@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,84 +26,76 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    // ================== SECURITY + CORS =====================
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                // Configuração CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Desativa CSRF porque usamos JWT
                 .csrf(csrf -> csrf.disable())
-                // Sessões sem estado (JWT)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Definição das permissões
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
+
+                        // 🔓 Libera estáticos
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+
+                        // 🔓 Libera autenticação, swagger, etc.
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/**"
+                                "/swagger-ui.html"
                         ).permitAll()
-                        // Permite requisições OPTIONS (necessárias para CORS)
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        // Exige autenticação para o restante
+
+                        // 🔓 Permite pré-flight (muito importante)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 🔐 Todo o resto requer autenticação
                         .anyRequest().authenticated()
                 )
-                // Filtro JWT antes do filtro padrão de autenticação
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // ================== CORS CONFIG =====================
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // aceita qualquer origem
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true); // permite cookies e autenticação se necessário
+
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
 
         return source;
     }
 
+    // ================== AUTH MANAGER =====================
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
+
+    // ================== STATIC RESOURCES =====================
     @Configuration
     public class StaticResourceConfig implements WebMvcConfigurer {
 
-        // Base no disco onde você salva os arquivos
-        // Ex.: relativo ao diretório de execução: "uploads/"
-        //      ou absoluto: "C:/SysHospitalar/uploads/"
         private static final String UPLOADS_BASE = "file:uploads/";
 
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry
-                    .addResourceHandler("/uploads/**")
+            registry.addResourceHandler("/uploads/**")
                     .addResourceLocations(UPLOADS_BASE);
         }
-    }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // libera acesso público às imagens
-                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                        // libere também, se necessário, o endpoint de upload sem auth (opcional)
-                        // .requestMatchers(HttpMethod.POST, "/pessoa/add").permitAll()
-                        .anyRequest().authenticated()
-                )
-                // Configure seu método de autenticação real aqui (form, httpBasic, JWT, etc.)
-                .httpBasic(Customizer.withDefaults());
-
-        return http.build();
     }
 
 }
