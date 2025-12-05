@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.dvml.api.repository.ProdutoRepository;
+import java.util.stream.Collectors;
+
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +23,10 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private ProdutoRepository repo;
+
 
     // ============================================================
     // CRIAR PRODUTO
@@ -206,4 +213,14 @@ public class ProdutoController {
     public ResponseEntity<ProdutoArvoreDTO> getArvore(@PathVariable Long id) {
         return ResponseEntity.ok(produtoService.montarArvoreProduto(id));
     }
+
+    @GetMapping("/all-with-inactive")
+    public ResponseEntity<List<ProdutoDTO>> findAllWithInactive() {
+        return ResponseEntity.ok(
+                repo.findAll().stream()
+                        .map(produtoService::convertEntityToDto)
+                        .sorted((a, b) -> a.getProductDescription().compareTo(b.getProductDescription()))
+                        .collect(Collectors.toList())
+        );
+}
 }
