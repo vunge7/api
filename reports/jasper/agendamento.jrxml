@@ -12,13 +12,13 @@
               la.status,
               p.nome AS paciente_nome,
               m.nome AS medico_nome,
-              ag.descricao AS agenda_descricao
+              ag.product_description AS agenda_descricao
             FROM linha_agenda la
             JOIN paciente pac ON la.paciente_id = pac.id
             JOIN pessoa p ON pac.pessoa_id = p.id
             JOIN funcionario f ON la.funcionario_id = f.id
             JOIN pessoa m ON f.pessoa_id = m.id
-            JOIN agenda ag ON la.agenda_id = ag.id
+            JOIN produto ag ON la.produto_id = ag.id
             WHERE la.funcionario_id = $P{id}]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">

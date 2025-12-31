@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 public class LinhaRequisicaoExame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "ID é obrigatório")
     private Long id;
 
     @Column(name = "produto_id")

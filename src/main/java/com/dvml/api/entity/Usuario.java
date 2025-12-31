@@ -38,8 +38,7 @@ public class Usuario {
     @NotBlank(message = "A senha não pode ser vazia ou nula")
     private String senha;
 
-    @Column(name = "numero_ordem", nullable = false, length = 100)
-    @NotBlank(message = "O número de ordem não pode ser vazio ou nulo")
+    @Column(name = "numero_ordem")
     private String numeroOrdem;
 
     @Enumerated(EnumType.STRING)
@@ -55,17 +54,19 @@ public class Usuario {
     @Column(name = "funcao_id")
     private long funcaoId;
 
-    @Column(name = "funcionario_id", nullable = false, length = 100)
+    @Column(name = "funcionario_id", nullable = false)
     @NotNull(message = "O ID do funcionário não pode ser nulo")
     private long funcionarioId;
+
+    @Column(name = "usuario_id", nullable = false)
+    @NotNull(message = "O ID do usuario não pode ser nulo")
+    private long usuarioId;
 
     @Column(name = "ip", nullable = false, length = 100)
     @NotBlank(message = "O IP não pode ser vazio ou nulo")
     private String ip;
 
 
-    @Column(name = "status", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean status = true;
 
     @Column(name = "empresa_id")
     @NotNull(message = "empresa é obrigatória")

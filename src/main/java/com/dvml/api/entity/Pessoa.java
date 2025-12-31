@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -30,7 +31,8 @@ public class Pessoa {
     private String nif;
 
     @Column(name = "data_nascimento")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dataNascimento;
 
     @Column(name = "local_nascimento")
@@ -96,5 +98,5 @@ public class Pessoa {
 
     @Column(name = "empresa_id")
     @NotNull(message = "empresa é obrigatória")
-    private Long empresaId; // ✅ Adicionado
+    private Long empresaId;
 }

@@ -18,8 +18,7 @@ public class UsuarioDTO {
     @Size(min = 8, max = 100, message = "A senha deve ter entre 8 e 100 caracteres")
     private String senha;
 
-    @NotBlank(message = "O número de ordem não pode ser vazio")
-    @Size(min = 1, max = 100, message = "O número de ordem deve ter entre 1 e 100 caracteres")
+
     private String numeroOrdem;
 
     @NotNull(message = "O estado do usuário não pode ser nulo")
@@ -33,6 +32,8 @@ public class UsuarioDTO {
 
     @NotNull(message = "O ID da função não pode ser nulo")
     private Long funcaoId;
+    @NotNull(message = "O ID do usuario não pode ser nulo")
+    private Long usuarioId;
 
     @Size(max = 100, message = "O IP deve ter no máximo 100 caracteres")
     private String ip;
@@ -68,5 +69,7 @@ public class UsuarioDTO {
     public void setIp(String ip) { this.ip = ip; }
 
     public Long getEmpresaId() { return empresaId; }
+    public Long getUsuarioId() { return usuarioId; }
     public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
+    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
 }

@@ -67,9 +67,10 @@ public class UsuarioService {
         usuario.setFuncaoId(usuarioDTO.getFuncaoId());
         usuario.setIp(usuarioDTO.getIp());
         usuario.setEmpresaId(usuarioDTO.getEmpresaId());
+        usuario.setUsuarioId(usuarioDTO.getUsuarioId());
         usuario.setDataCadastro(new Date());
         usuario.setDataAtualizacao(new Date());
-        usuario.setStatus(true);
+
 
         validarUsuario(usuario);
         usuario = usuarioRepository.save(usuario);
@@ -93,6 +94,7 @@ public class UsuarioService {
         usuario.setFuncaoId(usuarioDTO.getFuncaoId());
         usuario.setIp(usuarioDTO.getIp());
         usuario.setEmpresaId(usuarioDTO.getEmpresaId());
+        usuario.setUsuarioId(usuarioDTO.getUsuarioId());
         usuario.setDataAtualizacao(new Date());
 
         validarUsuario(usuario);
@@ -228,6 +230,7 @@ public class UsuarioService {
         dto.setFuncaoId(usuario.getFuncaoId());
         dto.setIp(usuario.getIp());
         dto.setEmpresaId(usuario.getEmpresaId());
+        dto.setUsuarioId(usuario.getUsuarioId());
         return dto;
     }
 

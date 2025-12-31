@@ -54,7 +54,7 @@ public class LinhaSubsidioController {
         return ResponseEntity.ok(subsidios);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<LinhaSubsidioDTO> update(@PathVariable("id") Long id, @Valid @RequestBody LinhaSubsidioDTO dto) {
         LOGGER.info("Atualizando subsídio ID: {}", id);
         dto.setId(id);

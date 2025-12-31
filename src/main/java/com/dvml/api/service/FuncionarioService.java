@@ -119,14 +119,14 @@ public class FuncionarioService {
     private void validateFuncionarioDTO(FuncionarioDTO dto) {
         if (dto == null) throw new IllegalArgumentException("FuncionarioDTO não pode ser nulo.");
         if (dto.getPessoaId() == null) throw new IllegalArgumentException("PessoaId é obrigatório.");
-        if (dto.getTipoDeContrato() == null || dto.getTipoDeContrato().isEmpty()) throw new IllegalArgumentException("Tipo de contrato é obrigatório.");
-        TipoContrato.valueOf(dto.getTipoDeContrato());
+        if (dto.getTipoContrato() == null || dto.getTipoContrato().isEmpty()) throw new IllegalArgumentException("Tipo de contrato é obrigatório.");
+        TipoContrato.valueOf(dto.getTipoContrato());
         if (dto.getSalario() == null || dto.getSalario().compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Salário deve ser maior que zero.");
         if (dto.getDataAdmissao() == null) throw new IllegalArgumentException("Data de admissão é obrigatória.");
         if (dto.getDescricao() == null || dto.getDescricao().isEmpty()) throw new IllegalArgumentException("Descrição é obrigatória.");
         if (dto.getCargo() == null || dto.getCargo().isEmpty()) throw new IllegalArgumentException("Cargo é obrigatório.");
         if (dto.getDepartamentoId() == null) throw new IllegalArgumentException("DepartamentoId é obrigatório.");
-        FechoPeriodo.valueOf(dto.getFechoContas());
+        FechoPeriodo.valueOf(dto.getFechoPeriodo());
         SegurancaSocial.valueOf(dto.getSegurancaSocial());
         if (dto.getEstadoFuncionario() == null) throw new IllegalArgumentException("Estado do funcionário é obrigatório.");
     }
@@ -135,13 +135,13 @@ public class FuncionarioService {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(dto.getId());
         funcionario.setPessoaId(dto.getPessoaId());
-        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoDeContrato()));
+        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoContrato()));
         funcionario.setSalario(dto.getSalario());
         funcionario.setDataAdmissao(dto.getDataAdmissao());
         funcionario.setDescricao(dto.getDescricao());
         funcionario.setCargo(dto.getCargo());
         funcionario.setDepartamentoId(dto.getDepartamentoId());
-        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
+        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoPeriodo()));
         funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
         // ✅ CAMPO EMPRESA
@@ -153,13 +153,13 @@ public class FuncionarioService {
         FuncionarioDTO dto = new FuncionarioDTO();
         dto.setId(funcionario.getId());
         dto.setPessoaId(funcionario.getPessoaId());
-        dto.setTipoDeContrato(funcionario.getTipoContrato().name());
+        dto.setTipoContrato(funcionario.getTipoContrato().name());
         dto.setSalario(funcionario.getSalario());
         dto.setDataAdmissao(funcionario.getDataAdmissao());
         dto.setDescricao(funcionario.getDescricao());
         dto.setCargo(funcionario.getCargo());
         dto.setDepartamentoId(funcionario.getDepartamentoId());
-        dto.setFechoContas(funcionario.getFechoPeriodo().name());
+        dto.setFechoPeriodo(funcionario.getFechoPeriodo().name());
         dto.setSegurancaSocial(funcionario.getSegurancaSocial().name());
         dto.setEstadoFuncionario(funcionario.getEstadoFuncionario());
         // ✅ CAMPO EMPRESA
@@ -169,13 +169,13 @@ public class FuncionarioService {
 
     private void updateEntity(Funcionario funcionario, FuncionarioDTO dto) {
         funcionario.setPessoaId(dto.getPessoaId());
-        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoDeContrato()));
+        funcionario.setTipoContrato(TipoContrato.valueOf(dto.getTipoContrato()));
         funcionario.setSalario(dto.getSalario());
         funcionario.setDataAdmissao(dto.getDataAdmissao());
         funcionario.setDescricao(dto.getDescricao());
         funcionario.setCargo(dto.getCargo());
         funcionario.setDepartamentoId(dto.getDepartamentoId());
-        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoContas()));
+        funcionario.setFechoPeriodo(FechoPeriodo.valueOf(dto.getFechoPeriodo()));
         funcionario.setSegurancaSocial(SegurancaSocial.valueOf(dto.getSegurancaSocial()));
         funcionario.setEstadoFuncionario(dto.getEstadoFuncionario());
         // ✅ CAMPO EMPRESA
