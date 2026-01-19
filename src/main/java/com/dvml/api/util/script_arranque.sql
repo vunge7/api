@@ -7,7 +7,7 @@
 -- TRUNCAR TUDO
 TRUNCATE TABLE linha_resultado, resultado_exame, requisicao_exame, receita, paciente_seguradora, paciente,
     linha_triagem, triagem, linha_subsidio, subsidio, operacao_stock, linhas_lotes, produto,
-    product_type, product_group, unidade_medidas, usuario_painel, painel_permissao, painel,
+    product_type, product_group, unidade_medidas, painel_permissao, painel,
     usuario, pessoa, seguradora, source_document, procedimento, tipo_exame, empresa
 RESTART IDENTITY CASCADE;
 
@@ -19,8 +19,8 @@ VALUES (1, 'DVML COMERCIAL', 'MATRIZ', TRUE, 0, '123456789', 'dvml@empresa.com',
 INSERT INTO pessoa (id, nome, apelido, nif, email, telefone, endereco, empresa_id)
 VALUES (1, 'Administrador', 'DVML', '123456789', 'admin@dvml.com', '923111111', 'Rua Principal, Luanda', 1);
 
-INSERT INTO usuario (id, user_name, senha, numero_ordem, estado, tipo_usuario, usuario_id, funcionario_id, ip, status, empresa_id, data_cadastro)
-VALUES (1, 'dvml', 'DM.2026#321', '001', 'ACTIVO', 'ADMINISTRATIVO', 1, 1, '127.0.0.1', TRUE, 1, NOW());
+INSERT INTO usuario (id, user_name, senha, numero_ordem, estado, tipo_usuario, usuario_id, funcionario_id, ip, empresa_id, data_cadastro)
+VALUES (1, 'dvml', 'DM.2026#321', '001', 'ACTIVO', 'ADMINISTRATIVO', 1, 1, '127.0.0.1', 1, NOW());
 
 -- UNIDADES DE MEDIDA
 INSERT INTO unidade_medidas (id, descricao, abreviacao, empresa_id) VALUES

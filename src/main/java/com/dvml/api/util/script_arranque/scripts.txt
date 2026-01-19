@@ -1,0 +1,8 @@
+# 1. Conectar ao postgres (outro banco)
+psql -U postgres -c "DROP DATABASE IF EXISTS kitanda_hospitalar_db;"
+
+# 2. Criar banco vazio
+psql -U postgres -c "CREATE DATABASE kitanda_hospitalar_db;"
+
+# 3. Restaurar backup
+psql -U postgres -d kitanda_hospitalar_db -f backup_completo.sql
