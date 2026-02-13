@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class AuthService implements UserDetailsService {
+public class   AuthService implements UserDetailsService {
 
     @Autowired
     private UsuarioService usuarioService;
